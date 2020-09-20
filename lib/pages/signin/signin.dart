@@ -40,7 +40,7 @@ class SignInPage extends StatelessWidget {
               child: Opacity(
                 opacity: .6,
                 child: Text(
-                  'Understand Better',
+                  ' Understand Better ',
                   style: TextStyle(
                     fontSize: 18,
                   ),
