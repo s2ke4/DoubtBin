@@ -47,7 +47,7 @@ class AuthServices {
   Future signOutGoogle() async {
   try{
       print("User Signed Out");
-      await FirebaseAuth.instance.signOut();
+      await _auth.signOut();
       await _googleSignIn.disconnect();
       await _googleSignIn.signOut();
     }catch(e){
@@ -55,5 +55,4 @@ class AuthServices {
         print(e.toString());
     }
 }
-
 }

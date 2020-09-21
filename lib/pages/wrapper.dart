@@ -8,9 +8,7 @@ class Wrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<MyUser>(context);
-    print("I am in Wrapper: $user");
     if(user==null){
-
       return SignInPage();
     }else{
       return Home();
