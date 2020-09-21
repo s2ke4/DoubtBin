@@ -1,15 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:doubtbin/services/auth.dart';
 
 class SignButton extends StatelessWidget {
-  SignButton({@required this.onPressed});
-  final GestureTapCallback onPressed;
+  final Function toggleLoading ;
+  SignButton({this.toggleLoading});
 
   @override
   Widget build(BuildContext context) {
+
+    final AuthServices _auth = AuthServices();
+
     return RawMaterialButton(
       shape: StadiumBorder(),
-      onPressed: () {},
+      onPressed: () async{
+        toggleLoading();
+        await _auth.singInWithGoogle();
+      },
       fillColor: Colors.white,
       splashColor: Colors.grey,
       hoverElevation: 20,

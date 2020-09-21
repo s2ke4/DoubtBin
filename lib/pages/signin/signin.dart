@@ -2,12 +2,23 @@ import 'package:doubtbin/pages/signin/signinbutton.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:doubtbin/shared/loading.dart';
 
+class SignInPage extends StatefulWidget {
+  @override
+  _SignInPageState createState() => _SignInPageState();
+}
 
-class SignInPage extends StatelessWidget {
+class _SignInPageState extends State<SignInPage> {
+
+  bool loading = false;
+  void toggleLoading(){
+    setState(()=>loading=true);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return loading?Loading():Scaffold(
       body: Container(
         child: Column(
           children: <Widget>[
@@ -28,7 +39,7 @@ class SignInPage extends StatelessWidget {
                       'DoubtBin',
                       style: TextStyle(
                         fontSize: 45,
-                        color: Colors.lightGreen[900],
+                        color: Colors.blue[900],
                         fontWeight: FontWeight.w900,
                       ),
                     )
@@ -71,7 +82,7 @@ class SignInPage extends StatelessWidget {
                 ),
               ),
             ),
-            SignButton(onPressed: () {}),
+            SignButton(toggleLoading:toggleLoading),
           ],
         ),
       )

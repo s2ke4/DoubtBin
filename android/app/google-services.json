@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1022538780100",
+    "firebase_url": "https://doubtbin-54bcd.firebaseio.com",
+    "project_id": "doubtbin-54bcd",
+    "storage_bucket": "doubtbin-54bcd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1022538780100:android:af29c3662f73e2af322891",
+        "android_client_info": {
+          "package_name": "com.s2.doubtbin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1022538780100-u1v9v16ofjjtf6smp4camhg13jb7okfs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.s2.doubtbin",
+            "certificate_hash": "1afaf0a9d9ceb064b6debb42a765253cf7cebc8b"
+          }
+        },
+        {
+          "client_id": "1022538780100-el6g900bgutjve1jsk2svojl2oajf1c8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5BKGsfvEoIxMJV06fxQ8-pqD3Z4RoWeI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1022538780100-el6g900bgutjve1jsk2svojl2oajf1c8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
