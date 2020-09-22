@@ -13,8 +13,7 @@ class AuthServices {
 
   //stream for auth state change
   Stream<MyUser> get user{
-      return _auth.authStateChanges()
-      .map(_userFromFirebase);
+      return _auth.authStateChanges().map(_userFromFirebase);
   }
 
   //code for signin with google goes here
