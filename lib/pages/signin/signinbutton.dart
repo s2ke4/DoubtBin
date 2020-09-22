@@ -15,7 +15,10 @@ class SignButton extends StatelessWidget {
       shape: StadiumBorder(),
       onPressed: () async{
         toggleLoading();
-        await _auth.singInWithGoogle();
+        String user = await _auth.singInWithGoogle();
+        if(user==null){
+          toggleLoading();
+        }
       },
       fillColor: Colors.white,
       splashColor: Colors.grey,
@@ -28,7 +31,7 @@ class SignButton extends StatelessWidget {
             child: Image(
               height:27,
               width: 27,
-              image: NetworkImage('https://pngmind.com/wp-content/uploads/2019/08/Google-Logo-PNG-Transparent-Background.jpeg'),
+              image: AssetImage('assets/google-logo.jpeg'),
             ),
           ),
           Padding(
