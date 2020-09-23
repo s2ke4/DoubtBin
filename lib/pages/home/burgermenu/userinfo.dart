@@ -26,17 +26,20 @@ class UserInfo extends StatelessWidget {
                   user.displayName,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 20,
+                    fontSize: 16,
                     fontWeight: FontWeight.w300
                   ),
                 ),
                 SizedBox(height: 5,),
-                Text(
-                  user.email,
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w200
+                Opacity(
+                  opacity: .8,
+                  child: Text(
+                    user.email,
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w200
+                    ),
                   ),
                 ),
               ],

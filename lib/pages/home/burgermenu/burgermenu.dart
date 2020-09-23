@@ -17,9 +17,7 @@ class _BurgerMenuState extends State<BurgerMenu> {
 
     return Container(
       child: Drawer(
-        child: ListView(
-          // Important: Remove any padding from the ListView.
-          padding: EdgeInsets.zero,
+        child: Column(
           children: <Widget>[
             DrawerHeader(
               padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
@@ -41,13 +39,20 @@ class _BurgerMenuState extends State<BurgerMenu> {
                 color: Colors.blueAccent,
               ),
             ),
-            ListTile(
-              title: Text('Item 1'),
-              onTap: () {},
-            ),
-            ListTile(
-              title: Text('Item 2'),
-              onTap: () {},
+            Expanded(
+              child: ListView(
+                scrollDirection: Axis.vertical,
+                children: <Widget> [
+                  ListTile(
+                    title: Text('Item 1'),
+                    onTap: () {},
+                  ),
+                  ListTile(
+                    title: Text('Item 2'),
+                    onTap: () {},
+                  ),
+                ],
+              ),
             ),
           ],
         ),
