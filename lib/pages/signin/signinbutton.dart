@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:doubtbin/services/auth.dart';
 
@@ -17,9 +17,9 @@ class SignButton extends StatelessWidget {
       onPressed: () async{
         toggleLoading();
         String user = await _auth.singInWithGoogle();
-        if(user==null)
-        {
-           toggleLoading();
+
+        if(user==null){
+          toggleLoading();
         }
       },
       fillColor: Colors.white,
@@ -33,7 +33,7 @@ class SignButton extends StatelessWidget {
             child: Image(
               height:27,
               width: 27,
-              image: NetworkImage('https://pngmind.com/wp-content/uploads/2019/08/Google-Logo-PNG-Transparent-Background.jpeg'),
+              image: AssetImage('assets/google-logo.jpeg'),
             ),
           ),
           Padding(
