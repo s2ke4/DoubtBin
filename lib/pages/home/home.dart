@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:doubtbin/services/auth.dart';
+import 'burgermenu/burgermenu.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -8,7 +9,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final AuthServices _auth = AuthServices();
-  
+
   @override
   Widget build(BuildContext context) {
 
@@ -23,6 +24,8 @@ class _HomeState extends State<Home> {
             label: Text("Log Out"))
         ],
       ),
+      body: Container(),
+      drawer: BurgerMenu(),
     );
   }
 }
