@@ -38,7 +38,7 @@ class _SignInPageState extends State<SignInPage> {
                 ),
                 Center(
                   child: Container(
-                    margin: EdgeInsets.fromLTRB(0, 120,0, 18),
+                    margin: EdgeInsets.fromLTRB(0, MediaQuery.of(context).size.width/3.5,0, 18),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
@@ -79,7 +79,7 @@ class _SignInPageState extends State<SignInPage> {
                 ),
                 Center(
                   child: Container(
-                    margin: EdgeInsets.fromLTRB(0, 280,0, 50),
+                    margin: EdgeInsets.fromLTRB(0, MediaQuery.of(context).size.width/1.25,0, 50),
                     child: SvgPicture.asset(
                       'assets/log1.svg',
                       width: 180,

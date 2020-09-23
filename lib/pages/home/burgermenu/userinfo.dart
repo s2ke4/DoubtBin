@@ -25,18 +25,18 @@ class UserInfo extends StatelessWidget {
                 Text(
                   user.displayName,
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Colors.black,
                     fontSize: 16,
                     fontWeight: FontWeight.w300
                   ),
                 ),
                 SizedBox(height: 5,),
                 Opacity(
-                  opacity: .8,
+                  opacity: .7,
                   child: Text(
                     user.email,
                     style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.grey[900],
                         fontSize: 12,
                         fontWeight: FontWeight.w200
                     ),

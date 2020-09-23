@@ -19,8 +19,17 @@ class _HomeState extends State<Home> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue[800],
-        title: Text("DoubtBin"),
+        elevation: 4,
+        backgroundColor: Colors.white,
+        iconTheme: new IconThemeData(color: Colors.grey[900]),
+        title: Text(
+          "DoubtBin",
+          style: TextStyle(
+            fontSize: 22,
+            color: Colors.black,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         actions: <Widget>[
           FlatButton.icon(
             onPressed:() async {await _auth.signOutGoogle();},
@@ -41,7 +50,8 @@ class _HomeState extends State<Home> {
               )
           )
         ]
-      )
+      ),
+
     );
   }
 }

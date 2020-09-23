@@ -17,10 +17,11 @@ class _BurgerMenuState extends State<BurgerMenu> {
 
     return Container(
       child: Drawer(
+
         child: Column(
           children: <Widget>[
             DrawerHeader(
-              padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
+              padding: EdgeInsets.all(MediaQuery.of(context).size.width/20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget> [
@@ -28,15 +29,19 @@ class _BurgerMenuState extends State<BurgerMenu> {
                     'DoubtBin',
                     style: TextStyle(
                       fontSize: 25,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                   UserInfo(),
                 ],
               ),
               decoration: BoxDecoration(
-                color: Colors.blueAccent,
+                boxShadow: [BoxShadow(
+                  color: Colors.black,
+                  blurRadius: 0.0,
+                )],
+                color: Colors.white,
               ),
             ),
             Expanded(
