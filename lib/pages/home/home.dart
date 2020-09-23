@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:doubtbin/services/auth.dart';
 import 'burgermenu/burgermenu.dart';
+import 'package:provider/provider.dart';
+import 'package:doubtbin/model/user.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -13,6 +15,8 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
 
+    final user = Provider.of<MyUser>(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue[800],
@@ -24,8 +28,20 @@ class _HomeState extends State<Home> {
             label: Text("Log Out"))
         ],
       ),
-      body: Container(),
       drawer: BurgerMenu(),
+      body: Column(
+        children:<Widget>[
+          Center(
+            child:Padding(
+              padding: EdgeInsets.fromLTRB(100, 50, 10, 10),
+              child:Text(
+              "You Are logged in as ${user.email}",
+              style: TextStyle(fontSize: 20),
+              )
+              )
+          )
+        ]
+      )
     );
   }
 }

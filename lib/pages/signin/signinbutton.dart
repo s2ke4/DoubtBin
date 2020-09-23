@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:doubtbin/services/auth.dart';
 
+
 class SignButton extends StatelessWidget {
   final Function toggleLoading ;
   SignButton({this.toggleLoading});
@@ -16,6 +17,7 @@ class SignButton extends StatelessWidget {
       onPressed: () async{
         toggleLoading();
         String user = await _auth.singInWithGoogle();
+
         if(user==null){
           toggleLoading();
         }

@@ -13,6 +13,7 @@ class _SignInPageState extends State<SignInPage> {
 
   bool loading = false;
   void toggleLoading(){
+
     setState(()=>loading = !loading);
   }
 
@@ -28,7 +29,7 @@ class _SignInPageState extends State<SignInPage> {
                   height: MediaQuery.of(context).size.height*.52,
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
-                      color: Colors.deepPurple[200],
+                      color: Colors.blue[100],
                       borderRadius: BorderRadius.only(
                         bottomLeft: const Radius.circular(40),
                         bottomRight: const Radius.circular(40),
