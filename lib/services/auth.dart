@@ -18,28 +18,32 @@ class AuthServices {
   //code for signin with google goes here
   Future<String> singInWithGoogle() async{
     
-    final GoogleSignInAccount _googleSignInAccount = await _googleSignIn.signIn();
-    final GoogleSignInAuthentication _googleSignInAuthentication = await _googleSignInAccount.authentication;
+    try{
+      final GoogleSignInAccount _googleSignInAccount = await _googleSignIn.signIn();
+      final GoogleSignInAuthentication _googleSignInAuthentication = await _googleSignInAccount.authentication;
 
-    final AuthCredential _credential = GoogleAuthProvider.credential(
-      accessToken:_googleSignInAuthentication.accessToken,
-      idToken:_googleSignInAuthentication.idToken,
-    );
+      final AuthCredential _credential = GoogleAuthProvider.credential(
+        accessToken:_googleSignInAuthentication.accessToken,
+        idToken:_googleSignInAuthentication.idToken,
+      );
 
-    final UserCredential _authResult = await _auth.signInWithCredential(_credential);
-    final User _user = _authResult.user;
+      final UserCredential _authResult = await _auth.signInWithCredential(_credential);
+      final User _user = _authResult.user;
 
-    if(_user!=null)
-    {
-      assert(!_user.isAnonymous);
-      assert(await _user.getIdToken()!=null);
-      final User _currentUser = _auth.currentUser;
-      assert(_user.uid==_currentUser.uid);
-      print("sign in with google succed : $_user");
-      print("checking for pull request");
-      return '$_user';
+      if(_user!=null)
+      {
+        assert(!_user.isAnonymous);
+        assert(await _user.getIdToken()!=null);
+        final User _currentUser = _auth.currentUser;
+        assert(_user.uid==_currentUser.uid);
+        print("sign in with google succed : $_user");
+        print("checking for pull request");
+        return '$_user';
+      }
+      return null;
+    }catch(e){
+      return null;
     }
-    return null;
   }
 
   //code for signout goes here
