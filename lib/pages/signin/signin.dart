@@ -13,7 +13,7 @@ class _SignInPageState extends State<SignInPage> {
 
   bool loading = false;
   void toggleLoading(){
-    setState(()=>loading=true);
+    setState(()=>loading=!loading);
   }
 
   @override

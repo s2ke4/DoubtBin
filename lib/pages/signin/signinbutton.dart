@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:doubtbin/services/auth.dart';
 
+
 class SignButton extends StatelessWidget {
   final Function toggleLoading ;
   SignButton({this.toggleLoading});
@@ -15,7 +16,11 @@ class SignButton extends StatelessWidget {
       shape: StadiumBorder(),
       onPressed: () async{
         toggleLoading();
-        await _auth.singInWithGoogle();
+        String user = await _auth.singInWithGoogle();
+        if(user==null)
+        {
+           toggleLoading();
+        }
       },
       fillColor: Colors.white,
       splashColor: Colors.grey,
