@@ -3,6 +3,8 @@ import 'burgermenu/burgermenu.dart';
 import 'package:provider/provider.dart';
 import 'package:doubtbin/model/user.dart';
 
+import 'floatingactionbutton.dart';
+
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
@@ -43,7 +45,7 @@ class _HomeState extends State<Home> {
           )
         ]
       ),
-
+      floatingActionButton: FloatButton(),
     );
   }
 }
