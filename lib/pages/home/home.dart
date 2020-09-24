@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:doubtbin/services/auth.dart';
 import 'burgermenu/burgermenu.dart';
 import 'package:provider/provider.dart';
 import 'package:doubtbin/model/user.dart';
@@ -10,7 +9,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final AuthServices _auth = AuthServices();
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +19,7 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         elevation: 4,
         backgroundColor: Colors.white,
-        iconTheme: new IconThemeData(color: Colors.grey[900]),
+        iconTheme: IconThemeData(color: Colors.grey[900]),
         title: Text(
           "DoubtBin",
           style: TextStyle(
@@ -30,12 +28,6 @@ class _HomeState extends State<Home> {
             fontWeight: FontWeight.w600,
           ),
         ),
-        actions: <Widget>[
-          FlatButton.icon(
-            onPressed:() async {await _auth.signOutGoogle();},
-             icon: Icon(Icons.person),
-            label: Text("Log Out"))
-        ],
       ),
       drawer: BurgerMenu(),
       body: Column(
