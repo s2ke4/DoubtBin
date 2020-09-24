@@ -9,7 +9,6 @@ class FloatButton extends StatelessWidget {
       child : SpeedDial(
         marginBottom: 25,
         marginRight: 25,
-        animationSpeed: 10,
         animatedIcon: AnimatedIcons.menu_close,
         animatedIconTheme: IconThemeData(size: 25.0),
        //child: Icon(Icons.add),
