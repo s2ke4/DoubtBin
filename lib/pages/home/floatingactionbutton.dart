@@ -17,13 +17,13 @@ class FloatButton extends StatelessWidget {
         curve: Curves.bounceIn,
         overlayColor: Colors.black,
         overlayOpacity: 0.5,
-        onOpen: () => print('OPENING DIAL'),
-        onClose: () => print('DIAL CLOSED'),
         tooltip: 'Speed Dial',
         heroTag: 'speed-dial-hero-tag',
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 10.0,
+        onOpen: () => print('OPENING DIAL'),
+        onClose: () => print('DIAL CLOSED'),
         shape: CircleBorder(),
         children: [
           SpeedDialChild(
