@@ -2,7 +2,7 @@
 
 DoubtBin is a doubt solving and resources sharing portfolio. It includes implemenation of concepts of Object Oriented Programming, Front-end Development and Back-end Development.
 
-# About the application
+## About the application
 
 This application will target the students helping them in solving doubts related to any course, topics within themself, or with faculty members. The application would be responsive to all devices. The portfolio will have the following features:
 - Students can post their doubts.
