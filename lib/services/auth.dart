@@ -48,7 +48,7 @@ class AuthServices {
 
   //code for signout goes here
   Future signOutGoogle() async {
-  try{
+    try{
       print("User Signed Out");
       await _auth.signOut();
       await _googleSignIn.disconnect();
@@ -57,5 +57,5 @@ class AuthServices {
         print("Error in signout");
         print(e.toString());
     }
-}
+  }
 }
