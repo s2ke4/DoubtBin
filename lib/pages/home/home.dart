@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'burgermenu/burgermenu.dart';
-import 'package:provider/provider.dart';
-import 'package:doubtbin/model/user.dart';
-
 import 'floatingactionbutton.dart';
 
 class Home extends StatefulWidget {
@@ -15,7 +12,6 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
 
-    final user = Provider.of<MyUser>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -35,13 +31,7 @@ class _HomeState extends State<Home> {
       body: Column(
         children:<Widget>[
           Center(
-            child:Padding(
-              padding: EdgeInsets.fromLTRB(100, 50, 10, 10),
-              child:Text(
-              "You Are logged in as ${user.email}",
-              style: TextStyle(fontSize: 20),
-              )
-              )
+            child:Text("Dashboard")
           )
         ]
       ),

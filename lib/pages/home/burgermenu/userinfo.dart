@@ -10,7 +10,7 @@ class UserInfo extends StatelessWidget {
     final user = Provider.of<MyUser>(context);
 
     return Container(
-      padding: EdgeInsets.fromLTRB(0, 20, 10, 10),
+      padding: EdgeInsets.fromLTRB(0, 20, 0, 10),
       child: Row(
         children: <Widget>[
           CircleAvatar(
@@ -25,21 +25,18 @@ class UserInfo extends StatelessWidget {
                 Text(
                   user.displayName,
                   style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
+                    color: Colors.black87,
+                    fontSize: 17,
                     fontWeight: FontWeight.w300
                   ),
                 ),
                 SizedBox(height: 5,),
-                Opacity(
-                  opacity: .7,
-                  child: Text(
-                    user.email,
-                    style: TextStyle(
-                        color: Colors.grey[900],
-                        fontSize: 12,
-                        fontWeight: FontWeight.w200
-                    ),
+                Text(
+                  user.email,
+                  style: TextStyle(
+                      color: Colors.grey[900],
+                      fontSize: 12,
+                      fontWeight: FontWeight.w200
                   ),
                 ),
               ],

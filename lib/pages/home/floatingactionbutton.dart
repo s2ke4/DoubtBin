@@ -20,7 +20,7 @@ class FloatButton extends StatelessWidget {
         overlayOpacity: 0.5,
         tooltip: 'Speed Dial',
         heroTag: 'speed-dial-hero-tag',
-        elevation: 10.0,
+        elevation: 6.0,
         onOpen: () => print('OPENING DIAL'),
         onClose: () => print('DIAL CLOSED'),
         shape: CircleBorder(),

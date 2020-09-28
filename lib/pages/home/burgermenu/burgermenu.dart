@@ -1,7 +1,5 @@
 import 'package:doubtbin/pages/home/burgermenu/userinfo.dart';
-import 'package:provider/provider.dart';
 import 'package:doubtbin/services/auth.dart';
-import 'package:doubtbin/model/user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -16,14 +14,12 @@ class _BurgerMenuState extends State<BurgerMenu> {
   @override
   Widget build(BuildContext context) {
 
-    final user = Provider.of<MyUser>(context);
-
     return Container(
       child: Drawer(
         child: Column(
           children: <Widget>[
             Container(
-              height: 230,
+              height: 250,
               child: DrawerHeader(
                 padding: EdgeInsets.all(MediaQuery.of(context).size.width/25),
                 child: Column(
@@ -38,12 +34,15 @@ class _BurgerMenuState extends State<BurgerMenu> {
                       ),
                     ),
                     UserInfo(),
-                    FlatButton.icon(
-                      minWidth: double.infinity,
-                      onPressed:() async {await _auth.signOutGoogle();},
-                      icon: Icon(Icons.person, size: 20,),
-                      label: Text("Log Out"),
-                    ),
+                    ButtonTheme(
+                        minWidth: double.infinity,
+                        child: FlatButton.icon(
+                          onPressed: (){ _auth.signOutGoogle();},
+                          label:Text("Log Out"),
+                          icon: Icon(Icons.person),
+                          color: Colors.grey[200],
+                      ),
+                    )
                   ],
                 ),
                 decoration: BoxDecoration(
