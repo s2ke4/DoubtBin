@@ -8,7 +8,7 @@ class UserInfo extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final user = Provider.of<MyUser>(context);
-
+    String name = user.displayName.length>17?(user.displayName.substring(0,15)+"...."):user.displayName;
     return Container(
       padding: EdgeInsets.fromLTRB(0, 20, 0, 10),
       child: Row(
@@ -23,7 +23,7 @@ class UserInfo extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  user.displayName,
+                  name,
                   style: TextStyle(
                     color: Colors.black87,
                     fontSize: 17,
