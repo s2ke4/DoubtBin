@@ -24,7 +24,7 @@ class AuthServices {
 
       final AuthCredential _credential = GoogleAuthProvider.credential(
         accessToken:_googleSignInAuthentication.accessToken,
-        idToken:_googleSignInAuthentication.idToken,
+        idToken:_googleSignInAuthentication.idToken, d
       );
 
       final UserCredential _authResult = await _auth.signInWithCredential(_credential);

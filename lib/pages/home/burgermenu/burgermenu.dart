@@ -40,7 +40,7 @@ class _BurgerMenuState extends State<BurgerMenu> {
                           onPressed: (){ _auth.signOutGoogle();},
                           label:Text("Log Out"),
                           icon: Icon(Icons.person),
-                          color: Colors.grey[200],
+                          color: Colors.white,
                       ),
                     )
                   ],

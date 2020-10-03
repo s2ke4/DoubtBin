@@ -18,7 +18,7 @@ class _HomeState extends State<Home> {
         elevation: 4,
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: Colors.grey[900]),
-        title: Text(
+        title: Text( 
           "DoubtBin",
           style: TextStyle(
             fontSize: 22,
