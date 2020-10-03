@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'burgermenu/burgermenu.dart';
 import 'floatingactionbutton.dart';
+import 'bin.dart';
+import 'binCard.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -8,11 +10,17 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
+  List<Bin> bins = [
+    Bin(owner: 'Ashish Phophalia & Novarun Deb', binName: 'CS201/CS261'),
+    Bin(owner: 'Naveen Kumar', binName: 'CS203/CS263'),
+    Bin(owner: 'Bhupendra Kumar', binName: 'MA201'),
+    Bin(owner: 'Kamal Kishor Jha', binName: 'EC201/EC261'),
+    Bin(owner: 'Dhirendra Kumar Sinha', binName: 'EE160'),
+    Bin(owner: 'Amandeep Singh', binName: 'HS201'),
+    Bin(owner: 'Vikas Kumar', binName: 'SC201'),
+  ];
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       appBar: AppBar(
         elevation: 4,
@@ -29,11 +37,12 @@ class _HomeState extends State<Home> {
       ),
       drawer: BurgerMenu(),
       body: Column(
-        children:<Widget>[
-          Center(
-            child:Text("Dashboard")
-          )
-        ]
+        children: bins
+            .map((bin) => BinCard(
+                bin: bin,
+                
+                }))
+            .toList(),
       ),
       floatingActionButton: FloatButton(),
     );
