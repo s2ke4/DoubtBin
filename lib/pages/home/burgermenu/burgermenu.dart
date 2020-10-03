@@ -13,7 +13,6 @@ class _BurgerMenuState extends State<BurgerMenu> {
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       child: Drawer(
         child: Column(
@@ -21,10 +20,10 @@ class _BurgerMenuState extends State<BurgerMenu> {
             Container(
               //height: 250,
               child: DrawerHeader(
-                padding: EdgeInsets.all(MediaQuery.of(context).size.width/25),
+                padding: EdgeInsets.all(20.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget> [
+                  children: <Widget>[
                     Text(
                       'DoubtBin',
                       style: TextStyle(
@@ -51,13 +50,75 @@ class _BurgerMenuState extends State<BurgerMenu> {
               child: ListView(
                 padding: EdgeInsets.all(0),
                 scrollDirection: Axis.vertical,
-                children: <Widget> [
+                children: <Widget>[
                   ListTile(
-                    title: Text('Item 1'),
+                    title: Text(
+                      'CS201',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     onTap: () {},
                   ),
                   ListTile(
-                    title: Text('Item 2'),
+                    title: Text(
+                      'CS203',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    onTap: () {},
+                  ),
+                  ListTile(
+                    title: Text(
+                      'MA201',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    onTap: () {},
+                  ),
+                  ListTile(
+                    title: Text(
+                      'EC201/EC261',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    onTap: () {},
+                  ),
+                  ListTile(
+                    title: Text(
+                      'EE160',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    onTap: () {},
+                  ),
+                  ListTile(
+                    title: Text(
+                      'HS201',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    onTap: () {},
+                  ),
+                  ListTile(
+                    title: Text(
+                      'SC201',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     onTap: () {},
                   ),
                 ],
@@ -77,7 +138,9 @@ class _BurgerMenuState extends State<BurgerMenu> {
               alignment: Alignment.bottomLeft,
             ),
             FlatButton(
-              onPressed: (){ _auth.signOutGoogle();},
+              onPressed: () {
+                _auth.signOutGoogle();
+              },
               child: SizedBox(
                   width: double.infinity,
                   child: Row(
@@ -89,8 +152,7 @@ class _BurgerMenuState extends State<BurgerMenu> {
                         textAlign: TextAlign.left,
                       ),
                     ],
-                  )
-                ),
+                  )),
             )
           ],
         ),
