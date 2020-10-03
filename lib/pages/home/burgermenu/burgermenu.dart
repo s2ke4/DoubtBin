@@ -19,7 +19,7 @@ class _BurgerMenuState extends State<BurgerMenu> {
         child: Column(
           children: <Widget>[
             Container(
-              height: 250,
+              //height: 250,
               child: DrawerHeader(
                 padding: EdgeInsets.all(MediaQuery.of(context).size.width/25),
                 child: Column(
@@ -34,15 +34,6 @@ class _BurgerMenuState extends State<BurgerMenu> {
                       ),
                     ),
                     UserInfo(),
-                    ButtonTheme(
-                        minWidth: double.infinity,
-                        child: FlatButton.icon(
-                          onPressed: (){ _auth.signOutGoogle();},
-                          label:Text("Log Out"),
-                          icon: Icon(Icons.person),
-                          color: Colors.grey[200],
-                      ),
-                    )
                   ],
                 ),
                 decoration: BoxDecoration(
@@ -85,6 +76,22 @@ class _BurgerMenuState extends State<BurgerMenu> {
               ),
               alignment: Alignment.bottomLeft,
             ),
+            FlatButton(
+              onPressed: (){ _auth.signOutGoogle();},
+              child: SizedBox(
+                  width: double.infinity,
+                  child: Row(
+                    children: [
+                      Icon(Icons.exit_to_app),
+                      SizedBox(width: 9),
+                      Text(
+                        'Log Out',
+                        textAlign: TextAlign.left,
+                      ),
+                    ],
+                  )
+                ),
+            )
           ],
         ),
       ),
