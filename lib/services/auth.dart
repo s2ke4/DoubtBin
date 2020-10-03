@@ -24,7 +24,7 @@ class AuthServices {
 
       final AuthCredential _credential = GoogleAuthProvider.credential(
         accessToken:_googleSignInAuthentication.accessToken,
-        idToken:_googleSignInAuthentication.idToken, d
+        idToken:_googleSignInAuthentication.idToken,
       );
 
       final UserCredential _authResult = await _auth.signInWithCredential(_credential);
@@ -37,7 +37,6 @@ class AuthServices {
         final User _currentUser = _auth.currentUser;
         assert(_user.uid==_currentUser.uid);
         print("sign in with google succed : $_user");
-        print("checking for pull request");
         return '$_user';
       }
       return null;
