@@ -39,9 +39,8 @@ class _HomeState extends State<Home> {
       body: Column(
         children: bins
             .map((bin) => BinCard(
-                bin: bin,
-                
-                }))
+                  bin: bin,
+                ))
             .toList(),
       ),
       floatingActionButton: FloatButton(),
