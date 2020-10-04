@@ -42,7 +42,7 @@ class _BurgerMenuState extends State<BurgerMenu> {
                       blurRadius: .7,
                     )
                   ],
-                  color: Colors.white,
+                  color: Colors.white, //the box in which user info is stored
                 ),
               ),
             ),
@@ -128,6 +128,7 @@ class _BurgerMenuState extends State<BurgerMenu> {
               child: ListTile(
                 title: Text(
                   'About us',
+                  textAlign: TextAlign.left,
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,

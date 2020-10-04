@@ -1,6 +1,6 @@
 class Bin {
   String binName;
   String owner;
-
-  Bin({this.binName, this.owner}); //named parameter
+  String color;
+  Bin({this.binName, this.owner, this.color}); //named parameter
 }
