@@ -21,7 +21,7 @@ class AboutUsCard extends StatelessWidget {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget> [
-            Text(dev.name ,style: TextStyle(fontSize: 17),),
+            Text(dev.name ,style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.grey[800]), ),
             SizedBox(height: 5,),
             Text(dev.buff, style: TextStyle(height: 1.9, fontSize: 12, color: Colors.grey[700]),),
           ],
