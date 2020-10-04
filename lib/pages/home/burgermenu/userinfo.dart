@@ -25,7 +25,7 @@ class UserInfo extends StatelessWidget {
                 Text(
                   name,
                   style: TextStyle(
-                    color: Colors.black87,
+                    color: Colors.black,
                     fontSize: 17,
                     fontWeight: FontWeight.w300
                   ),
