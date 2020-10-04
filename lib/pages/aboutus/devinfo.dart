@@ -2,7 +2,6 @@ import 'package:doubtbin/model/devs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 class DevInfo extends StatelessWidget {
 
   final Devs dev;
@@ -52,7 +51,10 @@ class DevInfo extends StatelessWidget {
           child: CustomScrollView(
             slivers: <Widget>[
               SliverAppBar(
-                backgroundColor: Colors.white,
+                iconTheme: IconThemeData(
+                  color: Colors.white, //change your color here
+                ),
+                backgroundColor: Colors.grey[700],
                 pinned: true,
                 expandedHeight: 300.0,
                 flexibleSpace: FlexibleSpaceBar(
@@ -67,7 +69,7 @@ class DevInfo extends StatelessWidget {
                 ),
               ),
               SliverFixedExtentList(
-                itemExtent: MediaQuery.of(context).size.height*0.8,
+                itemExtent: MediaQuery.of(context).size.height*.8,
                 delegate: SliverChildListDelegate(
                   [
                     Container(
@@ -80,7 +82,7 @@ class DevInfo extends StatelessWidget {
                             margin: EdgeInsets.symmetric(horizontal: 15, vertical: 0),
                             child: Text(dev.buff,style: TextStyle(fontWeight: FontWeight.w500,fontSize: 12,), textAlign: TextAlign.center,)
                           ),
-                          SizedBox(height: 40,),
+                          SizedBox(height: 30,),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -100,14 +102,14 @@ class DevInfo extends StatelessWidget {
                                         child: Text('About',style: TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.bold,)),
                                       ),
                                       SizedBox(height: 10,),
-                                      Flexible(fit: FlexFit.loose, child: Text(dev.description, style: TextStyle(height: 1.7,fontSize: 12,color: Colors.grey[800]),textAlign: TextAlign.start,)),
+                                      Flexible(fit: FlexFit.loose, child: Text(dev.description, style: TextStyle(height: 1.7,fontSize: 12.5,color: Colors.grey[800]),textAlign: TextAlign.justify,)),
                                     ],
                                   ),
                                 ),
                               ),
                             ],
                           ),
-                          SizedBox(height: 50,),
+                          SizedBox(height: 30,),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
