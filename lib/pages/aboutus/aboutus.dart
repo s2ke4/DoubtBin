@@ -28,8 +28,9 @@ class _AboutUsState extends State<AboutUs> {
         child: Column(
           children: <Widget>[
             Container(
-              margin: EdgeInsets.all(20),
-              child: Text('About us', style: TextStyle(fontSize: 40,),),
+              margin: EdgeInsets.all(10),
+              padding: EdgeInsets.all(12),
+              child: Center(child: Text('About us', style: TextStyle(fontSize: 40),)),
             ),
             Column(
             children: devs.map((dev) => AboutUsCard(
