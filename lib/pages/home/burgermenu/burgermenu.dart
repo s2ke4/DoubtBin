@@ -1,3 +1,4 @@
+import 'package:doubtbin/pages/aboutus/aboutus.dart';
 import 'package:doubtbin/pages/home/burgermenu/userinfo.dart';
 import 'package:doubtbin/services/auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -126,14 +127,9 @@ class _BurgerMenuState extends State<BurgerMenu> {
             ),
             Container(
               child: ListTile(
-                title: Text(
-                  'About us',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                  ),
+                title: Text('About us', style: TextStyle(fontSize: 15,),
                 ),
-                onTap: () {},
+                onTap: () => Navigator.push(context,MaterialPageRoute(builder:(context)=>AboutUs())),
               ),
               alignment: Alignment.bottomLeft,
             ),
