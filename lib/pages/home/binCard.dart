@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'bin.dart';
+import '../../model/bin.dart';
 
 class BinCard extends StatelessWidget {
   final Bin bin;

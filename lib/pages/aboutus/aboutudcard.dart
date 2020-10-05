@@ -14,7 +14,7 @@ class AboutUsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: EdgeInsets.all(12),
-      elevation: 1,
+      elevation: 2,
       child: ListTile(
         onTap: () => Navigator.push(context,MaterialPageRoute(builder:(context)=>DevInfo(dev: dev))),
         contentPadding: EdgeInsets.all(10),

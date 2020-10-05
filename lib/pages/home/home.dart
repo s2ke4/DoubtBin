@@ -1,7 +1,8 @@
+import 'package:doubtbin/shared/appBar.dart';
 import 'package:flutter/material.dart';
 import 'burgermenu/burgermenu.dart';
-import 'floatingactionbutton.dart';
-import 'bin.dart';
+import 'floatingbutton/floatingactionbutton.dart';
+import '../../model/bin.dart';
 import 'binCard.dart';
 
 class Home extends StatefulWidget {
@@ -34,19 +35,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 4,
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: Colors.black),
-        title: Text(
-          "DoubtBin",
-          style: TextStyle(
-            fontSize: 22,
-            color: Colors.black,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
+      appBar: appBar(),
       drawer: BurgerMenu(),
       body: ListView(
         scrollDirection: Axis.vertical,
