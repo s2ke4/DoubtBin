@@ -43,7 +43,7 @@ class _BurgerMenuState extends State<BurgerMenu> {
                       blurRadius: .7,
                     )
                   ],
-                  color: Colors.white,
+                  color: Colors.white, //the box in which user info is stored
                 ),
               ),
             ),
@@ -127,9 +127,14 @@ class _BurgerMenuState extends State<BurgerMenu> {
             ),
             Container(
               child: ListTile(
-                title: Text('About us', style: TextStyle(fontSize: 15,),
+                title: Text(
+                  'About us',
+                  style: TextStyle(
+                    fontSize: 15,
+                  ),
                 ),
-                onTap: () => Navigator.push(context,MaterialPageRoute(builder:(context)=>AboutUs())),
+                onTap: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => AboutUs())),
               ),
               alignment: Alignment.bottomLeft,
             ),

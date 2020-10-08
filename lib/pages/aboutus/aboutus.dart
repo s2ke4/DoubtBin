@@ -23,7 +23,6 @@ class _AboutUsState extends State<AboutUs> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(),
-      drawer: BurgerMenu(),
       body: SafeArea(
         child: Column(
           children: <Widget>[
