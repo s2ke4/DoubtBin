@@ -1,3 +1,4 @@
+import 'package:doubtbin/pages/signin/username.dart';
 import 'package:flutter/material.dart';
 import 'burgermenu/burgermenu.dart';
 import 'floatingactionbutton.dart';
@@ -24,6 +25,18 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         elevation: 4,
+        actions: [
+          GestureDetector(
+            onTap: (){
+              Navigator.push(context, MaterialPageRoute(
+                builder: (context) => Username()
+              ));
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 12) ,
+              child: Icon(Icons.person)),
+          )
+        ],
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: Colors.grey[900]),
         title: Text(
