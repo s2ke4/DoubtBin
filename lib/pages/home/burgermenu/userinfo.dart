@@ -13,6 +13,8 @@ class UserInfo extends StatelessWidget {
     String name = user.displayName.length>17?(user.displayName.substring(0,15)+"..."):user.displayName;
 
     return FlatButton(
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
       padding: const EdgeInsets.all(0),
       onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => Profile())),
       child: Container(
@@ -27,7 +29,7 @@ class UserInfo extends StatelessWidget {
               ),
             ),
             Container(
-              padding: EdgeInsets.fromLTRB(20, 5, 10, 10),
+              padding: EdgeInsets.fromLTRB(20, 5, 0, 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[

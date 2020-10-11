@@ -3,8 +3,14 @@ import '../../model/bin.dart';
 import 'package:doubtbin/pages/rooms/roomDashboard.dart';
 
 class BinCard extends StatelessWidget {
+
   final Bin bin;
+  double pad = 70;
+  double elevation=4;
+
   BinCard({this.bin});
+  BinCard.profile ({this.bin, this.pad, this.elevation});
+
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +30,7 @@ class BinCard extends StatelessWidget {
       },
       child: Card(
         margin: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),
-        elevation: 4.0,
+        elevation: elevation,
         // color: ${bin.color}, isme error de rha hai
         child: Padding(
           padding: const EdgeInsets.fromLTRB(28.0, 15.0, 24.0, 15.0),
@@ -38,7 +44,7 @@ class BinCard extends StatelessWidget {
                   color: Colors.grey[800],
                 ),
               ),
-              SizedBox(height: 80.0),
+              SizedBox(height: pad),
               Text(
                 bin.owner,
                 style: TextStyle(

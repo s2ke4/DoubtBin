@@ -43,7 +43,7 @@ class _BurgerMenuState extends State<BurgerMenu> {
             Container(
               //height: 250,
               child: DrawerHeader(
-                padding: EdgeInsets.all(20.0),
+                padding: EdgeInsets.fromLTRB(15,20,0,20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[

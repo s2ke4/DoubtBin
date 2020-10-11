@@ -8,13 +8,14 @@ import 'package:flutter/cupertino.dart';
 
 
 class Profile extends StatefulWidget {
-
-//  this is temporary list (for demonstration)
   @override
   _ProfileState createState() => _ProfileState();
 }
 
 class _ProfileState extends State<Profile> {
+
+
+  //  this is temporary list (for demonstration)
   List<Bin> bins = [
     Bin(
         owner: 'Ashish Phophalia & Novarun Deb',
@@ -52,31 +53,49 @@ class _ProfileState extends State<Profile> {
       appBar: appBar("Profile"),
       body: ListView(
         children: [
-          Center(
-            child: Container(
-              margin: EdgeInsets.only(top: 30),
-              child: Hero(
-                tag: '$user.photoURL',
-                child: CircleAvatar(
-                  backgroundImage: NetworkImage(user.photoURL),
-                  radius: 50,
+          Stack(
+            children: <Widget> [
+              Center(
+                child: Container(
+                  margin: EdgeInsets.only(top: 20),
+                  child: Hero(
+                    tag: '$user.photoURL',
+                    child: CircleAvatar(
+                      backgroundImage: NetworkImage(user.photoURL),
+                      radius: 50,
+                    ),
+                  ),
                 ),
               ),
-            ),
+              Container(
+                alignment: Alignment.topRight,
+                padding: EdgeInsets.only(top: 10,right: 10),
+                child: ClipOval(
+                  child: Material(
+                    color: Colors.white10, // button color
+                    child: InkWell(
+                      splashColor: Colors.blueGrey, // inkwell color
+                      child: SizedBox(width: 50, height: 50, child: Icon(Icons.edit, size: 25,)),
+                      onTap: () {},
+                    ),
+                  ),
+                )
+              ),
+            ]
           ),
 
           SizedBox(height: 7),
-          Center(child: Text('Lone.Star', style: TextStyle(fontSize: 17, letterSpacing: 2, ),)),
+          Center(child: Text('Lone.Star', style: TextStyle(fontSize: 18, letterSpacing: 2, ),)),
           SizedBox(height: 10),
           Center(child: Text(user.displayName, style: TextStyle(fontSize: 30, letterSpacing: 1,))),
           SizedBox(height: 20),
 
 
-          Text(_user() , style: TextStyle(fontSize: 20, )),
+          Padding(padding: EdgeInsets.only(left: 16) ,child: Text(_user() , style: TextStyle(fontSize: 20, ))),
 
           Column(
 //            scrollDirection: Axis.vertical,
-            children: bins.map((bin) => BinCard(bin: bin)).toList(),
+            children: bins.map((bin) => BinCard.profile(bin: bin, pad : 0, elevation: 1,)).toList(),
           )
         ],
       ),
