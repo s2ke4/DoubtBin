@@ -8,7 +8,8 @@ class UserInfo extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final user = Provider.of<MyUser>(context);
-    String name = user.displayName.length>17?(user.displayName.substring(0,15)+"...."):user.displayName;
+    String name = user.displayName.length>17?(user.displayName.substring(0,15)+"..."):user.displayName;
+    String email = user.email.length>28?(user.email.substring(0,23)+"..."):user.email;
     return Container(
       padding: EdgeInsets.fromLTRB(0, 20, 0, 10),
       child: Row(
@@ -18,7 +19,7 @@ class UserInfo extends StatelessWidget {
             radius: 25,
           ),
           Container(
-            padding: EdgeInsets.fromLTRB(20, 5, 10, 10),
+            padding: EdgeInsets.fromLTRB(20, 5, 0, 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -27,16 +28,16 @@ class UserInfo extends StatelessWidget {
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 17,
-                    fontWeight: FontWeight.w300
+                    fontWeight: FontWeight.w400
                   ),
                 ),
                 SizedBox(height: 5,),
                 Text(
-                  user.email,
+                  email,
                   style: TextStyle(
-                      color: Colors.grey[900],
+                      color: Colors.black,
                       fontSize: 12,
-                      fontWeight: FontWeight.w200
+                      fontWeight: FontWeight.w300
                   ),
                 ),
               ],

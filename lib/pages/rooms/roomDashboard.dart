@@ -1,3 +1,4 @@
+import 'package:doubtbin/shared/appBar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -49,7 +50,7 @@ class _RoomDashboardState extends State<RoomDashboard> {
                   ),
                 ],
               ),
-        );
+          );
       });
     }
   }
@@ -57,11 +58,7 @@ class _RoomDashboardState extends State<RoomDashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       key:key,
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.grey[900]),
-        title: Text("room Name",style: TextStyle(color:Colors.black),),
-        backgroundColor: Colors.white,
-      )
+      appBar: appBar("Room Name"),
     );
   }
 }

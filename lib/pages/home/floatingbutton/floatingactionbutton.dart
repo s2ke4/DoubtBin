@@ -1,5 +1,5 @@
-import 'file:///C:/Users/inayu/Desktop/steps/Apps/doubtbin/lib/pages/home/floatingbutton/createRoom.dart';
-import 'file:///C:/Users/inayu/Desktop/steps/Apps/doubtbin/lib/pages/home/floatingbutton/joinRoom.dart';
+import 'joinRoom.dart';
+import 'createRoom.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';

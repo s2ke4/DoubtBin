@@ -57,7 +57,7 @@ class _BurgerMenuState extends State<BurgerMenu> {
                       'CS201',
                       style: TextStyle(
                         fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                     onTap: () {},
@@ -67,7 +67,7 @@ class _BurgerMenuState extends State<BurgerMenu> {
                       'CS203',
                       style: TextStyle(
                         fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                     onTap: () {},
@@ -77,7 +77,7 @@ class _BurgerMenuState extends State<BurgerMenu> {
                       'MA201',
                       style: TextStyle(
                         fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                     onTap: () {},
@@ -87,7 +87,7 @@ class _BurgerMenuState extends State<BurgerMenu> {
                       'EC201/EC261',
                       style: TextStyle(
                         fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                     onTap: () {},
@@ -97,7 +97,7 @@ class _BurgerMenuState extends State<BurgerMenu> {
                       'EE160',
                       style: TextStyle(
                         fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                     onTap: () {},
@@ -107,7 +107,7 @@ class _BurgerMenuState extends State<BurgerMenu> {
                       'HS201',
                       style: TextStyle(
                         fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                     onTap: () {},
@@ -117,7 +117,7 @@ class _BurgerMenuState extends State<BurgerMenu> {
                       'SC201',
                       style: TextStyle(
                         fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                     onTap: () {},

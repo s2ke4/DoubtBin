@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-AppBar appBar(){
+AppBar appBar(String title){
   return AppBar(
           elevation: 4,
           backgroundColor: Colors.white,
           iconTheme: IconThemeData(color: Colors.grey[900]),
           title: Text(
-            "DoubtBin",
+            title,
             style: TextStyle(
               fontSize: 22,
               color: Colors.black,

@@ -35,7 +35,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(),
+      appBar: appBar("DoubtBin"),
       drawer: BurgerMenu(),
       body: ListView(
         scrollDirection: Axis.vertical,
