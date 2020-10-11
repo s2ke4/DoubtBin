@@ -11,6 +11,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
+
   List<Bin> bins = [
     Bin(
       owner: 'Ashish Phophalia & Novarun Deb',
@@ -41,10 +43,11 @@ class _HomeState extends State<Home> {
       binName: 'SC201',
     ),
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(),
+      appBar: appBar("DoubtBin"),
       drawer: BurgerMenu(),
       body: ListView(
         scrollDirection: Axis.vertical,

@@ -62,7 +62,7 @@ class DevInfo extends StatelessWidget {
                     tag: 'location-${dev.imgURL}',
                     child: Image.asset(
                       'assets/${dev.imgURL}',
-                      height: 360,
+                      height: 300,
                       fit: BoxFit.cover,
                     )
                   ),
@@ -82,7 +82,7 @@ class DevInfo extends StatelessWidget {
                             margin: EdgeInsets.symmetric(horizontal: 15, vertical: 0),
                             child: Text(dev.buff,style: TextStyle(fontWeight: FontWeight.w500,fontSize: 12,), textAlign: TextAlign.center,)
                           ),
-                          SizedBox(height: 30,),
+                          SizedBox(height: 30 ,),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
