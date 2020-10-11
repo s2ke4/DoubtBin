@@ -11,6 +11,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
+
   List<Bin> bins = [
     Bin(
         owner: 'Ashish Phophalia & Novarun Deb',
