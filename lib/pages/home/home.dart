@@ -19,24 +19,33 @@ class _HomeState extends State<Home> {
 
   List<Bin> bins = [
     Bin(
-        owner: 'Ashish Phophalia & Novarun Deb',
-        binName: 'CS201/CS261',
-        color: 'Colors.red[200]'),
+      owner: 'Ashish Phophalia & Novarun Deb',
+      binName: 'CS201/CS261',
+    ),
     Bin(
-        owner: 'Naveen Kumar',
-        binName: 'CS203/CS263',
-        color: 'Colors.red[200]'),
-    Bin(owner: 'Bhupendra Kumar', binName: 'MA201', color: 'Colors.red[200]'),
+      owner: 'Naveen Kumar',
+      binName: 'CS203/CS263',
+    ),
     Bin(
-        owner: 'Kamal Kishor Jha',
-        binName: 'EC201/EC261',
-        color: 'Colors.red[200]'),
+      owner: 'Bhupendra Kumar',
+      binName: 'MA201',
+    ),
     Bin(
-        owner: 'Dhirendra Kumar Sinha',
-        binName: 'EE160',
-        color: 'Colors.red[200]'),
-    Bin(owner: 'Amandeep Singh', binName: 'HS201', color: 'Colors.red[200]'),
-    Bin(owner: 'Vikas Kumar', binName: 'SC201', color: 'Colors.red[200]'),
+      owner: 'Kamal Kishor Jha',
+      binName: 'EC201/EC261',
+    ),
+    Bin(
+      owner: 'Dhirendra Kumar Sinha',
+      binName: 'EE160',
+    ),
+    Bin(
+      owner: 'Amandeep Singh',
+      binName: 'HS201',
+    ),
+    Bin(
+      owner: 'Vikas Kumar',
+      binName: 'SC201',
+    ),
   ];
 
   @override
