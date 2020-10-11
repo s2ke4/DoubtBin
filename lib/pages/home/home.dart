@@ -1,8 +1,4 @@
-//<<<<<<< HEAD
-import 'package:doubtbin/pages/signin/username.dart';
-//=======
 import 'package:doubtbin/shared/appBar.dart';
-//>>>>>>> 9467871e390ac35c56abbddd1ef612c6995c492b
 import 'package:flutter/material.dart';
 import 'burgermenu/burgermenu.dart';
 import 'floatingbutton/floatingactionbutton.dart';
@@ -15,8 +11,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
-
   List<Bin> bins = [
     Bin(
       owner: 'Ashish Phophalia & Novarun Deb',
@@ -51,35 +45,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-//<<<<<<< HEAD
-      appBar: AppBar(
-        elevation: 4,
-        actions: [
-          GestureDetector(
-            onTap: (){
-              Navigator.push(context, MaterialPageRoute(
-                builder: (context) => Username()
-              ));
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 12) ,
-              child: Icon(Icons.person)),
-          )
-        ],
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: Colors.grey[900]),
-        title: Text(
-          "DoubtBin",
-          style: TextStyle(
-            fontSize: 22,
-            color: Colors.black,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-//=======
       appBar: appBar("DoubtBin"),
-//>>>>>>> 9467871e390ac35c56abbddd1ef612c6995c492b
       drawer: BurgerMenu(),
       body: ListView(
         scrollDirection: Axis.vertical,
