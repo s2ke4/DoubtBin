@@ -22,8 +22,7 @@ class _AboutUsState extends State<AboutUs> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(),
-      drawer: BurgerMenu(),
+      appBar: appBar("DoubtBin"),
       body: SafeArea(
         child: Column(
           children: <Widget>[

@@ -25,7 +25,7 @@ class _JoinRoomState extends State<JoinRoom> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(),
+      appBar: appBar("DoubtBin"),
       body: Container(
         child:Padding(
           padding: const EdgeInsets.all(15.0),

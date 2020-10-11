@@ -42,7 +42,7 @@ class AuthServices {
         assert(await _user.getIdToken()!=null);
         final User _currentUser = _auth.currentUser;
         assert(_user.uid==_currentUser.uid);
-        print("sign in with google succed : $_user");
+        print("sign in with google succed ");
         return '$_user';
       }
       return null;

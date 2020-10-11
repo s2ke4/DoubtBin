@@ -17,7 +17,6 @@ class SignButton extends StatelessWidget {
       onPressed: () async{
         toggleLoading();
         String user = await _auth.singInWithGoogle();
-
         if(user==null){
           toggleLoading();
         }

@@ -1,8 +1,12 @@
+//<<<<<<< HEAD
 import 'package:doubtbin/pages/signin/username.dart';
+//=======
+import 'package:doubtbin/shared/appBar.dart';
+//>>>>>>> 9467871e390ac35c56abbddd1ef612c6995c492b
 import 'package:flutter/material.dart';
 import 'burgermenu/burgermenu.dart';
-import 'floatingactionbutton.dart';
-import 'bin.dart';
+import 'floatingbutton/floatingactionbutton.dart';
+import '../../model/bin.dart';
 import 'binCard.dart';
 
 class Home extends StatefulWidget {
@@ -11,18 +15,34 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
+
   List<Bin> bins = [
-    Bin(owner: 'Ashish Phophalia & Novarun Deb', binName: 'CS201/CS261'),
-    Bin(owner: 'Naveen Kumar', binName: 'CS203/CS263'),
-    Bin(owner: 'Bhupendra Kumar', binName: 'MA201'),
-    Bin(owner: 'Kamal Kishor Jha', binName: 'EC201/EC261'),
-    Bin(owner: 'Dhirendra Kumar Sinha', binName: 'EE160'),
-    Bin(owner: 'Amandeep Singh', binName: 'HS201'),
-    Bin(owner: 'Vikas Kumar', binName: 'SC201'),
+    Bin(
+        owner: 'Ashish Phophalia & Novarun Deb',
+        binName: 'CS201/CS261',
+        color: 'Colors.red[200]'),
+    Bin(
+        owner: 'Naveen Kumar',
+        binName: 'CS203/CS263',
+        color: 'Colors.red[200]'),
+    Bin(owner: 'Bhupendra Kumar', binName: 'MA201', color: 'Colors.red[200]'),
+    Bin(
+        owner: 'Kamal Kishor Jha',
+        binName: 'EC201/EC261',
+        color: 'Colors.red[200]'),
+    Bin(
+        owner: 'Dhirendra Kumar Sinha',
+        binName: 'EE160',
+        color: 'Colors.red[200]'),
+    Bin(owner: 'Amandeep Singh', binName: 'HS201', color: 'Colors.red[200]'),
+    Bin(owner: 'Vikas Kumar', binName: 'SC201', color: 'Colors.red[200]'),
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+//<<<<<<< HEAD
       appBar: AppBar(
         elevation: 4,
         actions: [
@@ -48,8 +68,12 @@ class _HomeState extends State<Home> {
           ),
         ),
       ),
+//=======
+      appBar: appBar("DoubtBin"),
+//>>>>>>> 9467871e390ac35c56abbddd1ef612c6995c492b
       drawer: BurgerMenu(),
-      body: Column(
+      body: ListView(
+        scrollDirection: Axis.vertical,
         children: bins
             .map((bin) => BinCard(
                   bin: bin,
