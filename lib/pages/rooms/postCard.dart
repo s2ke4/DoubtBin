@@ -1,4 +1,5 @@
 import 'package:doubtbin/model/post.dart';
+import 'package:doubtbin/pages/rooms/detailedPost.dart';
 import 'package:flutter/material.dart';
 
 class PostCard extends StatelessWidget {
@@ -9,7 +10,7 @@ class PostCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print("Card Clicked");
+        Navigator.push(context,MaterialPageRoute(builder: (context)=>DetailPost()));
       },
       child: Card(
         child: Padding(

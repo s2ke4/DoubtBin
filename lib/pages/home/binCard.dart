@@ -38,7 +38,7 @@ class BinCard extends StatelessWidget {
                   color: Colors.grey[800],
                 ),
               ),
-              SizedBox(height: 100.0),
+              SizedBox(height: 80.0),
               Text(
                 bin.owner,
                 style: TextStyle(

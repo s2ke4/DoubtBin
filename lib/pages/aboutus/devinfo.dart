@@ -62,7 +62,7 @@ class DevInfo extends StatelessWidget {
                     tag: 'location-${dev.imgURL}',
                     child: Image.asset(
                       'assets/${dev.imgURL}',
-                      height: 360,
+                      height: 300,
                       fit: BoxFit.cover,
                     )
                   ),

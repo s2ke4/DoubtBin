@@ -24,6 +24,7 @@ class _ProfileState extends State<Profile> {
         owner: 'Naveen Kumar',
         binName: 'CS203/CS263',
         color: 'Colors.red[200]'),
+
     Bin(owner: 'Bhupendra Kumar', binName: 'MA201', color: 'Colors.red[200]'),
     Bin(
         owner: 'Kamal Kishor Jha',
@@ -48,7 +49,7 @@ class _ProfileState extends State<Profile> {
     }
 
     return Scaffold(
-      appBar: appBar(),
+      appBar: appBar("Profile"),
       body: ListView(
         children: [
           Center(

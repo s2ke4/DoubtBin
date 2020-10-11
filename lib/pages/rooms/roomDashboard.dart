@@ -1,3 +1,4 @@
+import 'package:doubtbin/shared/appBar.dart';
 import 'package:doubtbin/model/post.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -136,9 +137,8 @@ class _RoomDashboardState extends State<RoomDashboard> {
                   Navigator.of(context).pop();
                 },
               ),
-            ],
-          ),
-        );
+            ]
+          ));
       });
     }
   }
@@ -147,14 +147,7 @@ class _RoomDashboardState extends State<RoomDashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: key,
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.grey[900]),
-        title: Text(
-          bin.binName,
-          style: TextStyle(color: Colors.black),
-        ),
-        backgroundColor: Colors.white,
-      ),
+      appBar: appBar( bin.binName, ),
       body: ListView(
         scrollDirection: Axis.vertical,
         children: posts
