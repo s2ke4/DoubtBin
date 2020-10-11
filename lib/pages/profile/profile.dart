@@ -1,3 +1,5 @@
+import 'package:doubtbin/model/bin.dart';
+import 'package:doubtbin/pages/home/binCard.dart';
 import 'package:doubtbin/shared/appBar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -5,10 +7,35 @@ import 'package:doubtbin/model/user.dart';
 import 'package:flutter/cupertino.dart';
 
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
 
 //  this is temporary list (for demonstration)
-  List <String> bins = ["Bin 1", "Bin 2", "Bin 3", "Bin 4","Bin 5", "Bin 6","Bin 7", "Bin 8","Bin 9", "Bin 10" ];
+  @override
+  _ProfileState createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
+  List<Bin> bins = [
+    Bin(
+        owner: 'Ashish Phophalia & Novarun Deb',
+        binName: 'CS201/CS261',
+        color: 'Colors.red[200]'),
+    Bin(
+        owner: 'Naveen Kumar',
+        binName: 'CS203/CS263',
+        color: 'Colors.red[200]'),
+    Bin(owner: 'Bhupendra Kumar', binName: 'MA201', color: 'Colors.red[200]'),
+    Bin(
+        owner: 'Kamal Kishor Jha',
+        binName: 'EC201/EC261',
+        color: 'Colors.red[200]'),
+    Bin(
+        owner: 'Dhirendra Kumar Sinha',
+        binName: 'EE160',
+        color: 'Colors.red[200]'),
+    Bin(owner: 'Amandeep Singh', binName: 'HS201', color: 'Colors.red[200]'),
+    Bin(owner: 'Vikas Kumar', binName: 'SC201', color: 'Colors.red[200]'),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +49,10 @@ class Profile extends StatelessWidget {
 
     return Scaffold(
       appBar: appBar(),
-      body: Center(
-        child: Column(
-          children: [
-            Container(
+      body: ListView(
+        children: [
+          Center(
+            child: Container(
               margin: EdgeInsets.only(top: 30),
               child: Hero(
                 tag: '$user.photoURL',
@@ -35,53 +62,22 @@ class Profile extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 7),
-            Text('Lone.Star', style: TextStyle(fontSize: 17, letterSpacing: 2, ),),
-            SizedBox(height: 10),
-            Text(user.displayName, style: TextStyle(fontSize: 30, letterSpacing: 1,)),
-            SizedBox(height: 20),
-            Text(_user(), style: TextStyle(fontSize: 20,)),
-            Container(
-              child: ListView(
-                scrollDirection: Axis.vertical,
-                children: bins.map((bin) => BinList(bin: bin)).toList(),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
+          ),
+
+          SizedBox(height: 7),
+          Center(child: Text('Lone.Star', style: TextStyle(fontSize: 17, letterSpacing: 2, ),)),
+          SizedBox(height: 10),
+          Center(child: Text(user.displayName, style: TextStyle(fontSize: 30, letterSpacing: 1,))),
+          SizedBox(height: 20),
 
 
-class BinList extends StatelessWidget {
+          Text(_user() , style: TextStyle(fontSize: 20, )),
 
-  final  bin;
-  BinList({this.bin});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 0),
-      elevation: 0,
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              bin,
-              style: TextStyle(
-                fontSize: 15.0,
-                color: Colors.grey[800],
-              ),
-            ),
-            SizedBox(
-              height: 2.0,
-            ),
-          ],
-        ),
+          Column(
+//            scrollDirection: Axis.vertical,
+            children: bins.map((bin) => BinCard(bin: bin)).toList(),
+          )
+        ],
       ),
     );
   }

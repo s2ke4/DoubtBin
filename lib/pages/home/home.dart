@@ -34,6 +34,7 @@ class _HomeState extends State<Home> {
     Bin(owner: 'Amandeep Singh', binName: 'HS201', color: 'Colors.red[200]'),
     Bin(owner: 'Vikas Kumar', binName: 'SC201', color: 'Colors.red[200]'),
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
