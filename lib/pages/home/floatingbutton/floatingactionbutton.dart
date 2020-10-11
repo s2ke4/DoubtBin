@@ -1,5 +1,5 @@
-import 'file:///C:/Users/inayu/Desktop/steps/Apps/doubtbin/lib/pages/home/floatingbutton/createRoom.dart';
-import 'file:///C:/Users/inayu/Desktop/steps/Apps/doubtbin/lib/pages/home/floatingbutton/joinRoom.dart';
+import 'package:doubtbin/pages/home/floatingbutton/createRoom.dart';
+import 'package:doubtbin/pages/home/floatingbutton/joinRoom.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -8,12 +8,12 @@ class FloatButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child : SpeedDial(
+      child: SpeedDial(
         marginBottom: 25,
         marginRight: 25,
         animatedIcon: AnimatedIcons.menu_close,
         animatedIconTheme: IconThemeData(size: 25.0),
-       //child: Icon(Icons.add),
+        //child: Icon(Icons.add),
         visible: true,
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
@@ -31,13 +31,14 @@ class FloatButton extends StatelessWidget {
               child: Icon(Icons.create),
               backgroundColor: Colors.red,
               label: '  Join  ',
-              onTap: () => Navigator.push(context,MaterialPageRoute(builder:(context)=>JoinRoom()))
-          ),
+              onTap: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => JoinRoom()))),
           SpeedDialChild(
             child: Icon(Icons.add),
             backgroundColor: Colors.blue,
             label: 'Create',
-            onTap: () => Navigator.push(context,MaterialPageRoute(builder:(context)=>CreateRoom())),
+            onTap: () => Navigator.push(
+                context, MaterialPageRoute(builder: (context) => CreateRoom())),
           ),
         ],
       ),
