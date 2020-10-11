@@ -38,6 +38,7 @@ dependencies:
   uuid: ^2.2.2
   lipsum: ^1.0.1
   url_launcher: ^5.7.2
+  cached_network_image: ^2.3.2+1
 
 dev_dependencies:
   flutter_test:
