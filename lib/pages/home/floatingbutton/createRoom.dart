@@ -28,7 +28,7 @@ class _CreateRoomState extends State<CreateRoom> {
       appBar: appBar("DoubtBin"),
       body: Container(
         child:Padding(
-          padding: const EdgeInsets.all(15.0),
+          padding: const EdgeInsets.symmetric(horizontal:24),
           child: Column(
             children: [
               SizedBox(height:30),
@@ -50,11 +50,20 @@ class _CreateRoomState extends State<CreateRoom> {
                   labelText:"Room Description",
                   errorText: toolongDescription?"Room Description too long":null),
                 ),
-              SizedBox(height:80),
-              RaisedButton(
-                onPressed: createRoom,
-                child: Text("Create",style: TextStyle(color: Colors.white,fontSize: 18)),
-                color: Colors.blue
+              SizedBox(height:25),
+              GestureDetector(
+                child: Container(
+                  alignment: Alignment.center,
+                  width: MediaQuery.of(context).size.width,
+                  padding: EdgeInsets.symmetric(vertical: 12),
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(colors: [
+                    const Color(0xff007EF4),
+                    const Color(0xFF2A75BC),
+                  ])),
+                  child: Text("Create",style: TextStyle(color:Colors.white,fontSize:18),),
+                ),
+                onTap: createRoom,
               )
             ],
           )

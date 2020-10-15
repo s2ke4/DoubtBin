@@ -13,7 +13,7 @@ class AuthServices {
 
 
   MyUser _userFromFirebase(User user){
-      return user!=null?MyUser(uid:user.uid,photoURL: user.photoURL,displayName: user.displayName,email: user.email):null;
+      return user!=null?MyUser(uid:user.uid,photoURL: user.photoURL,displayName: user.displayName,email: user.email,userName: ""):null;
   }
 
   //stream for auth state change

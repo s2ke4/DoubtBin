@@ -5,10 +5,17 @@ import 'package:doubtbin/shared/appBar.dart';
 import 'package:doubtbin/shared/loading.dart';
 import 'package:flutter/material.dart';
 
-class DetailPost extends StatelessWidget {
+enum WhyFarther { delete, markAsResolved, markAsUnresolved, update }
 
+class DetailPost extends StatefulWidget {
+
+  @override
+  _DetailPostState createState() => _DetailPostState();
+}
+
+class _DetailPostState extends State<DetailPost> {
   List<String> images = ["https://i.ytimg.com/vi/DJtL95DgsoM/maxresdefault.jpg"];
-
+  var _selection;
   @override
   Widget build(BuildContext context) {
 
@@ -37,7 +44,56 @@ class DetailPost extends StatelessWidget {
                               SizedBox(width: 10,),
                             ]
                           ),
-                          Icon(Icons.access_time,color:Colors.red,size: 30,)
+                          Row(
+                            children:[
+                              Icon(Icons.access_time,color:Colors.red,size: 30,),
+                              PopupMenuButton<WhyFarther>(
+                                onSelected: (WhyFarther result) { setState(() {  _selection = result;print(_selection); }); },
+                                itemBuilder: (BuildContext context) => <PopupMenuEntry<WhyFarther>>[
+                                  PopupMenuItem<WhyFarther>(
+                                    value: WhyFarther.delete,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text('Delete this post'),
+                                        Icon(Icons.delete)
+                                      ],
+                                    ),
+                                  ),
+                                  PopupMenuItem<WhyFarther>(
+                                    value: WhyFarther.markAsResolved,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text('Mark as Resolved'),
+                                        Icon(Icons.check,color:Colors.green)
+                                      ],
+                                    ),
+                                  ),
+                                  PopupMenuItem<WhyFarther>(
+                                    value: WhyFarther.markAsUnresolved,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text('Mark as Unresolved'),
+                                        Icon(Icons.access_time,color:Colors.red)
+                                      ],
+                                    ),
+                                  ),
+                                  PopupMenuItem<WhyFarther>(
+                                    value: WhyFarther.update,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text('Edit post'),
+                                        Icon(Icons.edit)
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ]
+                          )
                         ],
                       ),
                       Divider(),
