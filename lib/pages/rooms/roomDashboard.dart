@@ -1,3 +1,4 @@
+import 'package:doubtbin/pages/rooms/newPost.dart';
 import 'package:doubtbin/shared/appBar.dart';
 import 'package:doubtbin/model/post.dart';
 import 'package:flutter/material.dart';
@@ -109,36 +110,36 @@ class _RoomDashboardState extends State<RoomDashboard> {
     if (firstTime) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         await showDialog<String>(
-          context: context,
-          builder: (BuildContext context) => AlertDialog(
-            title: Text("Copy Below Code And share with other to invite them"),
-            content: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(id),
-                GestureDetector(
-                  child: Icon(Icons.content_copy),
-                  onTap: () {
-                    Clipboard.setData(new ClipboardData(text: id));
-                    key.currentState.showSnackBar(new SnackBar(
-                      content: new Text("Copied to Clipboard"),
-                    ));
-                    Future.delayed(Duration(seconds: 2), () {
-                      key.currentState.hideCurrentSnackBar();
-                    });
-                  },
-                )
-              ],
-            ),
-            actions: <Widget>[
-              FlatButton(
-                child: Text("OK"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ]
-          ));
+            context: context,
+            builder: (BuildContext context) => AlertDialog(
+                    title: Text(
+                        "Copy Below Code And share with other to invite them"),
+                    content: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(id),
+                        GestureDetector(
+                          child: Icon(Icons.content_copy),
+                          onTap: () {
+                            Clipboard.setData(new ClipboardData(text: id));
+                            key.currentState.showSnackBar(new SnackBar(
+                              content: new Text("Copied to Clipboard"),
+                            ));
+                            Future.delayed(Duration(seconds: 2), () {
+                              key.currentState.hideCurrentSnackBar();
+                            });
+                          },
+                        )
+                      ],
+                    ),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: Text("OK"),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ]));
       });
     }
   }
@@ -147,7 +148,9 @@ class _RoomDashboardState extends State<RoomDashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: key,
-      appBar: appBar( bin.binName, ),
+      appBar: appBar(
+        bin.binName,
+      ),
       body: ListView(
         scrollDirection: Axis.vertical,
         children: posts
@@ -157,7 +160,10 @@ class _RoomDashboardState extends State<RoomDashboard> {
             .toList(),
       ),
       floatingActionButton: new FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => NewPost()));
+        },
         child: new Icon(Icons.add),
       ),
     );
