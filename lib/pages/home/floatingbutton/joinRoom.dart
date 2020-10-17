@@ -2,6 +2,7 @@ import 'package:doubtbin/pages/rooms/roomDashboard.dart';
 import 'package:doubtbin/shared/appBar.dart';
 import 'package:flutter/material.dart';
 
+
 class JoinRoom extends StatefulWidget {
   @override
   _JoinRoomState createState() => _JoinRoomState();
@@ -10,14 +11,19 @@ class JoinRoom extends StatefulWidget {
 class _JoinRoomState extends State<JoinRoom> {
   TextEditingController joinroomNameController = TextEditingController();
   bool validCode = true;
+
+
+
+
   joinRoom(){
     setState(()=>joinroomNameController.text.trim().isEmpty?validCode = false:validCode = true);
+
     if(validCode)
     {
       //backend code to check code status
       if(validCode)
       {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>RoomDashboard(firstTime:false,id:"122345")));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>RoomDashboard(firstTime:false,roomCode:"122345")));
       }
     }
   }
@@ -35,7 +41,7 @@ class _JoinRoomState extends State<JoinRoom> {
               TextFormField(
                 controller: joinroomNameController,
                 decoration: InputDecoration(
-                  hintText:"Enter Room Code",
+                  hintText:"Enter 10 digit Room Code",
                   border: OutlineInputBorder(),
                   labelText:"Room Code",
                   errorText: validCode?null:"Room Not Found, Please Enter Correct Code",

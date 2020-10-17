@@ -1,6 +1,11 @@
 import 'package:doubtbin/pages/rooms/roomDashboard.dart';
 import 'package:doubtbin/shared/appBar.dart';
 import 'package:flutter/material.dart';
+import 'package:doubtbin/services/room.dart';
+import 'package:provider/provider.dart';
+import 'package:doubtbin/model/user.dart';
+import 'dart:math';
+
 
 class CreateRoom extends StatefulWidget {
   @override
@@ -14,12 +19,38 @@ class _CreateRoomState extends State<CreateRoom> {
   bool toolong=false;
   bool toolongDescription=false;
 
-  createRoom(){
+
+
+  final myController = TextEditingController();
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    myController.dispose();
+    super.dispose();
+  }
+
+//  random string generate for room
+  final _chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+  Random _rnd = Random();
+
+  String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
+      length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+
+  Future createRoom() async {
+
     setState(()=>roomNameController.text.trim().length > 50?toolong = true:toolong = false);
     setState(()=>roomDescriptionController.text.trim().length > 100?toolongDescription = true:toolong = false);
     setState(()=>roomNameController.text.trim().isEmpty?tooShortName = true:tooShortName = false);
     if(!tooShortName && !toolong && !toolongDescription){
-      Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>RoomDashboard(id:"123456789",firstTime:true)));
+
+//      room
+      final roomCode = getRandomString(10);
+      print(roomCode);
+      final _user = Provider.of<MyUser>(context,listen:false);
+      await BinDatabase(roomCode: roomCode).createRoom(roomCode, roomNameController.text , roomDescriptionController.text,);
+      await BinDatabase(roomCode: roomCode).addmembers(_user.uid);
+
+      Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>RoomDashboard(roomCode: roomCode,firstTime:true)));
     }
   }
   @override

@@ -1,4 +1,5 @@
 class Post {
+  String postID;
   String postHeading;
   String postBody;
   String author;
@@ -7,7 +8,10 @@ class Post {
   int numberOfComments;
   int numberOfLikes;
   int numberOfDislikes;
+
+
   Post({
+    this.postID,
     this.postHeading,
     this.postBody,
     this.author,

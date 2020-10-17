@@ -5,13 +5,27 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:doubtbin/services/room.dart';
+import 'package:provider/provider.dart';
+import 'package:doubtbin/model/user.dart';
+import 'dart:math';
+
 
 class NewPost extends StatefulWidget {
+
+  String roomCode;
+  NewPost({this.roomCode});
+
   @override
-  _NewPostState createState() => _NewPostState();
+  _NewPostState createState() => _NewPostState(roomCode: roomCode);
 }
 
 class _NewPostState extends State<NewPost> {
+
+  String roomCode;
+  _NewPostState({this.roomCode});
+
+
   TextEditingController postHeadingController = TextEditingController();
   TextEditingController postDescriptionController = TextEditingController();
   bool tooLong = false;
@@ -34,7 +48,18 @@ class _NewPostState extends State<NewPost> {
     });
   }
 
-  newPost() {
+
+  final _chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+  Random _rnd = Random();
+
+  String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
+      length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+
+
+
+
+
+  Future newPost() async{
     setState(() => postHeadingController.text.trim().length > 50
         ? tooLong = true
         : tooLong = false);
@@ -48,12 +73,21 @@ class _NewPostState extends State<NewPost> {
     print(tooShortDescription);
     print(tooShortHeading);
     if (!tooShortHeading && !tooLong && !tooShortDescription) {
+
+//here is the connection
+      final postID = getRandomString(10);
+      final _user = Provider.of<MyUser>(context,listen:false);
+      await BinDatabase(roomCode: roomCode,).addPost(
+          postID, postHeadingController.text,
+          postDescriptionController.text,
+          _user.uid, false, 0, 0, 0, 0);
+
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  RoomDashboard(id: "123456789", firstTime: true)));
-    }
+                  RoomDashboard(roomCode: roomCode, firstTime: true)));
+      }
   }
 
   @override
