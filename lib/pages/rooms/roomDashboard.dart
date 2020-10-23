@@ -1,29 +1,29 @@
 import 'package:doubtbin/pages/rooms/newPost.dart';
 import 'package:doubtbin/pages/rooms/postList.dart';
+import 'package:doubtbin/services/room.dart';
 import 'package:doubtbin/shared/appBar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:doubtbin/model/bin.dart';
 
 class RoomDashboard extends StatefulWidget {
-  bool firstTime;
-  Bin bin;
-  String roomCode;
+  final bool firstTime;
+  final String roomCode;
+  final String roomName;
 
-  RoomDashboard({this.firstTime, this.bin, this.roomCode});
+  RoomDashboard({this.firstTime,  this.roomCode,this.roomName});
 
   @override
   _RoomDashboardState createState() =>
-      _RoomDashboardState(firstTime: firstTime, bin: bin, roomCode: roomCode);
+      _RoomDashboardState(firstTime: firstTime,roomCode: roomCode,roomName:roomName);
 }
 
 class _RoomDashboardState extends State<RoomDashboard> {
   final key = new GlobalKey<ScaffoldState>();
   bool firstTime;
-  Bin bin;
   String roomCode;
+  String roomName;
 
-  _RoomDashboardState({this.firstTime, this.bin, this.roomCode});
+  _RoomDashboardState({this.firstTime, this.roomCode,this.roomName});
 
   //this list is created just for front-end, we will fetch the data from firebase and try to store it in a list so that the code remains the same.
 //  List<Post> posts = [
@@ -119,7 +119,7 @@ class _RoomDashboardState extends State<RoomDashboard> {
                     content: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(roomCode),
+                        Flexible(child: Text(roomCode,softWrap: true,)),
                         GestureDetector(
                           child: Icon(Icons.content_copy),
                           onTap: () {
@@ -141,24 +141,26 @@ class _RoomDashboardState extends State<RoomDashboard> {
                           Navigator.of(context).pop();
                         },
                       ),
-                    ]));
-      });
+                    ]
+                  )
+              );
+        }
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       key: key,
       appBar: appBar(
-        roomCode,
+        roomName,
       ),
-      body: PostList(),
+      body: BinDatabase(roomCode:roomCode).showAllPost(),
       floatingActionButton: new FloatingActionButton(
         onPressed: () {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => NewPost(roomCode: roomCode)));
+              context, MaterialPageRoute(builder: (context) => NewPost(roomCode: roomCode,roomName:roomName)));
         },
         child: new Icon(Icons.add),
       ),

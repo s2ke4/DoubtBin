@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 
 class PostCard extends StatelessWidget {
   final Post post;
-  PostCard({this.post});
+  final String roomCode;
+  PostCard({this.post,this.roomCode});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context,MaterialPageRoute(builder: (context)=>DetailPost()));
+        Navigator.push(context,MaterialPageRoute(builder: (context)=>DetailPost(post:post,roomCode:roomCode)));
       },
       child: Card(
         child: Padding(
@@ -22,21 +23,6 @@ class PostCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(children: [
-                    // CircleAvatar(
-                    //   backgroundImage: AssetImage('assets/1.jpg'),
-                    //   radius: 17,
-                    // ),
-                    // SizedBox(
-                    //   width: 10,
-                    // ),
-                    // Text(
-                    //   "Keshav",
-                    //   style: TextStyle(fontSize: 17),
-                    // ),
-                    // SizedBox(
-                    //   width: 10,
-                    // ),
-                    /*here begins the condensed form of card*/
                     Text(post.postHeading,
                         style: TextStyle(
                             fontSize: 21, fontWeight: FontWeight.bold)),
@@ -55,8 +41,6 @@ class PostCard extends StatelessWidget {
                 ],
               ),
               Divider(),
-              // Text("Post Heading",
-              //     style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold)),
               SizedBox(height: 20),
               Text(
                 post.postBody.length > 200
@@ -67,13 +51,6 @@ class PostCard extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 10),
-              // CachedNetworkImage(
-              //   fit: BoxFit.cover,
-              //   imageUrl:
-              //       "https://media.cheggcdn.com/media%2F109%2F1098ff33-8a74-446f-bf49-348232f79c1b%2Fimage.png",
-              //   placeholder: (context, url) => Loading(),
-              //   errorWidget: (context, url, error) => Icon(Icons.error),
-              // ),
               SizedBox(height: 10),
               Divider(),
               Row(
@@ -91,14 +68,6 @@ class PostCard extends StatelessWidget {
                     Icon(Icons.image, size: 27),
                     SizedBox(width: 10),
                     Text(post.numberOfAttachment.toString()),
-                    // if(post.isAttachment)
-                    // {
-                    //   Icon(
-                    //       Icons.check,
-                    //       color: Colors.green[900],
-                    //       size: 30,
-                    //     )
-                    // }
                   ]),
                   Padding(
                     padding: const EdgeInsets.only(right: 8.0),

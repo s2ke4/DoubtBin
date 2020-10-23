@@ -1,6 +1,5 @@
 import 'package:doubtbin/pages/aboutus/aboutus.dart';
 import 'package:doubtbin/pages/home/burgermenu/userinfo.dart';
-import 'package:doubtbin/pages/signin/username.dart';
 import 'package:doubtbin/services/auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -100,7 +99,6 @@ class _BurgerMenuState extends State<BurgerMenu> {
                                           roomCode: "123456789", //this we will fetch from firebase on linking backend
                                           firstTime:
                                               false, //true only when the user creates or joins the room and then visits it for first time
-                                          bin: bin,
                                         )));
                             // Navigator.push(context,MaterialPageRoute(builder: (context)=>PostPage())),
                           },

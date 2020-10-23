@@ -1,6 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:doubtbin/model/post.dart';
+import 'package:doubtbin/pages/home/home.dart';
 import 'package:doubtbin/pages/rooms/comment.dart';
 import 'package:doubtbin/pages/rooms/detailedImage.dart';
+import 'package:doubtbin/services/room.dart';
 import 'package:doubtbin/shared/appBar.dart';
 import 'package:doubtbin/shared/loading.dart';
 import 'package:flutter/material.dart';
@@ -9,18 +12,46 @@ enum WhyFarther { delete, markAsResolved, markAsUnresolved, update }
 
 class DetailPost extends StatefulWidget {
 
+  Post post;
+  String roomCode;
+  DetailPost({this.post,this.roomCode});
   @override
-  _DetailPostState createState() => _DetailPostState();
+  _DetailPostState createState() => _DetailPostState(post:post,roomCode:roomCode);
 }
 
 class _DetailPostState extends State<DetailPost> {
-  List<String> images = ["https://i.ytimg.com/vi/DJtL95DgsoM/maxresdefault.jpg"];
+
+  Post post;
+  String roomCode;
+  List<String> images;
+  String roomOwner;
+  _DetailPostState({this.post,this.roomCode});
+  String userName,userImageURL,roomName='';
+  
+  @override
+  void initState(){
+    super.initState();
+    getInfo();
+  }
+
+  getInfo()async{
+    final val =await userRef.doc(post.author).get();
+    final binref = await binCollection.doc(roomCode).get();
+    setState((){
+      userName = val.data()['userName'];
+      userImageURL = val.data()['circleAvatar'];
+      images = post.images;
+      roomOwner = binref.data()['ownerId'];
+      roomName = binref.data()['displayName'];
+    });
+  }
+
   var _selection;
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: appBar("Room Name"),
+      appBar: appBar(roomName),
       body: GestureDetector(
         onTap: (){ FocusScope.of(context).requestFocus(new FocusNode());},
         child: Stack(
@@ -36,17 +67,20 @@ class _DetailPostState extends State<DetailPost> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children:[
-                          Row(
+                          (userName==null||userImageURL==null)?Loading():Row(
                             children:[
-                              CircleAvatar(backgroundImage: AssetImage('assets/1.jpg'),radius: 17,),
+                              CircleAvatar(backgroundImage: NetworkImage(userImageURL),radius: 17,),
                               SizedBox(width: 10,),
-                              Text("Keshav",style: TextStyle(fontSize: 17),),
+                              Text(userName,style: TextStyle(fontSize: 17),),
                               SizedBox(width: 10,),
                             ]
                           ),
                           Row(
                             children:[
-                              Icon(Icons.access_time,color:Colors.red,size: 30,),
+                              post.isResolved == true
+                                ? (Icon(Icons.check,color: Colors.green[900],size: 30,))
+                                : (Icon(Icons.access_time,color: Colors.red,size: 30,)),
+                              (currentUser.uid==roomOwner || currentUser.uid==post.author)?
                               PopupMenuButton<WhyFarther>(
                                 onSelected: (WhyFarther result) { setState(() {  _selection = result;print(_selection); }); },
                                 itemBuilder: (BuildContext context) => <PopupMenuEntry<WhyFarther>>[
@@ -60,6 +94,7 @@ class _DetailPostState extends State<DetailPost> {
                                       ],
                                     ),
                                   ),
+                                  post.isResolved == false?
                                   PopupMenuItem<WhyFarther>(
                                     value: WhyFarther.markAsResolved,
                                     child: Row(
@@ -69,7 +104,7 @@ class _DetailPostState extends State<DetailPost> {
                                         Icon(Icons.check,color:Colors.green)
                                       ],
                                     ),
-                                  ),
+                                  ):
                                   PopupMenuItem<WhyFarther>(
                                     value: WhyFarther.markAsUnresolved,
                                     child: Row(
@@ -81,28 +116,27 @@ class _DetailPostState extends State<DetailPost> {
                                     ),
                                   ),
                                   PopupMenuItem<WhyFarther>(
-                                    value: WhyFarther.update,
-                                    child: Row(
+                                    value: (currentUser.uid==post.author)?WhyFarther.update:null,
+                                    child: (currentUser.uid==post.author)?Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text('Edit post'),
                                         Icon(Icons.edit)
                                       ],
-                                    ),
+                                    ):null,
                                   ),
                                 ],
-                              )
+                              ):Container()
                             ]
                           )
                         ],
                       ),
                       Divider(),
-                      Text("Post Heading",style:TextStyle(fontSize: 21,fontWeight: FontWeight.bold) ),
+                      Text(post.postHeading,style:TextStyle(fontSize: 21,fontWeight: FontWeight.bold) ),
                       SizedBox(height:12),
-                      Text("This is post body hello i have one doubt can u clear my doubt this is imp doubt this question is surely there on exam so please help me out to find the solution of this question any kind of help would be appreciated",
-                          style: TextStyle(fontSize: 16,),),
+                      Text(post.postBody,style: TextStyle(fontSize: 16,),),
                       SizedBox(height: 10),
-                      GestureDetector(
+                      images==null?Text(""):GestureDetector(
                         child: 
                         Stack(
                           children: [
@@ -146,11 +180,11 @@ class _DetailPostState extends State<DetailPost> {
                             children:[
                               Icon(Icons.thumb_up,size:27),
                               SizedBox(width:10),
-                              Text("20"),
+                              Text(post.numberOfLikes.toString()),
                               SizedBox(width:15),
                               Icon(Icons.thumb_down,size:27),
                               SizedBox(width:10),
-                              Text("20"),
+                              Text(post.numberOfDislikes.toString())
                             ]
                           ),
                           Padding(
@@ -159,7 +193,7 @@ class _DetailPostState extends State<DetailPost> {
                               children:[
                                 Icon(Icons.comment,size:27),
                                 SizedBox(width:10),
-                                Text("20"),
+                                Text(post.numberOfComments.toString())
                               ]
                             ),
                           )
@@ -169,9 +203,7 @@ class _DetailPostState extends State<DetailPost> {
                   ),
                 ),
               ),
-              Comment(),
-              Comment(),
-              Comment(),
+              //comments will come here
               SizedBox(height:70)
              ]
             ),

@@ -21,12 +21,10 @@ class BinCard extends StatelessWidget {
             context,
             MaterialPageRoute(
                 builder: (context) => RoomDashboard(
-                      roomCode: "123456789", //this we will fetch from firebase on linking backend
-                      firstTime:
-                          false, //true only when the user creates or joins the room and then visits it for first time
-                      bin: bin,
+                      roomCode: bin.roomId, 
+                      firstTime:false, //true only when the user creates or joins the room and then visits it for first time
+                      roomName: bin.binName,
                     )));
-        // Navigator.push(context,MaterialPageRoute(builder: (context)=>PostPage())),
       },
       child: Card(
         margin: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),

@@ -1,5 +1,8 @@
+import 'package:doubtbin/pages/home/home.dart';
 import 'package:doubtbin/pages/rooms/roomDashboard.dart';
+import 'package:doubtbin/services/room.dart';
 import 'package:doubtbin/shared/appBar.dart';
+import 'package:doubtbin/shared/loading.dart';
 import 'package:flutter/material.dart';
 
 
@@ -11,19 +14,21 @@ class JoinRoom extends StatefulWidget {
 class _JoinRoomState extends State<JoinRoom> {
   TextEditingController joinroomNameController = TextEditingController();
   bool validCode = true;
-
-
-
-
-  joinRoom(){
-    setState(()=>joinroomNameController.text.trim().isEmpty?validCode = false:validCode = true);
+  bool isLoading = false;
+  joinRoom()async{
+    var code = joinroomNameController.text.trim();
+    setState(()=>code.isEmpty?validCode = false:validCode = true);
 
     if(validCode)
     {
-      //backend code to check code status
-      if(validCode)
+      setState(()=>isLoading = true);
+      String name = await BinDatabase(roomCode:code).checkingCode(currentUser.uid);
+      if(name==null){
+        setState(()=>{validCode=false,isLoading = false});
+      }
+      else
       {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>RoomDashboard(firstTime:false,roomCode:"122345")));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>RoomDashboard(firstTime:false,roomCode:code,roomName: name,)));
       }
     }
   }
@@ -32,7 +37,7 @@ class _JoinRoomState extends State<JoinRoom> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar("DoubtBin"),
-      body: Container(
+      body: isLoading?Loading():Container(
         child:Padding(
           padding:EdgeInsets.symmetric(horizontal: 24),
           child: Column(
@@ -41,7 +46,7 @@ class _JoinRoomState extends State<JoinRoom> {
               TextFormField(
                 controller: joinroomNameController,
                 decoration: InputDecoration(
-                  hintText:"Enter 10 digit Room Code",
+                  hintText:"Enter Room Code",
                   border: OutlineInputBorder(),
                   labelText:"Room Code",
                   errorText: validCode?null:"Room Not Found, Please Enter Correct Code",

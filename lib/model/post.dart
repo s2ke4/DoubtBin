@@ -1,5 +1,6 @@
 class Post {
   String postID;
+  List<String> images;
   String postHeading;
   String postBody;
   String author;
@@ -21,4 +22,5 @@ class Post {
     this.numberOfLikes,
     this.numberOfDislikes,
   }); //named parameter
+
 }
