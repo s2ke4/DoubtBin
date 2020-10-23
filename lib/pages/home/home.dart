@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doubtbin/model/user.dart';
 import 'package:doubtbin/pages/signin/username.dart';
+import 'package:doubtbin/services/room.dart';
 import 'package:doubtbin/shared/appBar.dart';
 import 'package:doubtbin/shared/loading.dart';
 import 'package:flutter/material.dart';
@@ -78,14 +79,7 @@ class _HomeState extends State<Home> {
     return !isCheck?Loading():(firstTime)?new Username(switchHomeAndUserName):Scaffold(
       appBar: appBar("DoubtBin"),
       drawer: BurgerMenu(),
-      body: ListView(
-        scrollDirection: Axis.vertical,
-        children: bins
-            .map((bin) => BinCard(
-                  bin: bin,
-                ))
-            .toList(),
-      ),
+      body: BinDatabase().showRoom(currentUser.uid),
       floatingActionButton: FloatButton(),
     );
   }

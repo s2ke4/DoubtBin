@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:doubtbin/model/bin.dart';
 import 'package:doubtbin/model/post.dart';
+import 'package:doubtbin/pages/home/binCard.dart';
 import 'package:doubtbin/pages/home/home.dart';
 import 'package:doubtbin/pages/rooms/postCard.dart';
 import 'package:doubtbin/shared/loading.dart';
@@ -35,6 +37,33 @@ class BinDatabase{
     await userRef.doc(uid).collection("joinedRoom").doc(roomCode).set({
       "joined":true
     });
+  }
+
+  showRoom(String userId){
+    return StreamBuilder(
+      stream:userRef.doc(userId).collection("joinedRoom").snapshots(),
+      builder:(context,snapshot){
+        if(!snapshot.hasData){
+          return Loading();
+        }
+        List<BinCard> allCard = [];
+        snapshot.data.docs.map((doc)async{
+          final coll = await binCollection.doc(doc.id).get();
+          String binName= coll.data()['displayName'];
+          String ownerId=coll.data()['ownerId'];
+          String ownerName = coll.data()['ownerName'];
+          String roomId = doc.id;
+          print(binName);
+          allCard.add(BinCard(
+            bin:Bin( binName: binName,owner: ownerName,roomId: roomId)
+          ));
+        }).toList();
+
+        return ListView(
+          children:allCard
+        );
+      }
+    );
   }
 
   //when a person joined a room then
@@ -103,27 +132,6 @@ class BinDatabase{
         );
       },
     );
-  }
-
-  List<Post> _brewListFromSnapshot(QuerySnapshot snapshot) {
-    print("kamal hai bhaishabh 2");
-    return snapshot.docs.map((doc){
-      return Post(
-        postID: doc.data()['postID'],
-        postHeading: doc.data()['postHeading'],
-        postBody: doc.data()['postBody'],
-        author: doc.data()['author'],
-        isResolved: doc.data()['isResolved'],
-        numberOfAttachment: doc.data()['numberOfAttachment'],
-        numberOfComments: doc.data()['numberOfComments'],
-        numberOfLikes: doc.data()['numberOfLikes'],
-        numberOfDislikes: doc.data()['numberOfDislikes'],
-      );
-    }).toList();
-  }
-
-  Stream<List<Post>> get posts {
-    return binCollection.doc(roomCode).collection('posts').snapshots().map(_brewListFromSnapshot);
   }
 
 
