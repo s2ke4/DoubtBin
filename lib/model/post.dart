@@ -1,6 +1,6 @@
 class Post {
   String postID;
-  List<String> images;
+  List<dynamic> images;
   String postHeading;
   String postBody;
   String author;
@@ -13,6 +13,7 @@ class Post {
 
   Post({
     this.postID,
+    this.images,
     this.postHeading,
     this.postBody,
     this.author,

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doubtbin/model/bin.dart';
 import 'package:doubtbin/model/post.dart';
@@ -5,9 +6,13 @@ import 'package:doubtbin/pages/home/binCard.dart';
 import 'package:doubtbin/pages/home/home.dart';
 import 'package:doubtbin/pages/rooms/postCard.dart';
 import 'package:doubtbin/shared/loading.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image/image.dart' as Im;  
 import 'package:flutter/cupertino.dart';
+import 'package:path_provider/path_provider.dart';
 
  final CollectionReference binCollection = FirebaseFirestore.instance.collection('bins');
+ final StorageReference storageRef = FirebaseStorage.instance.ref();
 
 class BinDatabase{
 
@@ -53,7 +58,7 @@ class BinDatabase{
           String ownerId=coll.data()['ownerId'];
           String ownerName = coll.data()['ownerName'];
           String roomId = doc.id;
-          print(binName);
+          //print(binName);
           allCard.add(BinCard(
             bin:Bin( binName: binName,owner: ownerName,roomId: roomId)
           ));
@@ -115,6 +120,7 @@ class BinDatabase{
               post:Post(
                     postID: doc.data()['postID'],
                     postHeading: doc.data()['postHeading'],
+                    images:doc.data()['media'],
                     postBody: doc.data()['postBody'],
                     author: doc.data()['author'],
                     isResolved: doc.data()['isResolved'],
@@ -122,7 +128,7 @@ class BinDatabase{
                     numberOfComments: doc.data()['numberOfComments'],
                     numberOfLikes: doc.data()['numberOfLikes'],
                     numberOfDislikes: doc.data()['numberOfDislikes'],
-                  ),
+              ),
               roomCode:roomCode
             )
           );
@@ -140,11 +146,19 @@ class BinDatabase{
     String postHeading,
     String postBody,
     String author,
+    List<File> images,
     bool isResolved,
     int numberOfAttachment,
     int numberOfComments,
     int numberOfLikes,
     int numberOfDislikes,) async{
+      var media = new List(numberOfAttachment);
+      for(int i=0;i<numberOfAttachment;i++)
+      {
+         var image =await compressImage(images.elementAt(i), postID);
+         var let =await uploadImage(image,i,postID);
+         media[i] = let;
+      }
 
       await binCollection.doc(roomCode).collection('posts').doc(postID).set({
         "postID": postID,
@@ -152,6 +166,7 @@ class BinDatabase{
         "postBody" : postBody,
         "author" : author,
         "isResolved" : isResolved,
+        "media":media,
         "numberOfAttachment" : numberOfAttachment,
         "numberOfComments" : numberOfComments,
         "numberOfLikes" : numberOfLikes,
@@ -161,3 +176,20 @@ class BinDatabase{
   } 
 
 }
+
+Future compressImage(_image,postId) async{
+   Directory temDir = await getTemporaryDirectory();
+   final temPath = temDir.path;
+   Im.Image imageFile = Im.decodeImage(_image.readAsBytesSync());
+   final compressImageFile = File('$temPath/img_$postId.jpg')..writeAsBytesSync(Im.encodeJpg(imageFile,quality:85));
+   _image = compressImageFile;
+   return _image;
+}
+
+  //this fn is responsible for uploading image 
+  Future<String> uploadImage(_image,int i,postId) async{
+    StorageUploadTask uploadTask = storageRef.child('post$i _$postId.jpg').putFile(_image);
+    StorageTaskSnapshot storageSnap = await uploadTask.onComplete;
+    String downloadURL = await storageSnap.ref.getDownloadURL();
+    return downloadURL;
+  }

@@ -23,7 +23,7 @@ class _DetailPostState extends State<DetailPost> {
 
   Post post;
   String roomCode;
-  List<String> images;
+  List<dynamic> images;
   String roomOwner;
   _DetailPostState({this.post,this.roomCode});
   String userName,userImageURL,roomName='';
@@ -167,7 +167,7 @@ class _DetailPostState extends State<DetailPost> {
                         ),
                         onTap: (){
                           FocusScope.of(context).requestFocus(new FocusNode());
-                          Navigator.push(context,MaterialPageRoute(builder: (context)=>DetailedImage(images)));
+                          Navigator.push(context,MaterialPageRoute(builder: (context)=>DetailedImage(images,false)));
                           
                         },
                       ),
