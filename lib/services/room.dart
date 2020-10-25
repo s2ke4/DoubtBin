@@ -75,6 +75,6 @@ class BinDatabase{
         "numberOfDislikes" :numberOfDislikes ,
       });
 
-  } 
+  }
 
 }
