@@ -1,63 +1,140 @@
 import 'dart:io';
-import 'package:doubtbin/pages/rooms/roomDashboard.dart';
+import 'package:doubtbin/pages/home/home.dart';
+import 'package:doubtbin/pages/rooms/detailedImage.dart';
 import 'package:doubtbin/shared/appBar.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:doubtbin/shared/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:doubtbin/services/room.dart';
-import 'package:provider/provider.dart';
-import 'package:doubtbin/model/user.dart';
-import 'dart:math';
+import 'package:uuid/uuid.dart';
 
+var uuid = Uuid();
 
 class NewPost extends StatefulWidget {
 
-  String roomCode;
-  NewPost({this.roomCode});
+  String roomCode,roomName;
+  NewPost({this.roomCode,this.roomName});
 
   @override
-  _NewPostState createState() => _NewPostState(roomCode: roomCode);
+  _NewPostState createState() => _NewPostState(roomCode: roomCode,roomName:roomName);
 }
 
 class _NewPostState extends State<NewPost> {
 
-  String roomCode;
-  _NewPostState({this.roomCode});
-
+  String roomCode,roomName;
+  bool isLoading=false;
+  _NewPostState({this.roomCode,this.roomName});
 
   TextEditingController postHeadingController = TextEditingController();
   TextEditingController postDescriptionController = TextEditingController();
   bool tooLong = false;
   bool tooShortHeading = false;
   bool tooShortDescription = false;
-  bool attachment = false;
-  /*variables for attachement*/
-  File _image;
-  List<File> files;
+  List<File> images =[];
   final picker = ImagePicker();
-  Future getImage() async {
+
+  Future getImageFromCamera() async {
+    Navigator.pop(context);
     final pickedFile = await picker.getImage(source: ImageSource.camera);
 
     setState(() {
       if (pickedFile != null) {
-        _image = File(pickedFile.path);
-      } else {
-        print('No image selected.');
+        images.add(File(pickedFile.path));
       }
     });
   }
 
+  Future getImageFromGallery() async {
+    Navigator.pop(context);
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    setState(() {
+      if (pickedFile != null) {
+        images.add(File(pickedFile.path));
+      }
+    });
+  }
 
-  final _chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
-  Random _rnd = Random();
+  selectImage(parentContext){
+    return showDialog(
+      context:parentContext,
+      builder:(context){
+        return SimpleDialog(
+          children: <Widget>[
+            SimpleDialogOption(
+              child:Row(
+                children:<Widget>[
+                  Icon(Icons.camera_alt,size:25),
+                  SizedBox(width:9),
+                  Text("Image From Camera",style:TextStyle(fontSize: 17)),
+                ]
+              ),
+              onPressed: ()=>getImageFromCamera()),
+            SimpleDialogOption(
+              child:Row(
+                children:<Widget>[
+                  Icon(Icons.photo,size:25),
+                  SizedBox(width:9),
+                  Text("Upload From Gallery",style:TextStyle(fontSize:17)),
+                ]
+              ),
+              onPressed: ()=>getImageFromGallery(),),
+            SimpleDialogOption(
+              child:Row(
+                children:<Widget>[
+                  Icon(Icons.cancel,size:25),
+                  SizedBox(width:9),
+                  Text("Cancel",style:TextStyle(fontSize:17)),
+                ]
+              ),
+              onPressed: (){Navigator.pop(context);},),
+          ],
+        );
+      }
+    );
+  }
 
-  String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
-      length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
-
-
-
-
+  showUploadImage(){
+    return (images.isEmpty)
+            ?Text("no file selected")
+            :GestureDetector(
+                child:Stack(
+                        children: [
+                          Hero(
+                              tag: "heroImage",
+                              child: AspectRatio(
+                                  aspectRatio: 0.85,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      image:DecorationImage(
+                                        image:FileImage(images.elementAt(0)),
+                                        fit:BoxFit.cover
+                                      )
+                                    ),
+                                  ),
+                              )
+                          ),
+                          Positioned(
+                            left: 0,
+                            right: 0,
+                            top: 0,
+                            bottom:0,
+                            child: images.length>1?Opacity(
+                              opacity: 0.6,
+                              child: Container(
+                                color: Colors.white,
+                                alignment: Alignment.center,
+                                child:Text("+ ${images.length}",style: TextStyle(fontSize:25,fontWeight:FontWeight.bold),)
+                              ),
+                            ):Container(),
+                          )
+                        ],
+                ),
+                onTap: (){
+                  Navigator.push(context,MaterialPageRoute(builder: (context)=>DetailedImage(images,true)));
+                },
+            );
+  }
 
   Future newPost() async{
     setState(() => postHeadingController.text.trim().length > 50
@@ -69,30 +146,22 @@ class _NewPostState extends State<NewPost> {
     setState(() => postHeadingController.text.trim().isEmpty
         ? tooShortHeading = true
         : tooShortHeading = false);
-    print(tooLong);
-    print(tooShortDescription);
-    print(tooShortHeading);
     if (!tooShortHeading && !tooLong && !tooShortDescription) {
-
-//here is the connection
-      final postID = getRandomString(10);
-      final _user = Provider.of<MyUser>(context,listen:false);
+      
+      final postID =  uuid.v4();
+      setState(()=>isLoading=true);
       await BinDatabase(roomCode: roomCode,).addPost(
           postID, postHeadingController.text,
           postDescriptionController.text,
-          _user.uid, false, 0, 0, 0, 0);
-
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  RoomDashboard(roomCode: roomCode, firstTime: true)));
-      }
+          currentUser.uid,images, false, images.length, 0, 0, 0);
+      Navigator.pop(context);
+      
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return isLoading?Loading():Scaffold(
         appBar: appBar("New Post"),
         body: Container(
           margin: EdgeInsets.all(24),
@@ -131,67 +200,12 @@ class _NewPostState extends State<NewPost> {
                   ),
                 ),
                 SizedBox(height: 30),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
-                      children: [
-                        RaisedButton(
-                          onPressed: getImage,
-                          color: Colors.blue[200],
-                          child: Icon(Icons.add_a_photo),
-                        ),
-                        SizedBox(height: 10.0),
-                        _image == null
-                            ? Text('No image selected.')
-                            : Image.file(
-                                _image,
-                                height: 400,
-                                width: 200,
-                              )
-                      ],
-                    ),
-                    //Add the code for file_picker here
-                    Column(
-                      children: [
-                        RaisedButton(
-                          onPressed: () async {
-                            FilePickerResult result = await FilePicker.platform
-                                .pickFiles(allowMultiple: true);
-                            if (result != null) {
-                              files = result.paths
-                                  .map((path) => File(path))
-                                  .toList();
-                            }
-                            setState(() {
-                              files != null
-                                  // ignore: unnecessary_statements
-                                  ? (attachment = true)
-                                  // ignore: unnecessary_statements
-                                  : (attachment = false);
-                            });
-                          },
-                          color: Colors.blue[200],
-                          child: Icon(Icons.attachment),
-                        ),
-                        //The code to view the files which are attached with the post can be viewed here
-                        //I will write this code in a future update.
-                        //But, our app is able to fetch files from the device file manager and attach it with the post.
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                        files != null
-                            ? (Icon(
-                                Icons.image,
-                                size: 120,
-                              ))
-                            : (Text('No files attached.'))
-                      ],
-                    ),
-                  ],
+                RaisedButton(
+                  child: Text("Add Image",style: TextStyle(fontSize: 18)),
+                  color: Colors.blue[200],
+                  onPressed: ()=>selectImage(context),
                 ),
-                SizedBox(height: 40),
+                showUploadImage(),
                 RaisedButton(
                   onPressed: newPost,
                   child:
@@ -201,6 +215,7 @@ class _NewPostState extends State<NewPost> {
               ],
             ),
           ),
-        ));
+        )
+    );
   }
 }

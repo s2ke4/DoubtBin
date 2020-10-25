@@ -1,5 +1,3 @@
-import 'package:doubtbin/model/post.dart';
-import 'package:doubtbin/services/room.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
@@ -20,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
         providers: [
           StreamProvider<MyUser>.value(value: AuthServices().user),
-          StreamProvider<List<Post>>.value(value: BinDatabase().posts),
+          //StreamProvider<List<Post>>.value(value: BinDatabase().posts),
         ],
 
         child: MaterialApp(

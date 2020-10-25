@@ -4,18 +4,25 @@ import 'package:flutter/material.dart';
 
 class DetailedImage extends StatelessWidget {
 
-  List<String> images;
+  // List<String> images;
+  // List<File> fileImage;
   List<Hero> showImage;
-  DetailedImage(List<String> imgs){
-    images = imgs;
-    showImage = images.map((image)=>Hero(
+  DetailedImage(List<dynamic> imgs,bool isFileImage){
+    showImage = imgs.map((image)=>Hero(
               tag: "heroImage",
-              child: CachedNetworkImage(
-                imageUrl: image,
-                placeholder: (context, url) => Loading(),
-                errorWidget: (context, url, error) => Icon(Icons.error),
-            ),
-  )).toList();
+              child: isFileImage?Container(
+                                      decoration: BoxDecoration(
+                                        image:DecorationImage(
+                                          image:FileImage(image),
+                                          //fit:BoxFit.cover
+                                        )
+                                      ),
+                                    ):CachedNetworkImage(
+                                        imageUrl: image,
+                                        placeholder: (context, url) => Loading(),
+                                        errorWidget: (context, url, error) => Icon(Icons.error),
+                                    ),
+    )).toList();
   }
 
   final controller = PageController(

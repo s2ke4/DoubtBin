@@ -2,9 +2,10 @@ import 'package:doubtbin/pages/rooms/roomDashboard.dart';
 import 'package:doubtbin/shared/appBar.dart';
 import 'package:flutter/material.dart';
 import 'package:doubtbin/services/room.dart';
-import 'package:provider/provider.dart';
-import 'package:doubtbin/model/user.dart';
-import 'dart:math';
+import 'package:uuid/uuid.dart';
+import '../home.dart';
+
+var uuid = Uuid();
 
 
 class CreateRoom extends StatefulWidget {
@@ -29,28 +30,19 @@ class _CreateRoomState extends State<CreateRoom> {
     super.dispose();
   }
 
-//  random string generate for room
-  final _chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
-  Random _rnd = Random();
-
-  String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
-      length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
-
   Future createRoom() async {
-
-    setState(()=>roomNameController.text.trim().length > 50?toolong = true:toolong = false);
-    setState(()=>roomDescriptionController.text.trim().length > 100?toolongDescription = true:toolong = false);
-    setState(()=>roomNameController.text.trim().isEmpty?tooShortName = true:tooShortName = false);
+    String roomName = roomNameController.text.trim();
+    String roomDescription = roomDescriptionController.text.trim();
+    setState(()=>roomName.length > 50?toolong = true:toolong = false);
+    setState(()=>roomDescription.length > 100?toolongDescription = true:toolong = false);
+    setState(()=>roomName.isEmpty?tooShortName = true:tooShortName = false);
     if(!tooShortName && !toolong && !toolongDescription){
-
-//      room
-      final roomCode = getRandomString(10);
-      print(roomCode);
-      final _user = Provider.of<MyUser>(context,listen:false);
-      await BinDatabase(roomCode: roomCode).createRoom(roomCode, roomNameController.text , roomDescriptionController.text,);
-      await BinDatabase(roomCode: roomCode).addmembers(_user.uid);
-
-      Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>RoomDashboard(roomCode: roomCode,firstTime:true)));
+      //room
+      final roomCode = uuid.v4();
+      await BinDatabase(roomCode: roomCode).createRoom(roomCode, roomName , roomDescription,);
+      await BinDatabase(roomCode: roomCode).addmembers(currentUser.uid);
+      await BinDatabase(roomCode: roomCode).joinRoom(currentUser.uid);
+      Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>RoomDashboard(roomCode: roomCode,firstTime:true,roomName:roomNameController.text.trim())));
     }
   }
   @override
