@@ -3,6 +3,7 @@ import 'package:doubtbin/model/post.dart';
 import 'package:doubtbin/pages/home/home.dart';
 import 'package:doubtbin/pages/rooms/comment.dart';
 import 'package:doubtbin/pages/rooms/detailedImage.dart';
+import 'package:doubtbin/pages/rooms/detailedPost/deletePopUp.dart';
 import 'package:doubtbin/services/room.dart';
 import 'package:doubtbin/shared/appBar.dart';
 import 'package:doubtbin/shared/loading.dart';
@@ -23,14 +24,16 @@ class _DetailPostState extends State<DetailPost> {
 
   Post post;
   String roomCode;
-  List<dynamic> images;
+  List<dynamic> images=[];
   String roomOwner;
   _DetailPostState({this.post,this.roomCode});
   String userName,userImageURL,roomName='';
+  bool isResolved=false;
   
   @override
   void initState(){
     super.initState();
+    setState(()=>isResolved = post.isResolved);
     getInfo();
   }
 
@@ -46,7 +49,23 @@ class _DetailPostState extends State<DetailPost> {
     });
   }
 
-  var _selection;
+  //function to perform various operation such as like dislike delete resolved unresolved
+  void performOperation(var result)async{
+    switch(result){
+      case WhyFarther.markAsResolved:
+        setState(()=>isResolved = true);
+        await BinDatabase(roomCode:roomCode).makeResolved(post.postID);
+        break;
+      case WhyFarther.markAsUnresolved:
+        setState(()=>isResolved = false);
+        await BinDatabase(roomCode:roomCode).makeUnResolved(post.postID);
+        break;
+      case WhyFarther.delete:
+        await deletePopUp().deletePost(context, roomCode, post.postID, images);
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -77,12 +96,12 @@ class _DetailPostState extends State<DetailPost> {
                           ),
                           Row(
                             children:[
-                              post.isResolved == true
+                              isResolved == true
                                 ? (Icon(Icons.check,color: Colors.green[900],size: 30,))
                                 : (Icon(Icons.access_time,color: Colors.red,size: 30,)),
                               (currentUser.uid==roomOwner || currentUser.uid==post.author)?
                               PopupMenuButton<WhyFarther>(
-                                onSelected: (WhyFarther result) { setState(() {  _selection = result;print(_selection); }); },
+                                onSelected: (WhyFarther result) { performOperation(result); },
                                 itemBuilder: (BuildContext context) => <PopupMenuEntry<WhyFarther>>[
                                   PopupMenuItem<WhyFarther>(
                                     value: WhyFarther.delete,
@@ -94,7 +113,7 @@ class _DetailPostState extends State<DetailPost> {
                                       ],
                                     ),
                                   ),
-                                  post.isResolved == false?
+                                  isResolved == false?
                                   PopupMenuItem<WhyFarther>(
                                     value: WhyFarther.markAsResolved,
                                     child: Row(
@@ -136,7 +155,7 @@ class _DetailPostState extends State<DetailPost> {
                       SizedBox(height:12),
                       Text(post.postBody,style: TextStyle(fontSize: 16,),),
                       SizedBox(height: 10),
-                      images==null?Text(""):GestureDetector(
+                      images.isEmpty?Text(""):GestureDetector(
                         child: 
                         Stack(
                           children: [
