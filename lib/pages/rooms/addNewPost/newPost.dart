@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:doubtbin/pages/home/home.dart';
+import 'package:doubtbin/pages/rooms/addNewPost/showUploadImage.dart';
 import 'package:doubtbin/pages/rooms/detailedImage.dart';
 import 'package:doubtbin/shared/appBar.dart';
 import 'package:doubtbin/shared/loading.dart';
@@ -17,15 +18,13 @@ class NewPost extends StatefulWidget {
   NewPost({this.roomCode,this.roomName});
 
   @override
-  _NewPostState createState() => _NewPostState(roomCode: roomCode,roomName:roomName);
+  _NewPostState createState() => _NewPostState(roomCode:roomCode,roomName:roomName);
 }
 
 class _NewPostState extends State<NewPost> {
 
   String roomCode,roomName;
   bool isLoading=false;
-  _NewPostState({this.roomCode,this.roomName});
-
   TextEditingController postHeadingController = TextEditingController();
   TextEditingController postDescriptionController = TextEditingController();
   bool tooLong = false;
@@ -33,6 +32,8 @@ class _NewPostState extends State<NewPost> {
   bool tooShortDescription = false;
   List<File> images =[];
   final picker = ImagePicker();
+
+  _NewPostState({this.roomCode,this.roomName});
 
   Future getImageFromCamera() async {
     Navigator.pop(context);
@@ -92,48 +93,6 @@ class _NewPostState extends State<NewPost> {
         );
       }
     );
-  }
-
-  showUploadImage(){
-    return (images.isEmpty)
-            ?Text("no file selected")
-            :GestureDetector(
-                child:Stack(
-                        children: [
-                          Hero(
-                              tag: "heroImage",
-                              child: AspectRatio(
-                                  aspectRatio: 0.85,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      image:DecorationImage(
-                                        image:FileImage(images.elementAt(0)),
-                                        fit:BoxFit.cover
-                                      )
-                                    ),
-                                  ),
-                              )
-                          ),
-                          Positioned(
-                            left: 0,
-                            right: 0,
-                            top: 0,
-                            bottom:0,
-                            child: images.length>1?Opacity(
-                              opacity: 0.6,
-                              child: Container(
-                                color: Colors.white,
-                                alignment: Alignment.center,
-                                child:Text("+ ${images.length}",style: TextStyle(fontSize:25,fontWeight:FontWeight.bold),)
-                              ),
-                            ):Container(),
-                          )
-                        ],
-                ),
-                onTap: (){
-                  Navigator.push(context,MaterialPageRoute(builder: (context)=>DetailedImage(images,true)));
-                },
-            );
   }
 
   Future newPost() async{
@@ -205,7 +164,7 @@ class _NewPostState extends State<NewPost> {
                   color: Colors.blue[200],
                   onPressed: ()=>selectImage(context),
                 ),
-                showUploadImage(),
+                showImage().showUploadImage(images,context),
                 RaisedButton(
                   onPressed: newPost,
                   child:

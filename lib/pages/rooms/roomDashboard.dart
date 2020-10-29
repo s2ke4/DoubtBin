@@ -1,4 +1,4 @@
-import 'package:doubtbin/pages/rooms/newPost.dart';
+import 'package:doubtbin/pages/rooms/addNewPost/newPost.dart';
 import 'package:doubtbin/pages/rooms/postList.dart';
 import 'package:doubtbin/services/room.dart';
 import 'package:doubtbin/shared/appBar.dart';
@@ -24,87 +24,6 @@ class _RoomDashboardState extends State<RoomDashboard> {
   String roomName;
 
   _RoomDashboardState({this.firstTime, this.roomCode,this.roomName});
-
-  //this list is created just for front-end, we will fetch the data from firebase and try to store it in a list so that the code remains the same.
-//  List<Post> posts = [
-//    Post(
-//      author: 'Ashish Phophalia & Novarun Deb',
-//      postBody:
-//          'This is a dummy post posted which should be two lines on the card. So now, is it two lines? This is a line written just to increase the number of words in the sentence.Lorem ipsum dolor sit amet, consectetur adipiscing elit. In et consequat ligula. Suspendisse leo felis, posuere ut turpis non, mollis efficitur orci. Suspendisse potenti. Phasellus imperdiet convallis turpis, vitae bibendum sem sodales sed. Duis nec semper enim. Morbi efficitur euismod elementum. In justo augue, varius sed tellus rhoncus, posuere posuere ligula. Duis a varius mauris. Duis et odio ipsum. Cras eget condimentum elit, in hendrerit nisl. Duis sed fringilla augue.',
-//      numberOfAttachment: 1,
-//      postHeading: 'Post Heading',
-//      isResolved: false,
-//      numberOfLikes: 10,
-//      numberOfDislikes: 0,
-//      numberOfComments: 21,
-//    ),
-//    Post(
-//      author: 'Naveen Kumar',
-//      postBody:
-//          'This is a dummy post posted which should be two lines on the card. So now, is it two lines? This is a line written just to increase the number of words in the sentence.Lorem ipsum dolor sit amet, consectetur adipiscing elit. In et consequat ligula. Suspendisse leo felis, posuere ut turpis non, mollis efficitur orci. Suspendisse potenti. Phasellus imperdiet convallis turpis, vitae bibendum sem sodales sed. Duis nec semper enim. Morbi efficitur euismod elementum. In justo augue, varius sed tellus rhoncus, posuere posuere ligula. Duis a varius mauris. Duis et odio ipsum. Cras eget condimentum elit, in hendrerit nisl. Duis sed fringilla augue.',
-//      numberOfAttachment: 0,
-//      postHeading: 'Post Heading',
-//      isResolved: false,
-//      numberOfLikes: 90,
-//      numberOfDislikes: 20,
-//      numberOfComments: 5,
-//    ),
-//    Post(
-//      author: 'Bhupendra Kumar',
-//      postBody:
-//          'This is a dummy post posted which should be two lines on the card. So now, is it two lines? This is a line written just to increase the number of words in the sentence.Lorem ipsum dolor sit amet, consectetur adipiscing elit. In et consequat ligula. Suspendisse leo felis, posuere ut turpis non, mollis efficitur orci. Suspendisse potenti. Phasellus imperdiet convallis turpis, vitae bibendum sem sodales sed. Duis nec semper enim. Morbi efficitur euismod elementum. In justo augue, varius sed tellus rhoncus, posuere posuere ligula. Duis a varius mauris. Duis et odio ipsum. Cras eget condimentum elit, in hendrerit nisl. Duis sed fringilla augue.',
-//      numberOfAttachment: 3,
-//      postHeading: 'Post Heading',
-//      isResolved: true,
-//      numberOfLikes: 0,
-//      numberOfDislikes: 152,
-//      numberOfComments: 16,
-//    ),
-//    Post(
-//      author: 'Kamal Kishor Jha',
-//      postBody:
-//          'This is a dummy post posted which should be two lines on the card. So now, is it two lines? This is a line written just to increase the number of words in the sentence.Lorem ipsum dolor sit amet, consectetur adipiscing elit. In et consequat ligula. Suspendisse leo felis, posuere ut turpis non, mollis efficitur orci. Suspendisse potenti. Phasellus imperdiet convallis turpis, vitae bibendum sem sodales sed. Duis nec semper enim. Morbi efficitur euismod elementum. In justo augue, varius sed tellus rhoncus, posuere posuere ligula. Duis a varius mauris. Duis et odio ipsum. Cras eget condimentum elit, in hendrerit nisl. Duis sed fringilla augue.',
-//      numberOfAttachment: 4,
-//      postHeading: 'Post Heading',
-//      isResolved: true,
-//      numberOfLikes: 0,
-//      numberOfDislikes: 169,
-//      numberOfComments: 9,
-//    ),
-//    Post(
-//      author: 'Dhirendra Kumar Sinha',
-//      postBody:
-//          'This is a dummy post posted which should be two lines on the card. So now, is it two lines? This is a line written just to increase the number of words in the sentence.Lorem ipsum dolor sit amet, consectetur adipiscing elit. In et consequat ligula. Suspendisse leo felis, posuere ut turpis non, mollis efficitur orci. Suspendisse potenti. Phasellus imperdiet convallis turpis, vitae bibendum sem sodales sed. Duis nec semper enim. Morbi efficitur euismod elementum. In justo augue, varius sed tellus rhoncus, posuere posuere ligula. Duis a varius mauris. Duis et odio ipsum. Cras eget condimentum elit, in hendrerit nisl. Duis sed fringilla augue.',
-//      numberOfAttachment: 5,
-//      postHeading: 'Post Heading',
-//      isResolved: true,
-//      numberOfLikes: 130,
-//      numberOfDislikes: 70,
-//      numberOfComments: 7,
-//    ),
-//    Post(
-//      author: 'Amandeep Singh',
-//      postBody:
-//          'This is a dummy post posted which should be two lines on the card. So now, is it two lines? This is a line written just to increase the number of words in the sentence.Lorem ipsum dolor sit amet, consectetur adipiscing elit. In et consequat ligula. Suspendisse leo felis, posuere ut turpis non, mollis efficitur orci. Suspendisse potenti. Phasellus imperdiet convallis turpis, vitae bibendum sem sodales sed. Duis nec semper enim. Morbi efficitur euismod elementum. In justo augue, varius sed tellus rhoncus, posuere posuere ligula. Duis a varius mauris. Duis et odio ipsum. Cras eget condimentum elit, in hendrerit nisl. Duis sed fringilla augue.',
-//      numberOfAttachment: 3,
-//      postHeading: 'Post Heading',
-//      isResolved: true,
-//      numberOfLikes: 100,
-//      numberOfDislikes: 45,
-//      numberOfComments: 4,
-//    ),
-//    Post(
-//      author: 'Vikas Kumar',
-//      postBody:
-//          'This is a dummy post posted which should be two lines on the card. So now, is it two lines? This is a line written just to increase the number of words in the sentence.Lorem ipsum dolor sit amet, consectetur adipiscing elit. In et consequat ligula. Suspendisse leo felis, posuere ut turpis non, mollis efficitur orci. Suspendisse potenti. Phasellus imperdiet convallis turpis, vitae bibendum sem sodales sed. Duis nec semper enim. Morbi efficitur euismod elementum. In justo augue, varius sed tellus rhoncus, posuere posuere ligula. Duis a varius mauris. Duis et odio ipsum. Cras eget condimentum elit, in hendrerit nisl. Duis sed fringilla augue.',
-//      numberOfAttachment: 0,
-//      postHeading: 'Post Heading',
-//      isResolved: true,
-//      numberOfLikes: 62,
-//      numberOfDislikes: 21,
-//      numberOfComments: 1,
-//    ),
-//  ];
 
   @override
   void initState() {

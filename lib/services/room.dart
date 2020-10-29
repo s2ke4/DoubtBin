@@ -173,18 +173,16 @@ class BinDatabase{
         "numberOfDislikes" :numberOfDislikes ,
       });
 
-  } 
+  }
 
-}
-
-Future compressImage(_image,postId) async{
-   Directory temDir = await getTemporaryDirectory();
-   final temPath = temDir.path;
-   Im.Image imageFile = Im.decodeImage(_image.readAsBytesSync());
-   final compressImageFile = File('$temPath/img_$postId.jpg')..writeAsBytesSync(Im.encodeJpg(imageFile,quality:85));
-   _image = compressImageFile;
-   return _image;
-}
+  Future compressImage(_image,postId) async{
+    Directory temDir = await getTemporaryDirectory();
+    final temPath = temDir.path;
+    Im.Image imageFile = Im.decodeImage(_image.readAsBytesSync());
+    final compressImageFile = File('$temPath/img_$postId.jpg')..writeAsBytesSync(Im.encodeJpg(imageFile,quality:85));
+    _image = compressImageFile;
+    return _image;
+  }
 
   //this fn is responsible for uploading image 
   Future<String> uploadImage(_image,int i,postId) async{
@@ -193,3 +191,31 @@ Future compressImage(_image,postId) async{
     String downloadURL = await storageSnap.ref.getDownloadURL();
     return downloadURL;
   }
+ 
+
+  //fn to make doubt resolved
+  Future<void> makeResolved(String postId)async{
+    await binCollection.doc(roomCode).collection("posts").doc(postId).update({
+      "isResolved":true
+    });
+  } 
+
+  //fn to make doubt unresolved
+  Future<void> makeUnResolved(String postId)async{
+    await binCollection.doc(roomCode).collection("posts").doc(postId).update({
+      "isResolved":false
+    });
+  } 
+
+  //fn to delete post 
+  Future<void> deletePost(String postId,List<dynamic> images)async{
+    await binCollection.doc(roomCode).collection("posts").doc(postId).delete();
+    for(int i=0;i<images.length;i++)
+    {
+      storageRef.child('post$i _$postId.jpg').delete();
+    }
+  }
+}
+
+
+  
