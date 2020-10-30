@@ -41,7 +41,6 @@ dependencies:
   bubble: ^1.1.9+1
   cached_network_image: ^2.3.2+1
   image_picker: ^0.6.7+12
-  file_picker: ^2.0.7
   firebase_storage: ^4.0.1
   image: ^2.1.18
   path_provider: ^1.6.21
