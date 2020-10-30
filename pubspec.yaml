@@ -62,6 +62,16 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  fonts:
+    - family: Futura
+      - fonts: assets/Futura Light Italic font.ttf
+        style: Italic
+      - fonts: assets/Futura Bold font.ttf
+        weight : 700
+      - fonts: assets/futura light bt.ttf
+    - family: AppBarFont
+      fonts:
+        - asset: assets/georgiai.ttf
 
   # To add assets to your application, add an assets section, like this:
   assets:

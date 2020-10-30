@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doubtbin/model/user.dart';
+import 'dart:math';
 import 'package:doubtbin/pages/signin/username.dart';
 import 'package:doubtbin/services/room.dart';
 import 'package:doubtbin/shared/appBar.dart';
@@ -76,11 +77,23 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     checkingForUserName();
-    return !isCheck?Loading():(firstTime)?new Username(switchHomeAndUserName):Scaffold(
-      appBar: appBar("DoubtBin"),
-      drawer: BurgerMenu(),
-      body: BinDatabase().showRoom(currentUser.uid),
-      floatingActionButton: FloatButton(),
+    return !isCheck?Loading():(firstTime)?new Username(switchHomeAndUserName):Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Colors.grey[400], Colors.white],
+          //transform: GradientRotation(pi/4),
+        )
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: appBar("DoubtBin"),
+        drawer: BurgerMenu(),
+        body:
+        BinDatabase().showRoom(currentUser.uid),
+        floatingActionButton: FloatButton(),
+      ),
     );
   }
 }

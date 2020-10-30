@@ -13,76 +13,93 @@ class PostCard extends StatelessWidget {
       onTap: () {
         Navigator.push(context,MaterialPageRoute(builder: (context)=>DetailPost(post:post,roomCode:roomCode)));
       },
-      child: Card(
-        child: Padding(
-          padding: EdgeInsets.all(15.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(children: [
-                    Text(post.postHeading,
-                        style: TextStyle(
-                            fontSize: 21, fontWeight: FontWeight.bold)),
-                  ]),
-                  post.isResolved == true
-                      ? (Icon(
-                          Icons.check,
-                          color: Colors.green[900],
-                          size: 30,
-                        ))
-                      : (Icon(
-                          Icons.access_time,
-                          color: Colors.red,
-                          size: 30,
-                        )),
-                ],
-              ),
-              Divider(),
-              SizedBox(height: 20),
-              Text(
-                post.postBody.length > 200
-                    ? (post.postBody.substring(0, 196) + '....')
-                    : post.postBody,
-                style: TextStyle(
-                  fontSize: 16,
+      child: Container(
+         padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+        //     decoration: BoxDecoration(
+        //         //color: Colors.amber,
+        //         boxShadow: [
+        //           BoxShadow(
+        //             offset: const Offset(3.0, 3.0),
+        //             color: Colors.grey,
+        //             blurRadius: 5.0,
+        //             spreadRadius: 2.0,
+        //           ),
+        //         ]),
+            child: Card(
+              elevation: 10.0,
+              shadowColor: Colors.grey[400],
+              child: Padding(
+                padding: EdgeInsets.all(15.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(children: [
+                          Text(post.postHeading,
+                              style: TextStyle(
+                                  fontSize: 21, fontWeight: FontWeight.bold)),
+                        ]),
+                        post.isResolved == true
+                            ? (Icon(
+                                Icons.check,
+                                color: Colors.green[900],
+                                size: 30,
+                              ))
+                            : (Icon(
+                                Icons.access_time,
+                                color: Colors.red,
+                                size: 30,
+                              )),
+                      ],
+                    ),
+                    Divider(),
+                    SizedBox(height: 20),
+                    Text(
+                      post.postBody.length > 200
+                          ? (post.postBody.substring(0, 196) + '....')
+                          : post.postBody,
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    SizedBox(height: 20),
+                    Divider(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(children: [
+                          Icon(Icons.thumb_up, size: 27),
+                          SizedBox(width: 10),
+                          Text(post.numberOfLikes.toString()),
+                          SizedBox(width: 15),
+                          Icon(Icons.thumb_down, size: 27),
+                          SizedBox(width: 10),
+                          Text(post.numberOfDislikes.toString()),
+                          SizedBox(width: 15),
+                          Icon(Icons.image, size: 27),
+                          SizedBox(width: 10),
+                          Text(post.numberOfAttachment.toString()),
+                        ]),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: Row(children: [
+                            Icon(Icons.comment, size: 27),
+                            SizedBox(width: 10),
+                            Text(post.numberOfComments.toString()),
+                          ]),
+                        )
+                      ],
+                    )
+                  ],
                 ),
               ),
-              SizedBox(height: 10),
-              SizedBox(height: 10),
-              Divider(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(children: [
-                    Icon(Icons.thumb_up, size: 27),
-                    SizedBox(width: 10),
-                    Text(post.numberOfLikes.toString()),
-                    SizedBox(width: 15),
-                    Icon(Icons.thumb_down, size: 27),
-                    SizedBox(width: 10),
-                    Text(post.numberOfDislikes.toString()),
-                    SizedBox(width: 15),
-                    Icon(Icons.image, size: 27),
-                    SizedBox(width: 10),
-                    Text(post.numberOfAttachment.toString()),
-                  ]),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: Row(children: [
-                      Icon(Icons.comment, size: 27),
-                      SizedBox(width: 10),
-                      Text(post.numberOfComments.toString()),
-                    ]),
-                  )
-                ],
-              )
-            ],
+            ),
           ),
-        ),
-      ),
+
     );
+
   }
 }
