@@ -62,12 +62,6 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   fonts:
-    - family: Futura
-      - fonts: assets/Futura Light Italic font.ttf
-        style: Italic
-      - fonts: assets/Futura Bold font.ttf
-        weight : 700
-      - fonts: assets/futura light bt.ttf
     - family: AppBarFont
       fonts:
         - asset: assets/georgiai.ttf
