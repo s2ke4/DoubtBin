@@ -10,6 +10,7 @@ AppBar appBar(String title){
             style: TextStyle(
               fontSize: 22,
               color: Colors.black,
+              fontFamily: 'AppBarFont',
               fontWeight: FontWeight.w600,
             ),
           ),

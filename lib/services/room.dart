@@ -8,7 +8,6 @@ import 'package:doubtbin/pages/home/home.dart';
 import 'package:doubtbin/pages/rooms/postCard.dart';
 import 'package:doubtbin/pages/rooms/userTile.dart';
 import 'package:doubtbin/shared/loading.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image/image.dart' as Im;
 import 'package:flutter/cupertino.dart';
@@ -265,6 +264,32 @@ class BinDatabase {
   //get user stream
   Stream<List<MyUser>> get users {
     return userCollection.snapshots().map(_userListFromSnapshot);
+  }
+
+  //fn to make doubt resolved
+  Future<void> makeResolved(String postId) async {
+    await binCollection
+        .doc(roomCode)
+        .collection("posts")
+        .doc(postId)
+        .update({"isResolved": true});
+  }
+
+  //fn to make doubt unresolved
+  Future<void> makeUnResolved(String postId) async {
+    await binCollection
+        .doc(roomCode)
+        .collection("posts")
+        .doc(postId)
+        .update({"isResolved": false});
+  }
+
+  //fn to delete post
+  Future<void> deletePost(String postId, List<dynamic> images) async {
+    await binCollection.doc(roomCode).collection("posts").doc(postId).delete();
+    for (int i = 0; i < images.length; i++) {
+      storageRef.child('post$i _$postId.jpg').delete();
+    }
   }
 }
 

@@ -1,5 +1,6 @@
 import 'package:doubtbin/model/bin.dart';
 import 'package:doubtbin/pages/home/binCard.dart';
+import 'package:doubtbin/pages/profile/editUsename.dart';
 import 'package:doubtbin/shared/appBar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -48,82 +49,109 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     final user = Provider.of<MyUser>(context);
 
+
     String _user() {
       String tittle = user.email == user.email ? "Your Rooms " : "Mutual Rooms";
       return tittle;
     }
 
-    return Scaffold(
-      appBar: appBar("Profile"),
-      body: ListView(
-        children: [
-          Stack(children: <Widget>[
-            Center(
-              child: Container(
-                margin: EdgeInsets.only(top: 20),
-                child: Hero(
-                  tag: '$user.photoURL',
-                  child: CircleAvatar(
-                    backgroundImage: NetworkImage(user.photoURL),
-                    radius: 50,
-                  ),
-                ),
-              ),
-            ),
-            Container(
-                alignment: Alignment.topRight,
-                padding: EdgeInsets.only(top: 10, right: 10),
-                child: ClipOval(
-                  child: Material(
-                    color: Colors.white10, // button color
-                    child: InkWell(
-                      splashColor: Colors.blueGrey, // inkwell color
-                      child: SizedBox(
-                          width: 50,
-                          height: 50,
-                          child: Icon(
-                            Icons.edit,
-                            size: 25,
-                          )),
-                      onTap: () {},
+    return Container(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Colors.grey[400], Colors.white],
+            //transform: GradientRotation(pi/4),
+          )
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: appBar("Profile"),
+        body: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  colors: [Colors.green, Colors.lightGreen]
+              )
+          ),
+          child: ListView(
+            children: [
+              Stack(children: <Widget>[
+                Center(
+                  child: Container(
+                    margin: EdgeInsets.only(top: 20),
+                    child: Hero(
+                      tag: '$user.photoURL',
+                      child: CircleAvatar(
+                        backgroundImage: NetworkImage(user.photoURL),
+                        radius: 50,
+                      ),
                     ),
                   ),
-                )),
-          ]),
-          SizedBox(height: 7),
-          Center(
-              child: Text(
-            'Lone.Star',
-            style: TextStyle(
-              fontSize: 18,
-              letterSpacing: 2,
-            ),
-          )),
-          SizedBox(height: 10),
-          Center(
-              child: Text(user.displayName,
-                  style: TextStyle(
-                    fontSize: 30,
-                    letterSpacing: 1,
-                  ))),
-          SizedBox(height: 20),
-          Padding(
-              padding: EdgeInsets.only(left: 16),
-              child: Text(_user(),
-                  style: TextStyle(
-                    fontSize: 20,
-                  ))),
-          Column(
+                ),
+                Container(
+                    alignment: Alignment.topRight,
+                    padding: EdgeInsets.only(top: 10, right: 10),
+                    child: ClipOval(
+                      child: Material(
+                        color: Colors.transparent, // button color
+                        elevation: 0.0,
+                        child: InkWell(
+                          splashColor: Colors.blueGrey, // inkwell color
+                          child: SizedBox(
+                              width: 50,
+                              height: 50,
+                              child: Icon(
+                                Icons.edit,
+                                color: Colors.blue,
+                                size: 25,
+                              )),
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(
+                              builder: (context) => EditUsername()
+                            ));
+                          },
+                        ),
+                      ),
+                    )),
+              ]),
+              SizedBox(height: 7),
+              Center(
+                  child: Text(
+                user.userName,
+                style: TextStyle(
+                  fontSize: 18,
+                  letterSpacing: 2,
+                ),
+              )),
+              SizedBox(height: 10),
+              Center(
+                  child: Text(user.displayName,
+                      style: TextStyle(
+                        fontFamily: 'Futura',
+                        color: Colors.black45,
+                        fontSize: 30,
+                        letterSpacing: 1,
+                      ))),
+              SizedBox(height: 20),
+              Padding(
+                  padding: EdgeInsets.only(left: 16),
+                  child: Text(_user(),
+                      style: TextStyle(
+                        fontSize: 20,
+                      ))),
+              Column(
 //            scrollDirection: Axis.vertical,
-            children: bins
-                .map((bin) => BinCard.profile(
-                      bin: bin,
-                      pad: 0,
-                      elevation: 1,
-                    ))
-                .toList(),
-          )
-        ],
+                children: bins
+                    .map((bin) => BinCard.profile(
+                          bin: bin,
+                          pad: 0,
+                          elevation: 1,
+                        ))
+                    .toList(),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
