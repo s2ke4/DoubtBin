@@ -47,50 +47,74 @@ class _CreateRoomState extends State<CreateRoom> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: appBar("DoubtBin"),
-      body: Container(
-        child:Padding(
-          padding: const EdgeInsets.symmetric(horizontal:24),
-          child: Column(
-            children: [
-              SizedBox(height:30),
-              TextFormField(
-                controller: roomNameController,
-                decoration: InputDecoration(
-                  hintText:"Enter Room Name",
-                  border: OutlineInputBorder(),
-                  labelText:"Room Name",
-                  errorText: toolong?"Room Name too long":(tooShortName?"Room Name Can't Be Empty":null),
-                ),
-              ),
-              SizedBox(height:40),
-              TextFormField(
-                controller: roomDescriptionController,
-                decoration: InputDecoration(
-                  hintText:"Enter Room Description",
-                  border: OutlineInputBorder(),
-                  labelText:"Room Description",
-                  errorText: toolongDescription?"Room Description too long":null),
-                ),
-              SizedBox(height:25),
-              GestureDetector(
-                child: Container(
-                  alignment: Alignment.center,
-                  width: MediaQuery.of(context).size.width,
-                  padding: EdgeInsets.symmetric(vertical: 12),
-                  decoration: BoxDecoration(
-                      gradient: LinearGradient(colors: [
-                    const Color(0xff007EF4),
-                    const Color(0xFF2A75BC),
-                  ])),
-                  child: Text("Create",style: TextStyle(color:Colors.white,fontSize:18),),
-                ),
-                onTap: createRoom,
-              )
-            ],
+    return Container(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Colors.grey[400], Colors.white],
+            //transform: GradientRotation(pi/4),
           )
-        )
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: appBar("Create Room"),
+        body: Container(
+          child:Padding(
+            padding: const EdgeInsets.symmetric(horizontal:24),
+            child: Column(
+              children: [
+                SizedBox(height:30),
+                TextFormField(
+                  controller: roomNameController,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.grey[200],
+                    hintText:"Enter Room Name",
+                    border: OutlineInputBorder(),
+                    labelText:"Room Name",
+                    errorText: toolong?"Room Name too long":(tooShortName?"Room Name Can't Be Empty":null),
+                  ),
+                ),
+                SizedBox(height:40),
+                TextFormField(
+                  controller: roomDescriptionController,
+                  decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.grey[200],
+                    hintText:"Enter Room Description",
+                    border: OutlineInputBorder(),
+                    labelText:"Room Description",
+                    errorText: toolongDescription?"Room Description too long":null),
+                  ),
+                SizedBox(height: 40),
+                GestureDetector(
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: MediaQuery.of(context).size.width,
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          offset: const Offset(3.0, 3.0),
+                          color: Colors.grey,
+                          blurRadius: 4.0,
+                          spreadRadius: 2.0,
+                        )
+                      ],
+                        gradient: LinearGradient(colors: [
+                      const Color(0xff007EF4),
+                      const Color(0xFF2A75BC),
+                    ])
+                    ),
+                    child: Text("Create",style: TextStyle(color:Colors.white,fontSize:18),),
+                  ),
+                  onTap: createRoom,
+                )
+              ],
+            )
+          )
+        ),
       ),
     );
   }
