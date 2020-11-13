@@ -52,17 +52,17 @@ class BinDatabase{
           return Loading();
         }
         List<BinCard> allCard = [];
-        snapshot.data.docs.map((doc)async{
+        Future.wait(snapshot.data.docs.map((doc)async{
           final coll = await binCollection.doc(doc.id).get();
           String binName= coll.data()['displayName'];
           String ownerId=coll.data()['ownerId'];
           String ownerName = coll.data()['ownerName'];
           String roomId = doc.id;
           //print(binName);
-          allCard.add(BinCard(
-            bin:Bin( binName: binName,owner: ownerName,roomId: roomId)
-          ));
-        }).toList();
+          Bin bin1 = Bin( binName: binName,owner: ownerName,roomId: roomId);
+          BinCard bincard = BinCard(bin:bin1 );
+          allCard.add(bincard);
+        }));
 
         return ListView(
           children:allCard
