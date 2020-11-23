@@ -1,9 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:doubtbin/model/bin.dart';
 import 'package:doubtbin/pages/rooms/userList.dart';
 import 'package:doubtbin/services/room.dart';
 import 'package:doubtbin/shared/customAppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:doubtbin/model/user.dart';
 import 'package:provider/provider.dart';
+
+Bin currentBin;
 
 class JoinedUsers extends StatefulWidget {
   final String roomCode;
@@ -73,27 +77,8 @@ class _JoinedUsersState extends State<JoinedUsers> {
               ),
             ),
             Container(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Card(
-                  margin: EdgeInsets.fromLTRB(0.0, 6.0, 0.0, 0.0),
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      radius: 25.0,
-                      // backgroundImage: AssetImage('/assets/google-logo.jpg'),
-                    ),
-                    title: Text(
-                      'Wolf Gupta (Admin)',
-                    ),
-                    subtitle: Text('Chintu'),
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            Container(child: UserList()),
+              child: BinDatabase().showAllMembers(roomCode),
+            )
           ],
         ),
         // body: BinDatabase(roomCode: roomCode).showAllMembers(roomCode),

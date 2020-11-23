@@ -3,14 +3,12 @@ import '../../model/bin.dart';
 import 'package:doubtbin/pages/rooms/roomDashboard.dart';
 
 class BinCard extends StatelessWidget {
-
   final Bin bin;
   double pad = 70;
-  double elevation=4;
+  double elevation = 4;
 
   BinCard({this.bin});
-  BinCard.profile ({this.bin, this.pad, this.elevation});
-
+  BinCard.profile({this.bin, this.pad, this.elevation});
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +19,11 @@ class BinCard extends StatelessWidget {
             context,
             MaterialPageRoute(
                 builder: (context) => RoomDashboard(
-                      roomCode: bin.roomId, 
-                      firstTime:false, //true only when the user creates or joins the room and then visits it for first time
+                      roomCode: bin.roomId,
+                      firstTime:
+                          false, //true only when the user creates or joins the room and then visits it for first time
                       roomName: bin.binName,
+                      description: bin.description,
                     )));
       },
       child: Card(

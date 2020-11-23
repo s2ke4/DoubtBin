@@ -4,11 +4,14 @@ import 'package:doubtbin/model/bin.dart';
 import 'package:doubtbin/model/post.dart';
 import 'package:doubtbin/model/user.dart';
 import 'package:doubtbin/pages/home/binCard.dart';
+import 'package:doubtbin/pages/home/burgermenu/burgerRoomTile.dart';
 import 'package:doubtbin/pages/home/home.dart';
+import 'package:doubtbin/pages/rooms/joinedUsers.dart';
 import 'package:doubtbin/pages/rooms/postCard.dart';
 import 'package:doubtbin/pages/rooms/userTile.dart';
 import 'package:doubtbin/shared/loading.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:image/image.dart' as Im;
 import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
@@ -63,25 +66,87 @@ class BinDatabase {
 
   showRoom(String userId) {
     return StreamBuilder(
-        stream: userRef.doc(userId).collection("joinedRoom").snapshots(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Loading();
-          }
-          List<BinCard> allCard = [];
-          snapshot.data.docs.map((doc) async {
-            final coll = await binCollection.doc(doc.id).get();
-            String binName = coll.data()['displayName'];
-            String ownerId = coll.data()['ownerId'];
-            String ownerName = coll.data()['ownerName'];
-            String roomId = doc.id;
-            //print(binName);
-            allCard.add(BinCard(
-                bin: Bin(binName: binName, owner: ownerName, roomId: roomId)));
-          }).toList();
-
-          return ListView(children: allCard);
+      stream: userRef.doc(userId).collection("joinedRoom").snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return CircularProgressIndicator();
+        }
+        List<Future<DocumentSnapshot>> collFuture = List();
+        snapshot.data.docs.forEach((doc) {
+          collFuture.add(binCollection.doc(doc.id).get());
         });
+
+        return FutureBuilder<List<DocumentSnapshot>>(
+          future: Future.wait<DocumentSnapshot>(collFuture),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              List<BinCard> allCard = [];
+              snapshot.data.forEach((docSnap) {
+                allCard.add(
+                  BinCard(
+                    bin: Bin(
+                      description: docSnap.data()['description'],
+                      binName: docSnap.data()['displayName'],
+                      owner: docSnap.data()['ownerName'],
+                      roomId: docSnap.id,
+                    ),
+                  ),
+                );
+              });
+
+              return ListView(children: allCard);
+            } else {
+              return Container(
+                child: Loading(),
+              );
+            }
+          },
+        );
+      },
+    );
+  }
+
+  //this is used to display the list of rooms in the burgermenu.
+  showRoomsInBurger(String userId) {
+    return StreamBuilder(
+      stream: userRef.doc(userId).collection("joinedRoom").snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return CircularProgressIndicator();
+        }
+        List<Future<DocumentSnapshot>> collFuture = List();
+        snapshot.data.docs.forEach((doc) {
+          collFuture.add(binCollection.doc(doc.id).get());
+        });
+
+        return FutureBuilder<List<DocumentSnapshot>>(
+          future: Future.wait<DocumentSnapshot>(collFuture),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              List<BurgerRoomTile> allCard = [];
+              snapshot.data.forEach((docSnap) {
+                allCard.add(
+                  BurgerRoomTile(
+                    bin: Bin(
+                      description: docSnap.data()['description'],
+                      binName: docSnap.data()['displayName'],
+                      owner: docSnap.data()['ownerName'],
+                      roomId: docSnap.id,
+                    ),
+                  ),
+                );
+              });
+
+              return ListView(children: allCard);
+            } else {
+              return Container(
+                child: Loading(),
+              );
+            }
+          },
+        );
+      },
+    );
   }
 
   //when a person joined a room then
@@ -101,7 +166,6 @@ class BinDatabase {
             break;
           }
         }
-        ;
       }
     });
     if (found) {
@@ -189,29 +253,41 @@ class BinDatabase {
   //showMembers
   showAllMembers(String roomId) {
     return StreamBuilder(
-      stream: userRef.doc(roomId).collection("members").snapshots(),
+      stream: binCollection.doc(roomId).collection("members").snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return Loading();
+          return CircularProgressIndicator();
         }
-        List<UserTile> allMembers = [];
-        snapshot.data.docs.map((doc) async {
-          final coll = await userCollection.doc(doc.id).get();
-          String displayName = coll.data()['displayName'];
-          String userName = coll.data()['userName'];
-          String photoURL = coll.data()['circleAvatar'];
-          String email = coll.data()['email'];
-          String uid = doc.id;
-          allMembers.add(UserTile(
-              user: MyUser(
-                  displayName: displayName,
-                  userName: userName,
-                  photoURL: photoURL,
-                  email: email,
-                  uid: uid)));
-        }).toList();
+        List<Future<DocumentSnapshot>> collFuture = List();
+        snapshot.data.docs.forEach((doc) {
+          collFuture.add(userCollection.doc(doc.id).get());
+        });
 
-        return ListView(children: allMembers);
+        return FutureBuilder<List<DocumentSnapshot>>(
+          future: Future.wait<DocumentSnapshot>(collFuture),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              List<UserTile> allMembers = [];
+              snapshot.data.forEach((docSnap) {
+                allMembers.add(
+                  UserTile(
+                    user: MyUser(
+                        uid: docSnap.id,
+                        displayName: docSnap.data()['displayName'],
+                        email: docSnap.data()['email'],
+                        photoURL: docSnap.data()['circleAvatar'],
+                        userName: docSnap.data()['userName']),
+                  ),
+                );
+              });
+              return Column(children: allMembers);
+            } else {
+              return Container(
+                child: Loading(),
+              );
+            }
+          },
+        );
       },
     );
   }
