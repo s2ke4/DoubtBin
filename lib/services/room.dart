@@ -44,12 +44,17 @@ class BinDatabase{
     });
   }
 
+
+
   showRoom(String userId){
     return StreamBuilder(
       stream:userRef.doc(userId).collection("joinedRoom").snapshots(),
       builder:(context,snapshot){
         if(!snapshot.hasData){
           return Loading();
+        }
+        if(snapshot.data.docs.isEmpty){
+          return Center(child:Text("No Bins Yet",style: TextStyle(fontSize: 18)));
         }
         List<BinCard> allCard = [];
         snapshot.data.docs.map((doc)async{
@@ -90,8 +95,7 @@ class BinDatabase{
         };
       }
     });
-    if(found)
-    {
+    if(found) {
       await userRef.doc(userId).collection("joinedRoom").doc(roomCode).set({
         "joined":true
       });
@@ -115,6 +119,7 @@ class BinDatabase{
         }
         List<PostCard> allposts = [];
         snapshot.data.docs.map((doc){
+          print(doc.id);
           allposts.add(
             PostCard(
               post:Post(
