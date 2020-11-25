@@ -82,6 +82,7 @@ class _RoomDashboardState extends State<RoomDashboard> {
       key: key,
       appBar: CustomAppBar(
         appBar: AppBar(
+          backgroundColor:Color(0xff007EF4),
           title: Text(roomName),
           actions: [
             FlatButton.icon(
@@ -106,10 +107,8 @@ class _RoomDashboardState extends State<RoomDashboard> {
             ),
           ],
         ),
-        // onTap: () {
-        //   print("opening the joined in user list.");
-        // },
       ),
+      backgroundColor: Colors.grey[100],
       body: BinDatabase(roomCode: roomCode).showAllPost(),
       floatingActionButton: new FloatingActionButton(
         onPressed: () {

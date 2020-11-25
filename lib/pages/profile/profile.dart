@@ -65,14 +65,9 @@ class _ProfileState extends State<Profile> {
           )
       ),
       child: Scaffold(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.grey[100],
         appBar: appBar("Profile"),
         body: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [Colors.green, Colors.lightGreen]
-              )
-          ),
           child: ListView(
             children: [
               Stack(children: <Widget>[

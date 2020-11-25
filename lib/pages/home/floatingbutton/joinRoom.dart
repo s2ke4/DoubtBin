@@ -24,7 +24,6 @@ class _JoinRoomState extends State<JoinRoom> {
           await BinDatabase(roomCode: code).checkingCode(currentUser.uid);
       String description =
           await BinDatabase(roomCode: code).getDescription(currentUser.uid);
-      print(description);
       if (name == null) {
         setState(() => {validCode = false, isLoading = false});
       } else {

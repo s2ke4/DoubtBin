@@ -15,16 +15,14 @@ class FloatButton extends StatelessWidget {
         animatedIconTheme: IconThemeData(size: 25.0),
         //child: Icon(Icons.add),
         visible: true,
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
+        backgroundColor:Color(0xff007EF4),
+        foregroundColor: Colors.white,
         curve: Curves.bounceIn,
         overlayColor: Colors.black,
         overlayOpacity: 0.5,
         tooltip: 'Speed Dial',
         heroTag: 'speed-dial-hero-tag',
         elevation: 6.0,
-        onOpen: () => print('OPENING DIAL'),
-        onClose: () => print('DIAL CLOSED'),
         shape: CircleBorder(),
         children: [
           SpeedDialChild(

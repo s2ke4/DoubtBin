@@ -39,7 +39,7 @@ class UserInfo extends StatelessWidget {
                   Text(
                     name,
                     style: TextStyle(
-                        color: Colors.black,
+                        color: Colors.white,
                         fontSize: 20,
                         fontWeight: FontWeight.w300),
                   ),
@@ -49,7 +49,7 @@ class UserInfo extends StatelessWidget {
                   Text(
                     user.email,
                     style: TextStyle(
-                        color: Colors.grey[900],
+                        color: Colors.white,
                         fontSize: 14,
                         fontWeight: FontWeight.w200),
                   ),

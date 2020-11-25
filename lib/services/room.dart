@@ -6,7 +6,6 @@ import 'package:doubtbin/model/user.dart';
 import 'package:doubtbin/pages/home/binCard.dart';
 import 'package:doubtbin/pages/home/burgermenu/burgerRoomTile.dart';
 import 'package:doubtbin/pages/home/home.dart';
-import 'package:doubtbin/pages/rooms/joinedUsers.dart';
 import 'package:doubtbin/pages/rooms/postCard.dart';
 import 'package:doubtbin/pages/rooms/userTile.dart';
 import 'package:doubtbin/shared/loading.dart';
@@ -66,6 +65,25 @@ class BinDatabase {
 
   showRoom(String userId) {
     return StreamBuilder(
+      stream: userRef.doc(userId).collection("joinedRoom").snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return CircularProgressIndicator();
+        }
+        List<Future<DocumentSnapshot>> collFuture = List();
+        snapshot.data.docs.forEach((doc) {
+          collFuture.add(binCollection.doc(doc.id).get());
+        });
+
+        return FutureBuilder<List<DocumentSnapshot>>(
+          future: Future.wait<DocumentSnapshot>(collFuture),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              List<BinCard> allCard = [];
+              snapshot.data.forEach((docSnap) {
+                allCard.add(
+                  BinCard(
+                    bin: Bin(
                       description: docSnap.data()['description'],
                       binName: docSnap.data()['displayName'],
                       owner: docSnap.data()['ownerName'],
@@ -93,6 +111,7 @@ class BinDatabase {
       stream: userRef.doc(userId).collection("joinedRoom").snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
+          return CircularProgressIndicator();
         }
         List<Future<DocumentSnapshot>> collFuture = List();
         snapshot.data.docs.forEach((doc) {
@@ -117,7 +136,7 @@ class BinDatabase {
                 );
               });
 
-              return ListView(children: allCard);
+              return Column(children: allCard);
             } else {
               return Container(
                 child: Loading(),
@@ -134,7 +153,7 @@ class BinDatabase {
   //we will include that room in the joined room collection of that person
 
   //check room code to join room
-  checkingCode(String userId) async {
+  checkingCode(String userId) async { 
     bool found = false;
     String name;
     await binCollection.get().then((documents) {
@@ -303,23 +322,6 @@ class BinDatabase {
       "numberOfLikes": numberOfLikes,
       "numberOfDislikes": numberOfDislikes,
     });
-  }
-
-  //get user list from snapshot
-  List<MyUser> _userListFromSnapshot(QuerySnapshot snapshot) {
-    return snapshot.docs.map((doc) {
-      return MyUser(
-          uid: doc.data()['uid'],
-          displayName: doc.data()['displayName'],
-          email: doc.data()['email'],
-          photoURL: doc.data()['circleAvatar'],
-          userName: doc.data()['userName']);
-    }).toList();
-  }
-
-  //get user stream
-  Stream<List<MyUser>> get users {
-    return userCollection.snapshots().map(_userListFromSnapshot);
   }
 
   //fn to make doubt resolved

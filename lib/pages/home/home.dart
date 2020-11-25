@@ -87,7 +87,7 @@ class _HomeState extends State<Home> {
         )
       ),
       child: Scaffold(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.grey[100],
         appBar: appBar("DoubtBin"),
         drawer: BurgerMenu(),
         body:

@@ -20,15 +20,14 @@ class BinCard extends StatelessWidget {
             MaterialPageRoute(
                 builder: (context) => RoomDashboard(
                       roomCode: bin.roomId,
-                      firstTime:
-                          false, //true only when the user creates or joins the room and then visits it for first time
+                      firstTime:false, //true only when the user creates or joins the room and then visits it for first time
                       roomName: bin.binName,
                       description: bin.description,
                     )));
       },
       child: Card(
         margin: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),
-        elevation: elevation,
+        // elevation: elevation,
         // color: ${bin.color}, isme error de rha hai
         child: Padding(
           padding: const EdgeInsets.fromLTRB(28.0, 15.0, 24.0, 15.0),

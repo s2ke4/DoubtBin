@@ -1,11 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doubtbin/model/bin.dart';
-import 'package:doubtbin/pages/rooms/userList.dart';
 import 'package:doubtbin/services/room.dart';
 import 'package:doubtbin/shared/customAppBar.dart';
 import 'package:flutter/material.dart';
-import 'package:doubtbin/model/user.dart';
-import 'package:provider/provider.dart';
 
 Bin currentBin;
 
@@ -20,18 +16,14 @@ class JoinedUsers extends StatefulWidget {
       roomCode: roomCode, roomName: roomName, description: description);
 }
 
-class _JoinedUsersState extends State<JoinedUsers> {
+class _JoinedUsersState extends State<JoinedUsers> { 
   String roomCode;
   String roomName;
   String description;
   _JoinedUsersState({this.roomCode, this.roomName, this.description});
   @override
   Widget build(BuildContext context) {
-    print(roomName);
-    print(roomCode);
-    print(description);
-    return StreamProvider<List<MyUser>>.value(
-      value: BinDatabase().users,
+    return Container(
       child: Scaffold(
         appBar: CustomAppBar(
           appBar: AppBar(title: Text('Joined Users')),
@@ -53,7 +45,7 @@ class _JoinedUsersState extends State<JoinedUsers> {
                         color: Colors.grey[800],
                       ),
                     ),
-                    SizedBox(height: 40),
+                    SizedBox(height: 30),
                     Text(
                       description,
                       style: TextStyle(

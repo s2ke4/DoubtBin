@@ -120,9 +120,9 @@ class _NewPostState extends State<NewPost> {
 
   @override
   Widget build(BuildContext context) {
-    return isLoading?Loading():Scaffold(
+    return Scaffold(
         appBar: appBar("New Post"),
-        body: Container(
+        body: isLoading?Loading():Container(
           margin: EdgeInsets.all(24),
           child: Form(
             child: ListView(
