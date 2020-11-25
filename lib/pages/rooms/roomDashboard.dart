@@ -94,7 +94,6 @@ class _RoomDashboardState extends State<RoomDashboard> {
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () {
-                print(description);
                 Navigator.push(
                     context,
                     MaterialPageRoute(
