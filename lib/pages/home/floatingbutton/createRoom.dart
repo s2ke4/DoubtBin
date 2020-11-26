@@ -43,8 +43,8 @@ class _CreateRoomState extends State<CreateRoom> {
       final roomCode = uuid.v4();
       await BinDatabase(roomCode: roomCode).createRoom(roomCode, roomName , roomDescription,);
       await BinDatabase(roomCode: roomCode).addmembers(currentUser.uid);
-      await BinDatabase(roomCode: roomCode).joinRoom(currentUser.uid);
-      Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>RoomDashboard(roomCode: roomCode,firstTime:true,roomName:roomNameController.text.trim())));
+      await BinDatabase(roomCode: roomCode).joinRoom(currentUser.uid); 
+      Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>RoomDashboard(roomCode: roomCode,firstTime:true,roomName:roomName,description: roomDescription)));
     }
   }
   @override

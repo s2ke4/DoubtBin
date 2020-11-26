@@ -7,7 +7,7 @@ import 'package:doubtbin/pages/home/binCard.dart';
 import 'package:doubtbin/pages/home/burgermenu/burgerRoomTile.dart';
 import 'package:doubtbin/pages/home/home.dart';
 import 'package:doubtbin/pages/rooms/postCard.dart';
-import 'package:doubtbin/pages/rooms/userTile.dart';
+import 'package:doubtbin/pages/rooms/joinedUser/userTile.dart';
 import 'package:doubtbin/shared/loading.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -18,15 +18,15 @@ import 'package:path_provider/path_provider.dart';
 final CollectionReference binCollection =
     FirebaseFirestore.instance.collection('bins');
 final StorageReference storageRef = FirebaseStorage.instance.ref();
-
+ final CollectionReference userCollection =
+      FirebaseFirestore.instance.collection('Users');
 class BinDatabase {
   final String roomCode;
   final String user;
   final String uid;
   BinDatabase({this.roomCode, this.user, this.uid});
 
-  final CollectionReference userCollection =
-      FirebaseFirestore.instance.collection('Users');
+ 
   Future updateUserData(String displayName, String userName, String uid,
       String email, String photoURL) async {
     return await userCollection.doc(uid).set({
@@ -92,7 +92,17 @@ class BinDatabase {
                   ),
                 );
               });
-
+              if(allCard.length==0){
+                return Container(
+                  child:Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children:[
+                      Center(child: Text("You are not a member of any room.",style: TextStyle(fontSize:16),)),
+                      Center(child: Text("Room you will create or join will appear here.",style: TextStyle(fontSize:16)))
+                    ]
+                  )
+                );
+              }
               return ListView(children: allCard);
             } else {
               return Container(
@@ -135,7 +145,11 @@ class BinDatabase {
                   ),
                 );
               });
-
+              if(allCard.length==0){
+                return Container(
+                  child:Center(child: Text("No Room to Show",style: TextStyle(fontSize:16)))
+                );
+              }
               return Column(children: allCard);
             } else {
               return Container(
@@ -250,16 +264,19 @@ class BinDatabase {
   }
 
   //showMembers
-  showAllMembers(String roomId) {
+  showAllMembers(String roomId,String ownerId) {
     return StreamBuilder(
       stream: binCollection.doc(roomId).collection("members").snapshots(),
-      builder: (context, snapshot) {
+      builder: (context, snapshot){
         if (!snapshot.hasData) {
           return CircularProgressIndicator();
         }
+
         List<Future<DocumentSnapshot>> collFuture = List();
+
         snapshot.data.docs.forEach((doc) {
-          collFuture.add(userCollection.doc(doc.id).get());
+          if(doc.id!=ownerId){
+          collFuture.add(userCollection.doc(doc.id).get());}
         });
 
         return FutureBuilder<List<DocumentSnapshot>>(
@@ -349,6 +366,15 @@ class BinDatabase {
       storageRef.child('post$i _$postId.jpg').delete();
     }
   }
+
+  //exit a person from group
+//room will be removed from his joined collection and 
+//he will be removed from member collection of that room
+
+  exitFromBin(code,uid)async{
+    await userRef.doc(uid).collection("joinedRoom").doc(code).delete();
+    await binCollection.doc(code).collection('members').doc(uid).delete();
+  }
 }
 
 Future compressImage(_image, postId) async {
@@ -369,3 +395,4 @@ Future<String> uploadImage(_image, int i, postId) async {
   String downloadURL = await storageSnap.ref.getDownloadURL();
   return downloadURL;
 }
+

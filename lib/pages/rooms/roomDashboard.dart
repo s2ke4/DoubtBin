@@ -1,4 +1,4 @@
-import 'package:doubtbin/pages/rooms/joinedUsers.dart';
+import 'package:doubtbin/pages/rooms/joinedUser/joinedUsers.dart';
 import 'package:doubtbin/pages/rooms/addNewPost/newPost.dart';
 import 'package:doubtbin/services/room.dart';
 import 'package:doubtbin/shared/customAppBar.dart';
