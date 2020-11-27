@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:doubtbin/pages/home/home.dart';
 import 'package:doubtbin/pages/rooms/addNewPost/showUploadImage.dart';
-import 'package:doubtbin/pages/rooms/detailedImage.dart';
 import 'package:doubtbin/shared/appBar.dart';
 import 'package:doubtbin/shared/loading.dart';
 import 'package:flutter/material.dart';
@@ -95,6 +94,10 @@ class _NewPostState extends State<NewPost> {
     );
   }
 
+  void RemoveImage(img){
+    setState(()=>images.remove(img));
+  }
+
   Future newPost() async{
     setState(() => postHeadingController.text.trim().length > 50
         ? tooLong = true
@@ -106,15 +109,13 @@ class _NewPostState extends State<NewPost> {
         ? tooShortHeading = true
         : tooShortHeading = false);
     if (!tooShortHeading && !tooLong && !tooShortDescription) {
-      
-      final postID =  uuid.v4();
       setState(()=>isLoading=true);
+      final postID =  uuid.v4();
       await BinDatabase(roomCode: roomCode,).addPost(
-          postID, postHeadingController.text,
-          postDescriptionController.text,
+          postID, postHeadingController.text.trim(),
+          postDescriptionController.text.trim(),
           currentUser.uid,images, false, images.length, 0, 0, 0);
       Navigator.pop(context);
-      
     }
   }
 
@@ -164,7 +165,7 @@ class _NewPostState extends State<NewPost> {
                   color: Colors.blue[200],
                   onPressed: ()=>selectImage(context),
                 ),
-                showImage().showUploadImage(images,context),
+                showImage(images:images,RemoveImg:RemoveImage),
                 RaisedButton(
                   onPressed: newPost,
                   child:

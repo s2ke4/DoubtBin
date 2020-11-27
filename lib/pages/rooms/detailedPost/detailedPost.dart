@@ -186,8 +186,7 @@ class _DetailPostState extends State<DetailPost> {
                         ),
                         onTap: (){
                           FocusScope.of(context).requestFocus(new FocusNode());
-                          Navigator.push(context,MaterialPageRoute(builder: (context)=>DetailedImage(images,false)));
-                          
+                          Navigator.push(context,MaterialPageRoute(builder: (context)=>DetailedImage(imgs:images,isFileImage:false)));
                         },
                       ),
                       SizedBox(height: 10),
