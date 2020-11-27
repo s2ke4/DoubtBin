@@ -293,6 +293,8 @@ class BinDatabase {
                         email: docSnap.data()['email'],
                         photoURL: docSnap.data()['circleAvatar'],
                         userName: docSnap.data()['userName']),
+                    ownerId:ownerId,
+                    code:roomId
                   ),
                 );
               });

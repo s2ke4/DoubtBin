@@ -61,7 +61,7 @@ class _DetailPostState extends State<DetailPost> {
         await BinDatabase(roomCode:roomCode).makeUnResolved(post.postID);
         break;
       case WhyFarther.delete:
-        await deletePopUp().deletePost(context, roomCode, post.postID, images);
+        await deletePopUp(roomCode:roomCode,postId:post.postID,images:images,isDeletePost:true).deletePost(context,"Delete this Doubt?","Delete");
         break;
     }
   }

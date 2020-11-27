@@ -1,16 +1,10 @@
-import 'package:doubtbin/services/room.dart';
+import 'package:doubtbin/pages/rooms/detailedPost/deletePopUp.dart';
 import 'package:flutter/material.dart';
 
 class ExitButton extends StatelessWidget {
 
   String code,uid;
   ExitButton({this.code,this.uid});
-
-  ExitUser(BuildContext context){
-    BinDatabase().exitFromBin(code,uid);
-    Navigator.pop(context);
-    Navigator.pop(context);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +20,9 @@ class ExitButton extends StatelessWidget {
                   Text("Exit From Room",style: TextStyle(color:Colors.red,fontSize: 16),),
                 ]
               ),
-              onPressed: (){ExitUser(context);},
+              onPressed: ()async{
+                await deletePopUp(roomCode:code,isDeletePost: false,userId:uid).deletePost(context,"Are You Sure You Want to Exit From this Room","Exit");
+              },
             );
   }
 }

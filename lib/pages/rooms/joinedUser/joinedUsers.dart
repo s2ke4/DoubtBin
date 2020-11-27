@@ -55,7 +55,10 @@ class _JoinedUsersState extends State<JoinedUsers> {
                   email: docSnap.data()['email'],
                   photoURL: docSnap.data()['circleAvatar'],
                   userName: docSnap.data()['userName']),
+              ownerId:oid,
+              code:roomCode,
             ),
+            
             isLoading?Loading():Container(
               child: BinDatabase().showAllMembers(roomCode,oid),
             )
