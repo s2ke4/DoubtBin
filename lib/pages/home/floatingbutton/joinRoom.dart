@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doubtbin/pages/home/home.dart';
 import 'package:doubtbin/pages/rooms/roomDashboard.dart';
 import 'package:doubtbin/services/room.dart';
@@ -20,13 +21,13 @@ class _JoinRoomState extends State<JoinRoom> {
 
     if (validCode) {
       setState(() => isLoading = true);
-      String name =
-          await BinDatabase(roomCode: code).checkingCode(currentUser.uid);
-      String description =
-          await BinDatabase(roomCode: code).getDescription(currentUser.uid);
-      if (name == null) {
+      bool exist = await BinDatabase(roomCode: code).checkingCode(currentUser.uid);
+      if (!exist) {
         setState(() => {validCode = false, isLoading = false});
       } else {
+        DocumentSnapshot doc = await binCollection.doc(code).get();
+        String name = doc.data()['displayName'];
+        String description = doc.data()['description'];
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(

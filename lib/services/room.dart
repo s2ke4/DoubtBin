@@ -167,66 +167,17 @@ class BinDatabase {
   //we will include that room in the joined room collection of that person
 
   //check room code to join room
-  checkingCode(String userId) async { 
-    bool found = false;
-    String name;
-    await binCollection.get().then((documents) {
-      if (documents != null) {
-        for (var doc in documents.docs) {
-          if (doc.id == roomCode) {
-            found = true;
-            name = doc.data()['displayName'];
-            break;
-          }
-        }
-      }
-    });
+  Future<bool> checkingCode(String userId) async{ 
+    DocumentSnapshot doc = await binCollection.doc(roomCode).get();
+    bool found = doc.exists;
     if (found) {
-      await userRef
-          .doc(userId)
-          .collection("joinedRoom")
-          .doc(roomCode)
-          .set({"joined": true});
-      await binCollection
-          .doc(roomCode)
-          .collection("members")
-          .doc(userId)
-          .set({"member": true});
-      return name;
+      userRef.doc(userId).collection("joinedRoom").doc(roomCode).set({"joined": true});
+      binCollection.doc(roomCode).collection("members").doc(userId).set({"member": true});
+      return true;
     }
-    return null;
+    return false;
   }
 
-  //to get Description
-  getDescription(String userId) async {
-    bool found = false;
-    String description;
-    await binCollection.get().then((documents) {
-      if (documents != null) {
-        for (var doc in documents.docs) {
-          if (doc.id == roomCode) {
-            found = true;
-            description = doc.data()['description'];
-            break;
-          }
-        }
-      }
-    });
-    if (found) {
-      await userRef
-          .doc(userId)
-          .collection("joinedRoom")
-          .doc(roomCode)
-          .set({"joined": true});
-      await binCollection
-          .doc(roomCode)
-          .collection("members")
-          .doc(userId)
-          .set({"member": true});
-      return description;
-    }
-    return null;
-  }
 
   showAllPost() {
     return StreamBuilder(
