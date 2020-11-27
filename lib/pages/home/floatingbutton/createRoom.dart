@@ -1,5 +1,6 @@
 import 'package:doubtbin/pages/rooms/roomDashboard.dart';
 import 'package:doubtbin/shared/appBar.dart';
+import 'package:doubtbin/shared/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:doubtbin/services/room.dart';
 import 'package:uuid/uuid.dart';
@@ -19,7 +20,7 @@ class _CreateRoomState extends State<CreateRoom> {
   bool tooShortName=false;
   bool toolong=false;
   bool toolongDescription=false;
-
+  bool isLoading = false;
 
 
   final myController = TextEditingController();
@@ -38,11 +39,12 @@ class _CreateRoomState extends State<CreateRoom> {
     setState(()=>roomName.isEmpty?tooShortName = true:tooShortName = false);
     if(!tooShortName && !toolong && !toolongDescription){
       //room
+      setState(()=>isLoading = true);
       final roomCode = uuid.v4();
       await BinDatabase(roomCode: roomCode).createRoom(roomCode, roomName , roomDescription,);
       await BinDatabase(roomCode: roomCode).addmembers(currentUser.uid);
-      await BinDatabase(roomCode: roomCode).joinRoom(currentUser.uid);
-      Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>RoomDashboard(roomCode: roomCode,firstTime:true,roomName:roomNameController.text.trim())));
+      await BinDatabase(roomCode: roomCode).joinRoom(currentUser.uid); 
+      Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>RoomDashboard(roomCode: roomCode,firstTime:true,roomName:roomName,description: roomDescription)));
     }
   }
   @override
@@ -52,14 +54,14 @@ class _CreateRoomState extends State<CreateRoom> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Colors.grey[400], Colors.white],
+            colors: [Colors.grey[100], Colors.white],
             //transform: GradientRotation(pi/4),
           )
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: appBar("Create Room"),
-        body: Container(
+        body: isLoading?Loading():Container(
           child:Padding(
             padding: const EdgeInsets.symmetric(horizontal:24),
             child: Column(
@@ -69,7 +71,7 @@ class _CreateRoomState extends State<CreateRoom> {
                   controller: roomNameController,
                   decoration: InputDecoration(
                     filled: true,
-                    fillColor: Colors.grey[200],
+                    fillColor: Colors.grey[50],
                     hintText:"Enter Room Name",
                     border: OutlineInputBorder(),
                     labelText:"Room Name",
@@ -81,7 +83,7 @@ class _CreateRoomState extends State<CreateRoom> {
                   controller: roomDescriptionController,
                   decoration: InputDecoration(
                       filled: true,
-                      fillColor: Colors.grey[200],
+                      fillColor: Colors.grey[50],
                     hintText:"Enter Room Description",
                     border: OutlineInputBorder(),
                     labelText:"Room Description",

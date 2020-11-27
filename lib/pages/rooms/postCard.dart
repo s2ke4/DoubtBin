@@ -15,18 +15,8 @@ class PostCard extends StatelessWidget {
       },
       child: Container(
          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
-        //     decoration: BoxDecoration(
-        //         //color: Colors.amber,
-        //         boxShadow: [
-        //           BoxShadow(
-        //             offset: const Offset(3.0, 3.0),
-        //             color: Colors.grey,
-        //             blurRadius: 5.0,
-        //             spreadRadius: 2.0,
-        //           ),
-        //         ]),
             child: Card(
-              elevation: 10.0,
+              elevation: 3.0,
               shadowColor: Colors.grey[400],
               child: Padding(
                 padding: EdgeInsets.all(15.0),

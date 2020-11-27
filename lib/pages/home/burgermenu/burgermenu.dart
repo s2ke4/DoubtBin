@@ -24,7 +24,8 @@ class _BurgerMenuState extends State<BurgerMenu> {
               //height: 250,
               decoration: BoxDecoration(
                   gradient: LinearGradient(
-                      colors: [Colors.green, Colors.lightGreen])),
+                      colors: [ const Color(0xff007EF4),
+                      const Color(0xFF2A75BC),])),
               child: DrawerHeader(
                 padding: EdgeInsets.fromLTRB(10, 15, 0, 15),
                 child: Column(
@@ -35,7 +36,7 @@ class _BurgerMenuState extends State<BurgerMenu> {
                       style: TextStyle(
                         fontFamily: 'AppBarFont',
                         fontSize: 25,
-                        color: Colors.black45,
+                        color: Colors.white,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -46,28 +47,18 @@ class _BurgerMenuState extends State<BurgerMenu> {
                     UserInfo(),
                   ],
                 ),
-                // decoration: BoxDecoration(
-                //   boxShadow: [
-                //     BoxShadow(
-                //       color: Colors.black,
-                //       blurRadius: .7,
-                //     )
-                //   ],
-                //   color: Colors.white, //the box in which user info is stored
-                // ),
               ),
             ),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-              color: Colors.grey[200],
               child: Align(
                 alignment: Alignment.topLeft,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 2),
                   child: (Text(
-                    'Your rooms',
+                    'Your Rooms',
                     style: TextStyle(
-                      fontSize: 15,
+                      fontSize: 16,
                       color: Colors.grey[600],
                       fontWeight: FontWeight.w800,
                     ),
@@ -77,12 +68,7 @@ class _BurgerMenuState extends State<BurgerMenu> {
             ),
             Expanded(
               child: Container(
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [Colors.grey[200], Colors.white],
-                )),
+                padding: EdgeInsets.all(0),
                 child: BinDatabase().showRoomsInBurger(currentUser.uid),
               ),
             ),
