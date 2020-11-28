@@ -15,11 +15,10 @@ import 'package:image/image.dart' as Im;
 import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 
-final CollectionReference binCollection =
-    FirebaseFirestore.instance.collection('bins');
+final CollectionReference binCollection =  FirebaseFirestore.instance.collection('bins');
 final StorageReference storageRef = FirebaseStorage.instance.ref();
- final CollectionReference userCollection =
-      FirebaseFirestore.instance.collection('Users');
+final CollectionReference userCollection = FirebaseFirestore.instance.collection('Users');
+
 class BinDatabase {
   final String roomCode;
   final String user;
@@ -38,8 +37,7 @@ class BinDatabase {
     });
   }
 
-  Future createRoom(
-      String roomCode, String displayName, String description) async {
+  Future createRoom(String roomCode, String displayName, String description) async {
     await binCollection.doc(roomCode).set({
       "roomCode": roomCode,
       "displayName": displayName,
@@ -375,6 +373,22 @@ class BinDatabase {
     await userRef.doc(uid).collection("joinedRoom").doc(code).delete();
     await binCollection.doc(code).collection('members').doc(uid).delete();
   }
+
+
+  //likes and dislikes
+//  Future PostLikes(String postId) async {
+//    DocumentSnapshot likes =  await binCollection
+//        .doc(roomCode)
+//        .collection("posts")
+//        .doc(postId).get(numberOfLikes);
+//    await binCollection
+//        .doc(roomCode)
+//        .collection("posts")
+//        .doc(postId)
+//        .update({"isResolved": );
+//  }
+
+
 }
 
 Future compressImage(_image, postId) async {
@@ -395,4 +409,3 @@ Future<String> uploadImage(_image, int i, postId) async {
   String downloadURL = await storageSnap.ref.getDownloadURL();
   return downloadURL;
 }
-
