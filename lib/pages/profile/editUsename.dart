@@ -1,5 +1,6 @@
 import 'package:doubtbin/model/user.dart';
 import 'package:doubtbin/pages/home/home.dart';
+import 'package:doubtbin/pages/profile/profile.dart';
 import 'package:doubtbin/shared/appBar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -27,6 +28,10 @@ class _EditUsernameState extends State<EditUsername> {
         "userName": userNameController.text.trim(),
       });
     }
+    // Navigator.push(
+    //     context, MaterialPageRoute(builder: (context) => EditUsername()));
+    Navigator.pop(context);
+    Navigator.pop(context);
   }
 
   @override
@@ -85,7 +90,7 @@ class _EditUsernameState extends State<EditUsername> {
                       const Color(0xFF2A75BC),
                     ])),
                 child: Text(
-                  "Enter",
+                  "Save Changes",
                   style: TextStyle(color: Colors.white, fontSize: 18),
                 ),
               ),
