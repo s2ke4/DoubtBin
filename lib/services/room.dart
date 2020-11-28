@@ -18,15 +18,15 @@ import 'package:path_provider/path_provider.dart';
 final CollectionReference binCollection =
     FirebaseFirestore.instance.collection('bins');
 final StorageReference storageRef = FirebaseStorage.instance.ref();
- final CollectionReference userCollection =
-      FirebaseFirestore.instance.collection('Users');
+final CollectionReference userCollection =
+    FirebaseFirestore.instance.collection('Users');
+
 class BinDatabase {
   final String roomCode;
   final String user;
   final String uid;
   BinDatabase({this.roomCode, this.user, this.uid});
 
- 
   Future updateUserData(String displayName, String userName, String uid,
       String email, String photoURL) async {
     return await userCollection.doc(uid).set({
@@ -92,16 +92,21 @@ class BinDatabase {
                   ),
                 );
               });
-              if(allCard.length==0){
+              if (allCard.length == 0) {
                 return Container(
-                  child:Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children:[
-                      Center(child: Text("You are not a member of any room.",style: TextStyle(fontSize:16),)),
-                      Center(child: Text("Room you will create or join will appear here.",style: TextStyle(fontSize:16)))
-                    ]
-                  )
-                );
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                      Center(
+                          child: Text(
+                        "You are not a member of any room.",
+                        style: TextStyle(fontSize: 16),
+                      )),
+                      Center(
+                          child: Text(
+                              "Room you will create or join will appear here.",
+                              style: TextStyle(fontSize: 16)))
+                    ]));
               }
               return ListView(children: allCard);
             } else {
@@ -145,10 +150,58 @@ class BinDatabase {
                   ),
                 );
               });
-              if(allCard.length==0){
+              if (allCard.length == 0) {
                 return Container(
-                  child:Center(child: Text("No Room to Show",style: TextStyle(fontSize:16)))
+                    child: Center(
+                        child: Text("No Room to Show",
+                            style: TextStyle(fontSize: 16))));
+              }
+              return ListView(children: allCard);
+            } else {
+              return Container(
+                child: Loading(),
+              );
+            }
+          },
+        );
+      },
+    );
+  }
+
+  showRoomsInProfile(String userId) {
+    return StreamBuilder(
+      stream: userRef.doc(userId).collection("joinedRoom").snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return CircularProgressIndicator();
+        }
+        List<Future<DocumentSnapshot>> collFuture = List();
+        snapshot.data.docs.forEach((doc) {
+          collFuture.add(binCollection.doc(doc.id).get());
+        });
+
+        return FutureBuilder<List<DocumentSnapshot>>(
+          future: Future.wait<DocumentSnapshot>(collFuture),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              List<BurgerRoomTile> allCard = [];
+              snapshot.data.forEach((docSnap) {
+                allCard.add(
+                  BurgerRoomTile(
+                    bin: Bin(
+                      description: docSnap.data()['description'],
+                      binName: docSnap.data()['displayName'],
+                      owner: docSnap.data()['ownerName'],
+                      roomId: docSnap.id,
+                    ),
+                  ),
                 );
+              });
+              if (allCard.length == 0) {
+                return Container(
+                    child: Center(
+                        child: Text("No Room to Show",
+                            style: TextStyle(fontSize: 16))));
               }
               return Column(children: allCard);
             } else {
@@ -167,17 +220,24 @@ class BinDatabase {
   //we will include that room in the joined room collection of that person
 
   //check room code to join room
-  Future<bool> checkingCode(String userId) async{ 
+  Future<bool> checkingCode(String userId) async {
     DocumentSnapshot doc = await binCollection.doc(roomCode).get();
     bool found = doc.exists;
     if (found) {
-      userRef.doc(userId).collection("joinedRoom").doc(roomCode).set({"joined": true});
-      binCollection.doc(roomCode).collection("members").doc(userId).set({"member": true});
+      userRef
+          .doc(userId)
+          .collection("joinedRoom")
+          .doc(roomCode)
+          .set({"joined": true});
+      binCollection
+          .doc(roomCode)
+          .collection("members")
+          .doc(userId)
+          .set({"member": true});
       return true;
     }
     return false;
   }
-
 
   showAllPost() {
     return StreamBuilder(
@@ -216,10 +276,10 @@ class BinDatabase {
   }
 
   //showMembers
-  showAllMembers(String roomId,String ownerId) {
+  showAllMembers(String roomId, String ownerId) {
     return StreamBuilder(
       stream: binCollection.doc(roomId).collection("members").snapshots(),
-      builder: (context, snapshot){
+      builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return CircularProgressIndicator();
         }
@@ -227,8 +287,9 @@ class BinDatabase {
         List<Future<DocumentSnapshot>> collFuture = List();
 
         snapshot.data.docs.forEach((doc) {
-          if(doc.id!=ownerId){
-          collFuture.add(userCollection.doc(doc.id).get());}
+          if (doc.id != ownerId) {
+            collFuture.add(userCollection.doc(doc.id).get());
+          }
         });
 
         return FutureBuilder<List<DocumentSnapshot>>(
@@ -239,15 +300,14 @@ class BinDatabase {
               snapshot.data.forEach((docSnap) {
                 allMembers.add(
                   UserTile(
-                    user: MyUser(
-                        uid: docSnap.id,
-                        displayName: docSnap.data()['displayName'],
-                        email: docSnap.data()['email'],
-                        photoURL: docSnap.data()['circleAvatar'],
-                        userName: docSnap.data()['userName']),
-                    ownerId:ownerId,
-                    code:roomId
-                  ),
+                      user: MyUser(
+                          uid: docSnap.id,
+                          displayName: docSnap.data()['displayName'],
+                          email: docSnap.data()['email'],
+                          photoURL: docSnap.data()['circleAvatar'],
+                          userName: docSnap.data()['userName']),
+                      ownerId: ownerId,
+                      code: roomId),
                 );
               });
               return Column(children: allMembers);
@@ -357,10 +417,10 @@ class BinDatabase {
   }
 
   //exit a person from group
-//room will be removed from his joined collection and 
+//room will be removed from his joined collection and
 //he will be removed from member collection of that room
 
-  exitFromBin(code,uid)async{
+  exitFromBin(code, uid) async {
     await userRef.doc(uid).collection("joinedRoom").doc(code).delete();
     await binCollection.doc(code).collection('members').doc(uid).delete();
   }
@@ -388,4 +448,3 @@ Future<String> uploadImage(_image, int i, postId) async {
   
   return downloadURL;
 }
-
