@@ -23,9 +23,10 @@ class _BurgerMenuState extends State<BurgerMenu> {
             Container(
               //height: 250,
               decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      colors: [ const Color(0xff007EF4),
-                      const Color(0xFF2A75BC),])),
+                  gradient: LinearGradient(colors: [
+                const Color(0xff007EF4),
+                const Color(0xFF2A75BC),
+              ])),
               child: DrawerHeader(
                 padding: EdgeInsets.fromLTRB(10, 15, 0, 15),
                 child: Column(
@@ -71,6 +72,9 @@ class _BurgerMenuState extends State<BurgerMenu> {
                 padding: EdgeInsets.all(0),
                 child: BinDatabase().showRoomsInBurger(currentUser.uid),
               ),
+            ),
+            SizedBox(
+              height: 20,
             ),
             Container(
               child: ListTile(

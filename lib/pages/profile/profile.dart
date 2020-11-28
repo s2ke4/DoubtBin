@@ -116,7 +116,8 @@ class _ProfileState extends State<Profile> {
                       ))),
               SizedBox(height: 15),
               Container(
-                child: BinDatabase().showRoomsInBurger(currentUser.uid),
+                padding: EdgeInsets.all(0),
+                child: BinDatabase().showRoomsInProfile(currentUser.uid),
               ),
             ],
           ),
