@@ -41,9 +41,9 @@ class _ProfileState extends State<Profile> {
                   child: Container(
                     margin: EdgeInsets.only(top: 20),
                     child: Hero(
-                      tag: '$user.photoURL',
+                      tag: '$currentUser.photoURL',
                       child: CircleAvatar(
-                        backgroundImage: NetworkImage(user.photoURL),
+                        backgroundImage: NetworkImage(currentUser.photoURL),
                         radius: 50,
                       ),
                     ),

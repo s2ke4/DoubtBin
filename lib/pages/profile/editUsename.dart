@@ -38,6 +38,17 @@ class _EditUsernameState extends State<EditUsername> {
           padding: EdgeInsets.symmetric(horizontal: 24),
           child: Column(children: [
             SizedBox(height: 50),
+            Container(
+              margin: EdgeInsets.only(top: 20),
+              child: Hero(
+                tag: '$currentUser.photoURL',
+                child: CircleAvatar(
+                  backgroundImage: NetworkImage(currentUser.photoURL),
+                  radius: 50,
+                ),
+              ),
+            ),
+            SizedBox(height: 50),
             TextFormField(
               onChanged: (val) {
                 setState(() => correctUserName = val.length > 2 ? true : false);
