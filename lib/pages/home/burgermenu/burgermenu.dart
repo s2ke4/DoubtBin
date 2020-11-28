@@ -69,12 +69,12 @@ class _BurgerMenuState extends State<BurgerMenu> {
             ),
             Expanded(
               child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.blueGrey[50],
+                ),
                 padding: EdgeInsets.all(0),
                 child: BinDatabase().showRoomsInBurger(currentUser.uid),
               ),
-            ),
-            SizedBox(
-              height: 20,
             ),
             Container(
               child: ListTile(
@@ -89,22 +89,24 @@ class _BurgerMenuState extends State<BurgerMenu> {
               ),
               alignment: Alignment.bottomLeft,
             ),
-            FlatButton(
-              onPressed: () {
-                _auth.signOutGoogle();
-              },
-              child: SizedBox(
-                  width: double.infinity,
-                  child: Row(
-                    children: [
-                      Icon(Icons.exit_to_app),
-                      SizedBox(width: 9),
-                      Text(
-                        'Log Out',
-                        textAlign: TextAlign.left,
-                      ),
-                    ],
-                  )),
+            Container(
+              child: FlatButton(
+                onPressed: () {
+                  _auth.signOutGoogle();
+                },
+                child: SizedBox(
+                    width: double.infinity,
+                    child: Row(
+                      children: [
+                        Icon(Icons.exit_to_app),
+                        SizedBox(width: 9),
+                        Text(
+                          'Log Out',
+                          textAlign: TextAlign.left,
+                        ),
+                      ],
+                    )),
+              ),
             )
           ],
         ),
