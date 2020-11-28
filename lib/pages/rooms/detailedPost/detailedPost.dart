@@ -4,6 +4,7 @@ import 'package:doubtbin/pages/home/home.dart';
 import 'package:doubtbin/pages/rooms/comment.dart';
 import 'package:doubtbin/pages/rooms/detailedImage.dart';
 import 'package:doubtbin/pages/rooms/detailedPost/deletePopUp.dart';
+import 'package:doubtbin/pages/rooms/editPost/editNewPost.dart';
 import 'package:doubtbin/services/room.dart';
 import 'package:doubtbin/shared/appBar.dart';
 import 'package:doubtbin/shared/loading.dart';
@@ -29,6 +30,10 @@ class _DetailPostState extends State<DetailPost> {
   _DetailPostState({this.post,this.roomCode});
   String userName,userImageURL,roomName='';
   bool isResolved=false;
+
+  void updateValue(Post post1){
+    setState(()=>post = post1);
+  }
   
   @override
   void initState(){
@@ -63,6 +68,9 @@ class _DetailPostState extends State<DetailPost> {
       case WhyFarther.delete:
         await deletePopUp(roomCode:roomCode,postId:post.postID,images:images,isDeletePost:true).deletePost(context,"Delete this Doubt?","Delete");
         break;
+      case WhyFarther.update:
+         Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>EditNewPost(post:post,roomCode:roomCode,updateValue:updateValue)));
+         break;
     }
   }
 
@@ -160,13 +168,13 @@ class _DetailPostState extends State<DetailPost> {
                         Stack(
                           children: [
                             Hero(
-                                    tag: "heroImage",
-                                    child: CachedNetworkImage(
-                                      fit:BoxFit.cover,
-                                      imageUrl: images[0],
-                                      placeholder: (context, url) => Loading(),
-                                      errorWidget: (context, url, error) => Icon(Icons.error),
-                                  ),
+                              tag: "heroImage",
+                              child: CachedNetworkImage(
+                                fit:BoxFit.cover,
+                                imageUrl: images[0],
+                                placeholder: (context, url) => Loading(),
+                                errorWidget: (context, url, error) => Icon(Icons.error),
+                              ),
                             ),
                             Positioned(
                               left: 0,

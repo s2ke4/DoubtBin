@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 
 class DetailedImage extends StatefulWidget {
 
-  // List<String> images;
-  // List<File> fileImage;
   List<dynamic> imgs;
   bool isFileImage;
   Function removeImg;
@@ -64,12 +62,13 @@ class _DetailedImageState extends State<DetailedImage> {
                     )
                   )
                 ],
-              ):CachedNetworkImage(
-                                        imageUrl: image,
-                                        placeholder: (context, url) => Loading(),
-                                        errorWidget: (context, url, error) => Icon(Icons.error),
-                                    ),
-    )).toList(),
+              ):
+              CachedNetworkImage(
+                  imageUrl: image,
+                  placeholder: (context, url) => Loading(),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+              ),
+        )).toList(),
       )
     );
   }

@@ -6,11 +6,6 @@ import 'package:provider/provider.dart';
 
 class EditUsername extends StatefulWidget {
 
-  Function switchHomeAndUserName;
-  Username(Function fn)
-  {
-    switchHomeAndUserName = fn;
-  }
 
   @override
   _EditUsernameState createState() => _EditUsernameState();
@@ -32,14 +27,8 @@ class _EditUsernameState extends State<EditUsername> {
       });
       final _user = Provider.of<MyUser>(context,listen:false);
       await userRef.doc(_user.uid).set({
-        "userName":userNameController.text.trim(),
-        "displayName":_user.displayName,
-        "email":_user.email,
-        "circleAvatar":_user.photoURL,
-        "uid":_user.uid
+        "userName":userNameController.text.trim()
       });
-      MyUser _newUser = MyUser(uid:_user.uid,photoURL: _user.photoURL,displayName: _user.displayName,email: _user.email,userName: userNameController.text.trim());
-      widget.switchHomeAndUserName(_newUser);
     }
   }
 
