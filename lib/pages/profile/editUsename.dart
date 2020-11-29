@@ -28,9 +28,6 @@ class _EditUsernameState extends State<EditUsername> {
         "userName": userNameController.text.trim(),
       });
     }
-    // Navigator.push(
-    //     context, MaterialPageRoute(builder: (context) => EditUsername()));
-    Navigator.pop(context);
     Navigator.pop(context);
   }
 

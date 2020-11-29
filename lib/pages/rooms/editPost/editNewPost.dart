@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:doubtbin/model/post.dart';
 import 'package:doubtbin/pages/rooms/editPost/previewImage.dart';
 import 'package:doubtbin/services/room.dart';
@@ -171,7 +170,7 @@ class _EditNewPostState extends State<EditNewPost> {
                 SizedBox(height: 30),
                 RaisedButton(
                   child: Text("Add Image",style: TextStyle(fontSize: 18)),
-                  color: Colors.blue[200],
+                  color: Color(0xff007EF4),
                   onPressed: ()=>selectImage(context),
                 ),
                PreViewImage(img1:images,img2:img,removeImage: removeImg),
@@ -179,7 +178,7 @@ class _EditNewPostState extends State<EditNewPost> {
                   onPressed: editPost,
                   child:
                       Text("Update Post", style: TextStyle(fontSize: 18)),
-                  color: Colors.blue[200],
+                  color: Color(0xff007EF4),
                 ),
               ],
             ),
