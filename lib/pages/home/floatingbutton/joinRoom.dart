@@ -21,7 +21,8 @@ class _JoinRoomState extends State<JoinRoom> {
 
     if (validCode) {
       setState(() => isLoading = true);
-      bool exist = await BinDatabase(roomCode: code).checkingCode(currentUser.uid);
+      bool exist =
+          await BinDatabase(roomCode: code).checkingCode(currentUser.uid);
       if (!exist) {
         setState(() => {validCode = false, isLoading = false});
       } else {
@@ -43,68 +44,57 @@ class _JoinRoomState extends State<JoinRoom> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-          gradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [Colors.grey[400], Colors.white],
-        //transform: GradientRotation(pi/4),
-      )),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: appBar("DoubtBin"),
-        body: isLoading
-            ? Loading()
-            : Container(
-                child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 24),
-                    child: Column(
-                      children: [
-                        SizedBox(height: 50),
-                        TextFormField(
-                          controller: joinroomNameController,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.grey[200],
-                            hintText: "Enter Room Code",
-                            border: OutlineInputBorder(),
-                            labelText: "Room Code",
-                            errorText: validCode
-                                ? null
-                                : "Room Not Found, Please Enter Correct Code",
+    return Scaffold(
+      appBar: appBar("DoubtBin"),
+      body: isLoading
+          ? Loading()
+          : Container(
+              child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    children: [
+                      SizedBox(height: 50),
+                      TextFormField(
+                        controller: joinroomNameController,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.grey[200],
+                          hintText: "Enter Room Code",
+                          border: OutlineInputBorder(),
+                          labelText: "Room Code",
+                          errorText: validCode
+                              ? null
+                              : "Room Not Found, Please Enter Correct Code",
+                        ),
+                      ),
+                      SizedBox(height: 25),
+                      GestureDetector(
+                        child: Container(
+                          alignment: Alignment.center,
+                          width: MediaQuery.of(context).size.width,
+                          padding: EdgeInsets.symmetric(vertical: 12),
+                          decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  offset: const Offset(3.0, 3.0),
+                                  color: Colors.grey,
+                                  blurRadius: 4.0,
+                                  spreadRadius: 2.0,
+                                )
+                              ],
+                              gradient: LinearGradient(colors: [
+                                const Color(0xff007EF4),
+                                const Color(0xFF2A75BC),
+                              ])),
+                          child: Text(
+                            "Join",
+                            style: TextStyle(color: Colors.white, fontSize: 18),
                           ),
                         ),
-                        SizedBox(height: 25),
-                        GestureDetector(
-                          child: Container(
-                            alignment: Alignment.center,
-                            width: MediaQuery.of(context).size.width,
-                            padding: EdgeInsets.symmetric(vertical: 12),
-                            decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    offset: const Offset(3.0, 3.0),
-                                    color: Colors.grey,
-                                    blurRadius: 4.0,
-                                    spreadRadius: 2.0,
-                                  )
-                                ],
-                                gradient: LinearGradient(colors: [
-                                  const Color(0xff007EF4),
-                                  const Color(0xFF2A75BC),
-                                ])),
-                            child: Text(
-                              "Join",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 18),
-                            ),
-                          ),
-                          onTap: joinRoom,
-                        )
-                      ],
-                    ))),
-      ),
+                        onTap: joinRoom,
+                      )
+                    ],
+                  ))),
     );
   }
 }
