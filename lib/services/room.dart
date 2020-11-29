@@ -75,7 +75,7 @@ class BinDatabase {
           collFuture.add(binCollection.doc(doc.id).get());
         });
 
-        return FutureBuilder<List<DocumentSnapshot>>(
+        return snapshot.hasData ? FutureBuilder<List<DocumentSnapshot>>(
           future: Future.wait<DocumentSnapshot>(collFuture),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
@@ -115,7 +115,7 @@ class BinDatabase {
               );
             }
           },
-        );
+        ): Container();
       },
     );
   }
@@ -484,6 +484,26 @@ class BinDatabase {
   exitFromBin(code, uid) async {
     await userRef.doc(uid).collection("joinedRoom").doc(code).delete();
     await binCollection.doc(code).collection('members').doc(uid).delete();
+  }
+
+  addComments(String postId, String roomId, commentMap )
+  {
+    FirebaseFirestore.instance.collection("bins")
+        .doc(roomId)
+        .collection("posts")
+        .doc(postId)
+        .collection("comments")
+        .add(commentMap).catchError((e){print(e.toString());});
+  }
+
+  getComments(String roomId, String postId) async
+  {
+    return await FirebaseFirestore.instance.collection("bins")
+        .doc(roomId)
+        .collection("posts")
+        .doc(postId)
+        .collection("comments").orderBy("time", descending: true)
+        .snapshots();
   }
 
   
