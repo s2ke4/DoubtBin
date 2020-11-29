@@ -89,6 +89,7 @@ class BinDatabase {
                             binName: docSnap.data()['displayName'],
                             owner: docSnap.data()['ownerName'],
                             roomId: docSnap.id,
+                            ownerId:docSnap.data()['ownerId']
                           ),
                         ),
                       );
