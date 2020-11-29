@@ -73,7 +73,7 @@ class BinDatabase {
           collFuture.add(binCollection.doc(doc.id).get());
         });
 
-        return FutureBuilder<List<DocumentSnapshot>>(
+        return snapshot.hasData ? FutureBuilder<List<DocumentSnapshot>>(
           future: Future.wait<DocumentSnapshot>(collFuture),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
@@ -113,7 +113,7 @@ class BinDatabase {
               );
             }
           },
-        );
+        ): Container();
       },
     );
   }
@@ -250,6 +250,7 @@ class BinDatabase {
         }
         List<PostCard> allposts = [];
         snapshot.data.docs.map((doc) {
+          
           allposts.add(PostCard(
               post: Post(
                 postID: doc.data()['postID'],
@@ -335,7 +336,7 @@ class BinDatabase {
     int numberOfLikes,
     int numberOfDislikes,
   ) async {
-    var media = new List(numberOfAttachment);
+    List<String> media = new List(numberOfAttachment);
     for (int i = 0; i < numberOfAttachment; i++) {
       var image = await compressImage(images.elementAt(i), postID);
       var let = await uploadImage(image, i, postID);
@@ -360,6 +361,36 @@ class BinDatabase {
 
   }
 
+  //edit post
+  Future<Post> editPost(String postId,String head,String des,List<File> img1,List<dynamic> img2)async{
+    for (int i = 0; i < img1.length; i++) {
+      var image = await compressImage(img1.elementAt(i), postId);
+      var let = await uploadImage(image, i, postId);
+      img2.add(let);
+    }
+    
+    await binCollection.doc(roomCode).collection('posts').doc(postId).update({
+      "postHeading": head,
+      "postBody": des,
+      "media": img2,
+      "numberOfAttachment":img2.length,
+    });
+    DocumentSnapshot doc = await binCollection.doc(roomCode).collection('posts').doc(postId).get();
+    Post post = Post(
+                postID: doc.data()['postID'],
+                postHeading: doc.data()['postHeading'],
+                images: doc.data()['media'],
+                postBody: doc.data()['postBody'],
+                author: doc.data()['author'],
+                isResolved: doc.data()['isResolved'],
+                numberOfAttachment: doc.data()['numberOfAttachment'],
+                numberOfComments: doc.data()['numberOfComments'],
+                numberOfLikes: doc.data()['numberOfLikes'],
+                numberOfDislikes: doc.data()['numberOfDislikes'],
+              );
+    return post;
+  } 
+
   //fn to make doubt resolved
   Future<void> makeResolved(String postId) async {
     await binCollection
@@ -382,8 +413,13 @@ class BinDatabase {
   Future<void> deletePost(String postId, List<dynamic> images) async {
     await binCollection.doc(roomCode).collection("posts").doc(postId).delete();
     for (int i = 0; i < images.length; i++) {
-      storageRef.child('post$i _$postId.jpg').delete();
+      deleteImageFromStorage(images[i]);
     }
+  }
+
+  Future<void> deleteImageFromStorage(dynamic image)async{
+     StorageReference ref =  await FirebaseStorage.instance.getReferenceFromUrl(image);
+      ref.delete();
   }
 
   //exit a person from group
@@ -416,20 +452,49 @@ class BinDatabase {
   }
 
   Future PostDislikes(String postId) async {
-    DocumentSnapshot  post =  await binCollection.doc(roomCode).collection("posts").doc(postId).get();
+    DocumentSnapshot post = await binCollection.doc(roomCode).collection(
+        "posts").doc(postId).get();
     int like = post.get('numberOfLikes');
     int disLike = post.get('numberOfDislikes');
-    if(post.get('isDisliked')==true){
-      await binCollection.doc(roomCode).collection("posts").doc(postId).update({"numberOfDislikes": disLike-1});
-      await binCollection.doc(roomCode).collection("posts").doc(postId).update({"isDisliked": false});
-    }else{
-      await binCollection.doc(roomCode).collection("posts").doc(postId).update({"numberOfDislikes": disLike+1});
-      await binCollection.doc(roomCode).collection("posts").doc(postId).update({"isDisliked": true});
-      if(post.get('isLiked')==true){
-        await binCollection.doc(roomCode).collection("posts").doc(postId).update({"numberOfLikes": like-1});
-        await binCollection.doc(roomCode).collection("posts").doc(postId).update({"isLiked": false});
+    if (post.get('isDisliked') == true) {
+      await binCollection.doc(roomCode).collection("posts").doc(postId).update(
+          {"numberOfDislikes": disLike - 1});
+      await binCollection.doc(roomCode).collection("posts").doc(postId).update(
+          {"isDisliked": false});
+    } else {
+      await binCollection.doc(roomCode).collection("posts").doc(postId).update(
+          {"numberOfDislikes": disLike + 1});
+      await binCollection.doc(roomCode).collection("posts").doc(postId).update(
+          {"isDisliked": true});
+      if (post.get('isLiked') == true) {
+        await binCollection.doc(roomCode).collection("posts")
+            .doc(postId)
+            .update({"numberOfLikes": like - 1});
+        await binCollection.doc(roomCode).collection("posts")
+            .doc(postId)
+            .update({"isLiked": false});
       }
     }
+  }
+
+  addComments(String postId, String roomId, commentMap )
+  {
+    FirebaseFirestore.instance.collection("bins")
+        .doc(roomId)
+        .collection("posts")
+        .doc(postId)
+        .collection("comments")
+        .add(commentMap).catchError((e){print(e.toString());});
+  }
+
+  getComments(String roomId, String postId) async
+  {
+    return await FirebaseFirestore.instance.collection("bins")
+        .doc(roomId)
+        .collection("posts")
+        .doc(postId)
+        .collection("comments").orderBy("time", descending: true)
+        .snapshots();
   }
 
 
@@ -448,9 +513,13 @@ Future compressImage(_image, postId) async {
 
 //this fn is responsible for uploading image
 Future<String> uploadImage(_image, int i, postId) async {
+  int id = new DateTime.now().millisecondsSinceEpoch;
+  id+=i;
   StorageUploadTask uploadTask =
-      storageRef.child('post$i _$postId.jpg').putFile(_image);
+      storageRef.child('post$id _$postId.jpg').putFile(_image);
+    
   StorageTaskSnapshot storageSnap = await uploadTask.onComplete;
   String downloadURL = await storageSnap.ref.getDownloadURL();
+  
   return downloadURL;
 }

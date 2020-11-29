@@ -1,9 +1,11 @@
+import 'package:bubble/bubble.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:doubtbin/model/post.dart';
 import 'package:doubtbin/pages/home/home.dart';
 import 'package:doubtbin/pages/rooms/comment.dart';
 import 'package:doubtbin/pages/rooms/detailedImage.dart';
 import 'package:doubtbin/pages/rooms/detailedPost/deletePopUp.dart';
+import 'package:doubtbin/pages/rooms/editPost/editNewPost.dart';
 import 'package:doubtbin/services/room.dart';
 import 'package:doubtbin/shared/appBar.dart';
 import 'package:doubtbin/shared/loading.dart';
@@ -24,17 +26,42 @@ class _DetailPostState extends State<DetailPost> {
 
   Post post;
   String roomCode;
-  List<dynamic> images=[];
   String roomOwner;
   _DetailPostState({this.post,this.roomCode});
   String userName,userImageURL,roomName='';
   bool isResolved=false;
-
-
   bool isLiked;
   bool isDisliked;
   int numberOfLikes;
   int numberOfDislikes;
+
+  BinDatabase binDatabase = new BinDatabase();
+  TextEditingController commentTextEditingController = new TextEditingController();
+
+  Stream binCommentsStream;
+
+  Widget BinCommentsList()
+  {
+    return StreamBuilder(
+      stream: binCommentsStream,
+      builder: (context, snapshot){
+        return snapshot.hasData ? ListView.builder(
+          shrinkWrap: true,
+          scrollDirection: Axis.vertical,
+          itemCount: snapshot.data.documents.length,
+            itemBuilder: (context, index){
+            return CommentTile(snapshot.data.documents[index].data()["comment"], userName, userImageURL);
+            }) : Container();
+      },
+    );
+  }
+
+
+
+  void updateValue(Post post1){
+    setState(()=>post = post1);
+  }
+
 
   @override
   void initState(){
@@ -46,18 +73,25 @@ class _DetailPostState extends State<DetailPost> {
       numberOfLikes = post.numberOfLikes;
       numberOfDislikes = post.numberOfDislikes;
     });
+
+    binDatabase.(roomCode, post.postID).then((value){
+      setState(() {
+        binCommentsStream = value;
+      });
+    });
     getInfo();
   }
 
   getInfo()async{
     final val =await userRef.doc(post.author).get();
     final binref = await binCollection.doc(roomCode).get();
+    final binCommentRef = await binCollection .doc(roomCode).collection(post.postID).doc(post.postID).get();
     setState((){
       userName = val.data()['userName'];
       userImageURL = val.data()['circleAvatar'];
-      images = post.images;
       roomOwner = binref.data()['ownerId'];
       roomName = binref.data()['displayName'];
+      post.numberOfComments = binCommentRef.data()['numberOfComments'];
     });
   }
 
@@ -73,8 +107,11 @@ class _DetailPostState extends State<DetailPost> {
         await BinDatabase(roomCode:roomCode).makeUnResolved(post.postID);
         break;
       case WhyFarther.delete:
-        await deletePopUp(roomCode:roomCode,postId:post.postID,images:images,isDeletePost:true).deletePost(context,"Delete this Doubt?","Delete");
+        await deletePopUp(roomCode:roomCode,postId:post.postID,images:post.images,isDeletePost:true).deletePost(context,"Delete this Doubt?","Delete");
         break;
+      case WhyFarther.update:
+         Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>EditNewPost(post:post,roomCode:roomCode,updateValue:updateValue)));
+         break;
     }
   }
 
@@ -90,6 +127,22 @@ class _DetailPostState extends State<DetailPost> {
     setState(() {isDisliked = false; numberOfDislikes--; }) :
     setState(() {isDisliked = true;if(isLiked == true){numberOfLikes--;isLiked = false;};numberOfDislikes++; });
   }
+
+  Future addComment()  async
+  {
+    if(commentTextEditingController.text.isNotEmpty){
+      Map<String, dynamic> commentMap = {
+      "comment" : commentTextEditingController.text,
+        "time" : DateTime.now().millisecondsSinceEpoch
+    };
+     await binDatabase.addComments(post.postID, roomCode, commentMap);
+     commentTextEditingController.text = " ";
+     post.numberOfComments++;
+    }
+
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -180,30 +233,30 @@ class _DetailPostState extends State<DetailPost> {
                       SizedBox(height:12),
                       Text(post.postBody,style: TextStyle(fontSize: 16,),),
                       SizedBox(height: 10),
-                      images.isEmpty?Text(""):GestureDetector(
+                      post.images.isEmpty?Text(""):GestureDetector(
                         child: 
                         Stack(
                           children: [
                             Hero(
-                                    tag: "heroImage",
-                                    child: CachedNetworkImage(
-                                      fit:BoxFit.cover,
-                                      imageUrl: images[0],
-                                      placeholder: (context, url) => Loading(),
-                                      errorWidget: (context, url, error) => Icon(Icons.error),
-                                  ),
+                              tag: "heroImage",
+                              child: CachedNetworkImage(
+                                fit:BoxFit.cover,
+                                imageUrl: post.images[0],
+                                placeholder: (context, url) => Loading(),
+                                errorWidget: (context, url, error) => Icon(Icons.error),
+                              ),
                             ),
                             Positioned(
                               left: 0,
                               right: 0,
                               top: 0,
                               bottom:0,
-                              child: images.length>1?Opacity(
+                              child: post.images.length>1?Opacity(
                                 opacity: 0.6,
                                 child: Container(
                                   color: Colors.white,
                                   alignment: Alignment.center,
-                                  child:Text("+ ${images.length}",style: TextStyle(fontSize:25,fontWeight:FontWeight.bold),)
+                                  child:Text("+ ${post.images.length}",style: TextStyle(fontSize:25,fontWeight:FontWeight.bold),)
                                 ),
                               ) :Container(),
                             )
@@ -211,7 +264,7 @@ class _DetailPostState extends State<DetailPost> {
                         ),
                         onTap: (){
                           FocusScope.of(context).requestFocus(new FocusNode());
-                          Navigator.push(context,MaterialPageRoute(builder: (context)=>DetailedImage(imgs:images,isFileImage:false)));
+                          Navigator.push(context,MaterialPageRoute(builder: (context)=>DetailedImage(imgs:post.images,isFileImage:false)));
                         },
                       ),
                       SizedBox(height: 10),
@@ -257,7 +310,8 @@ class _DetailPostState extends State<DetailPost> {
                 ),
               ),
               //comments will come here
-              SizedBox(height:70)
+              BinCommentsList(),
+             // SizedBox(height:70)
              ]
             ),
             Positioned(
@@ -266,11 +320,15 @@ class _DetailPostState extends State<DetailPost> {
               right: 0.0,
               child:Container(
                 child: TextFormField(
+                  textInputAction: TextInputAction.done,
+                  controller: commentTextEditingController,
                   autofocus: false,
                   decoration: InputDecoration(
                     hintText: "Write Your Comment...",
                     border: InputBorder.none,
-                    suffixIcon: Icon(Icons.send,color: Colors.blue,),
+                    suffixIcon: IconButton(
+                      onPressed: addComment,
+                        icon : Icon(Icons.send,color: Colors.blue,)),
                   ),
                 ),
                 decoration: new BoxDecoration (
@@ -281,6 +339,57 @@ class _DetailPostState extends State<DetailPost> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+
+class CommentTile extends StatelessWidget {
+
+  final String comment;
+  final String username;
+  final String userimageURL;
+  CommentTile(this.comment, this.username, this.userimageURL);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(left:10,top: 15,right: 5),
+      child: Bubble(
+          nip: BubbleNip.leftTop,
+          color: Color.fromRGBO(240, 240, 240, 1.0),
+          child:Padding(
+            padding: const EdgeInsets.fromLTRB(5,5,0,5),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children:[
+                    (username==null||userimageURL==null)?Loading() :
+                    CircleAvatar(backgroundImage: NetworkImage(userimageURL),radius: 17,),
+                    SizedBox(width: 10,),
+                    (username==null||userimageURL==null)?Loading() :
+                    Text(username,style: TextStyle(fontSize: 16),)
+                  ],
+                ),
+                SizedBox(height:10),
+                comment == null ? Loading() :
+                Text(comment,style:TextStyle(fontSize: 16)),
+                SizedBox(height: 13,),
+                Row(
+                  children: [
+                    Icon(Icons.thumb_up,size:20 ),
+                    SizedBox(width: 5),
+                    Text("17",style: TextStyle(fontSize: 12),),
+                    SizedBox(width: 18),
+                    Icon(Icons.thumb_down,size: 20,),
+                    SizedBox(width: 5),
+                    Text("17",style: TextStyle(fontSize: 12),)
+                  ],
+                )
+              ],
+            ),
+          )
       ),
     );
   }

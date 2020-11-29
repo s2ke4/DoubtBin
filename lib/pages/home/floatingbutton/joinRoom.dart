@@ -58,7 +58,7 @@ class _JoinRoomState extends State<JoinRoom> {
                         controller: joinroomNameController,
                         decoration: InputDecoration(
                           filled: true,
-                          fillColor: Colors.grey[200],
+                          fillColor: Colors.grey[50],
                           hintText: "Enter Room Code",
                           border: OutlineInputBorder(),
                           labelText: "Room Code",
