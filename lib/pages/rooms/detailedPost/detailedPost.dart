@@ -1,3 +1,4 @@
+import 'package:bubble/bubble.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:doubtbin/model/post.dart';
 import 'package:doubtbin/pages/home/home.dart';
@@ -29,17 +30,44 @@ class _DetailPostState extends State<DetailPost> {
   _DetailPostState({this.post,this.roomCode});
   String userName,userImageURL,roomName='';
   bool isResolved=false;
-  
+  BinDatabase binDatabase = new BinDatabase();
+  TextEditingController commentTextEditingController = new TextEditingController();
+
+  Stream binCommentsStream;
+
+  Widget BinCommentsList()
+  {
+    return StreamBuilder(
+      stream: binCommentsStream,
+      builder: (context, snapshot){
+        return snapshot.hasData ? ListView.builder(
+          shrinkWrap: true,
+          scrollDirection: Axis.vertical,
+          itemCount: snapshot.data.documents.length,
+            itemBuilder: (context, index){
+            return CommentTile(snapshot.data.documents[index].data()["comment"], userName, userImageURL);
+            }) : Container();
+      },
+    );
+  }
+
+
   @override
   void initState(){
     super.initState();
     setState(()=>isResolved = post.isResolved);
+    binDatabase.getComments(roomCode, post.postID).then((value){
+      setState(() {
+        binCommentsStream = value;
+      });
+    });
     getInfo();
   }
 
   getInfo()async{
     final val =await userRef.doc(post.author).get();
     final binref = await binCollection.doc(roomCode).get();
+    final binCommentRef = await binCollection .doc(roomCode).collection(post.postID).doc("comments").get();
     setState((){
       userName = val.data()['userName'];
       userImageURL = val.data()['circleAvatar'];
@@ -65,6 +93,21 @@ class _DetailPostState extends State<DetailPost> {
         break;
     }
   }
+
+  Future addComment()  async
+  {
+    if(commentTextEditingController.text.isNotEmpty){
+      Map<String, dynamic> commentMap = {
+      "comment" : commentTextEditingController.text,
+        "time" : DateTime.now().millisecondsSinceEpoch
+    };
+     await binDatabase.addComments(post.postID, roomCode, commentMap);
+     commentTextEditingController.text = " ";
+    }
+
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -222,7 +265,8 @@ class _DetailPostState extends State<DetailPost> {
                 ),
               ),
               //comments will come here
-              SizedBox(height:70)
+              BinCommentsList(),
+             // SizedBox(height:70)
              ]
             ),
             Positioned(
@@ -231,11 +275,15 @@ class _DetailPostState extends State<DetailPost> {
               right: 0.0,
               child:Container(
                 child: TextFormField(
+                  textInputAction: TextInputAction.done,
+                  controller: commentTextEditingController,
                   autofocus: false,
                   decoration: InputDecoration(
                     hintText: "Write Your Comment...",
                     border: InputBorder.none,
-                    suffixIcon: Icon(Icons.send,color: Colors.blue,),
+                    suffixIcon: IconButton(
+                      onPressed: addComment,
+                        icon : Icon(Icons.send,color: Colors.blue,)),
                   ),
                 ),
                 decoration: new BoxDecoration (
@@ -246,6 +294,54 @@ class _DetailPostState extends State<DetailPost> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+
+class CommentTile extends StatelessWidget {
+
+  final String comment;
+  final String username;
+  final String userimageURL;
+  CommentTile(this.comment, this.username, this.userimageURL);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(left:10,top: 15,right: 5),
+      child: Bubble(
+          nip: BubbleNip.leftTop,
+          color: Color.fromRGBO(240, 240, 240, 1.0),
+          child:Padding(
+            padding: const EdgeInsets.fromLTRB(5,5,0,5),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children:[
+                    CircleAvatar(backgroundImage: NetworkImage(userimageURL),radius: 17,),
+                    SizedBox(width: 10,),
+                    Text(username,style: TextStyle(fontSize: 16),)
+                  ],
+                ),
+                SizedBox(height:10),
+                Text(comment,style:TextStyle(fontSize: 16)),
+                SizedBox(height: 13,),
+                Row(
+                  children: [
+                    Icon(Icons.thumb_up,size:20 ),
+                    SizedBox(width: 5),
+                    Text("17",style: TextStyle(fontSize: 12),),
+                    SizedBox(width: 18),
+                    Icon(Icons.thumb_down,size: 20,),
+                    SizedBox(width: 5),
+                    Text("17",style: TextStyle(fontSize: 12),)
+                  ],
+                )
+              ],
+            ),
+          )
       ),
     );
   }
