@@ -25,7 +25,6 @@ class _DetailPostState extends State<DetailPost> {
 
   Post post;
   String roomCode;
-  List<dynamic> images=[];
   String roomOwner;
   _DetailPostState({this.post,this.roomCode});
   String userName,userImageURL,roomName='';
@@ -48,7 +47,6 @@ class _DetailPostState extends State<DetailPost> {
     setState((){
       userName = val.data()['userName'];
       userImageURL = val.data()['circleAvatar'];
-      images = post.images;
       roomOwner = binref.data()['ownerId'];
       roomName = binref.data()['displayName'];
     });
@@ -66,7 +64,7 @@ class _DetailPostState extends State<DetailPost> {
         await BinDatabase(roomCode:roomCode).makeUnResolved(post.postID);
         break;
       case WhyFarther.delete:
-        await deletePopUp(roomCode:roomCode,postId:post.postID,images:images,isDeletePost:true).deletePost(context,"Delete this Doubt?","Delete");
+        await deletePopUp(roomCode:roomCode,postId:post.postID,images:post.images,isDeletePost:true).deletePost(context,"Delete this Doubt?","Delete");
         break;
       case WhyFarther.update:
          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>EditNewPost(post:post,roomCode:roomCode,updateValue:updateValue)));
@@ -163,7 +161,7 @@ class _DetailPostState extends State<DetailPost> {
                       SizedBox(height:12),
                       Text(post.postBody,style: TextStyle(fontSize: 16,),),
                       SizedBox(height: 10),
-                      images.isEmpty?Text(""):GestureDetector(
+                      post.images.isEmpty?Text(""):GestureDetector(
                         child: 
                         Stack(
                           children: [
@@ -171,7 +169,7 @@ class _DetailPostState extends State<DetailPost> {
                               tag: "heroImage",
                               child: CachedNetworkImage(
                                 fit:BoxFit.cover,
-                                imageUrl: images[0],
+                                imageUrl: post.images[0],
                                 placeholder: (context, url) => Loading(),
                                 errorWidget: (context, url, error) => Icon(Icons.error),
                               ),
@@ -181,12 +179,12 @@ class _DetailPostState extends State<DetailPost> {
                               right: 0,
                               top: 0,
                               bottom:0,
-                              child: images.length>1?Opacity(
+                              child: post.images.length>1?Opacity(
                                 opacity: 0.6,
                                 child: Container(
                                   color: Colors.white,
                                   alignment: Alignment.center,
-                                  child:Text("+ ${images.length}",style: TextStyle(fontSize:25,fontWeight:FontWeight.bold),)
+                                  child:Text("+ ${post.images.length}",style: TextStyle(fontSize:25,fontWeight:FontWeight.bold),)
                                 ),
                               ) :Container(),
                             )
@@ -194,7 +192,7 @@ class _DetailPostState extends State<DetailPost> {
                         ),
                         onTap: (){
                           FocusScope.of(context).requestFocus(new FocusNode());
-                          Navigator.push(context,MaterialPageRoute(builder: (context)=>DetailedImage(imgs:images,isFileImage:false)));
+                          Navigator.push(context,MaterialPageRoute(builder: (context)=>DetailedImage(imgs:post.images,isFileImage:false)));
                         },
                       ),
                       SizedBox(height: 10),

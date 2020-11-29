@@ -362,7 +362,7 @@ class BinDatabase {
       var let = await uploadImage(image, i, postId);
       img2.add(let);
     }
-
+    
     await binCollection.doc(roomCode).collection('posts').doc(postId).update({
       "postHeading": head,
       "postBody": des,
