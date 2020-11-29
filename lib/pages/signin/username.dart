@@ -80,13 +80,13 @@ class _UsernameState extends State<Username> {
                     padding: EdgeInsets.symmetric(vertical: 12),
                     decoration: BoxDecoration(
                         gradient: LinearGradient(colors: [
-                      const Color(0xff007EF4),
-                      const Color(0xFF2A75BC),
-                    ])),
-                    child: Text(
-                      "Enter",
-                      style: TextStyle(color: Colors.white, fontSize: 18),
-                    ),
+                          const Color(0xff007EF4),
+                          const Color(0xFF2A75BC),
+                        ])),
+                        child: Text(
+                          "Enter",
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
                   ),
                   onTap: addUserInDatabase,
                 )

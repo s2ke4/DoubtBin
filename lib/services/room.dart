@@ -68,7 +68,7 @@ class BinDatabase {
       stream: userRef.doc(userId).collection("joinedRoom").snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return CircularProgressIndicator();
+          return Loading();
         }
         List<Future<DocumentSnapshot>> collFuture = List();
         snapshot.data.docs.forEach((doc) {
@@ -126,7 +126,7 @@ class BinDatabase {
       stream: userRef.doc(userId).collection("joinedRoom").snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return CircularProgressIndicator();
+          return Loading();
         }
         List<Future<DocumentSnapshot>> collFuture = List();
         snapshot.data.docs.forEach((doc) {
@@ -173,9 +173,11 @@ class BinDatabase {
       stream: userRef.doc(userId).collection("joinedRoom").snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return CircularProgressIndicator();
+          return Loading();
         }
         List<Future<DocumentSnapshot>> collFuture = List();
+        print("from fn");
+        print(snapshot.data.docs);
         snapshot.data.docs.forEach((doc) {
           collFuture.add(binCollection.doc(doc.id).get());
         });
@@ -212,6 +214,65 @@ class BinDatabase {
           },
         );
       },
+    );
+  }
+
+  showCommonRoomsInProfile(String userId1,userId2){
+    return StreamBuilder(
+      stream:userRef.doc(userId1).collection("joinedRoom").snapshots(),
+      builder:(context,snapshot1){
+        if(!snapshot1.hasData){
+          return Loading();
+        }
+        return StreamBuilder(
+          stream: userRef.doc(userId2).collection("joinedRoom").snapshots(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Loading();
+            }
+            List<Future<DocumentSnapshot>> collFuture = List();
+            snapshot.data.docs.forEach((doc) {
+              for(int i=0;i<snapshot1.data.docs.length;i++){
+                if(doc.id==snapshot1.data.docs[i].id){
+                  collFuture.add(binCollection.doc(doc.id).get());
+                  break;
+                }
+              }});
+
+            return FutureBuilder<List<DocumentSnapshot>>(
+              future: Future.wait<DocumentSnapshot>(collFuture),
+              builder: (context, snapshot){
+                if (snapshot.hasData){
+                  List<BurgerRoomTile> allCard = [];
+                  snapshot.data.forEach((docSnap) {
+                    allCard.add(
+                      BurgerRoomTile(
+                        bin: Bin(
+                          description: docSnap.data()['description'],
+                          binName: docSnap.data()['displayName'],
+                          owner: docSnap.data()['ownerName'],
+                          roomId: docSnap.id,
+                        ),
+                      ),
+                    );
+                  });
+                  if (allCard.length == 0) {
+                    return Container(
+                        child: Center(
+                            child: Text("No Room to Show",
+                                style: TextStyle(fontSize: 16))));
+                  }
+                  return Column(children: allCard);
+                } else {
+                  return Container(
+                    child: Loading(),
+                  );
+                }
+              },
+            );
+          },
+        );
+      }
     );
   }
 
@@ -281,7 +342,7 @@ class BinDatabase {
       stream: binCollection.doc(roomId).collection("members").snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return CircularProgressIndicator();
+          return Loading();
         }
 
         List<Future<DocumentSnapshot>> collFuture = List();
@@ -416,7 +477,7 @@ class BinDatabase {
       ref.delete();
   }
 
-  //exit a person from group
+//exit a person from group
 //room will be removed from his joined collection and
 //he will be removed from member collection of that room
 
@@ -424,27 +485,29 @@ class BinDatabase {
     await userRef.doc(uid).collection("joinedRoom").doc(code).delete();
     await binCollection.doc(code).collection('members').doc(uid).delete();
   }
-}
 
-Future compressImage(_image, postId) async {
-  Directory temDir = await getTemporaryDirectory();
-  final temPath = temDir.path;
-  Im.Image imageFile = Im.decodeImage(_image.readAsBytesSync());
-  final compressImageFile = File('$temPath/img_$postId.jpg')
-    ..writeAsBytesSync(Im.encodeJpg(imageFile, quality: 85));
-  _image = compressImageFile;
-  return _image;
-}
-
-//this fn is responsible for uploading image
-Future<String> uploadImage(_image, int i, postId) async {
-  int id = new DateTime.now().millisecondsSinceEpoch;
-  id+=i;
-  StorageUploadTask uploadTask =
-      storageRef.child('post$id _$postId.jpg').putFile(_image);
-    
-  StorageTaskSnapshot storageSnap = await uploadTask.onComplete;
-  String downloadURL = await storageSnap.ref.getDownloadURL();
   
-  return downloadURL;
+  Future compressImage(_image, postId) async {
+    Directory temDir = await getTemporaryDirectory();
+    final temPath = temDir.path;
+    Im.Image imageFile = Im.decodeImage(_image.readAsBytesSync());
+    final compressImageFile = File('$temPath/img_$postId.jpg')
+      ..writeAsBytesSync(Im.encodeJpg(imageFile, quality: 85));
+    _image = compressImageFile;
+    return _image;
+  }
+
+  //this fn is responsible for uploading image
+  Future<String> uploadImage(_image, int i, postId) async {
+    int id = new DateTime.now().millisecondsSinceEpoch;
+    id+=i;
+    StorageUploadTask uploadTask =
+        storageRef.child('post$id _$postId.jpg').putFile(_image);
+      
+    StorageTaskSnapshot storageSnap = await uploadTask.onComplete;
+    String downloadURL = await storageSnap.ref.getDownloadURL();
+    
+    return downloadURL;
+  }
+
 }

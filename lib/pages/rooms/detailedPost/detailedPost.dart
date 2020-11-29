@@ -9,6 +9,7 @@ import 'package:doubtbin/services/room.dart';
 import 'package:doubtbin/shared/appBar.dart';
 import 'package:doubtbin/shared/loading.dart';
 import 'package:flutter/material.dart';
+import 'package:charcode/charcode.dart';
 
 enum WhyFarther { delete, markAsResolved, markAsUnresolved, update }
 

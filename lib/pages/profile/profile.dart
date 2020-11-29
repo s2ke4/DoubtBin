@@ -1,39 +1,51 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doubtbin/pages/profile/editUsename.dart';
 import 'package:doubtbin/services/room.dart';
 import 'package:doubtbin/shared/appBar.dart';
+import 'package:doubtbin/shared/loading.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:doubtbin/model/user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:doubtbin/pages/home/home.dart';
 
 class Profile extends StatefulWidget {
+
+  String userId;
+  Profile({this.userId});
+
   @override
-  _ProfileState createState() => _ProfileState();
+  _ProfileState createState() => _ProfileState(userId: userId);
 }
 
 class _ProfileState extends State<Profile> {
-  @override
-  Widget build(BuildContext context) {
-    final user = Provider.of<MyUser>(context);
 
-    String _user() {
-      String tittle = user.email == user.email ? "Your Rooms " : "Mutual Rooms";
-      return tittle;
+  bool isLoading = true;
+  MyUser profileUser;
+  String userId;
+  _ProfileState({this.userId}){
+       _user();
     }
 
+    Future<void> _user()async{
+       DocumentSnapshot userDoc = await userRef.doc(userId).get();
+       profileUser = MyUser.creatingUser(userDoc);
+       setState(()=>isLoading = false);
+    }
+
+  @override
+  Widget build(BuildContext context){
     return Container(
       decoration: BoxDecoration(
           gradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [Colors.grey[400], Colors.white],
-        //transform: GradientRotation(pi/4),
-      )),
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Colors.grey[400], Colors.white],
+          )
+      ),
       child: Scaffold(
         backgroundColor: Colors.grey[100],
         appBar: appBar("Profile"),
-        body: Container(
+        body: isLoading?Loading():Container(
           child: ListView(
             children: [
               Stack(children: <Widget>[
@@ -41,15 +53,15 @@ class _ProfileState extends State<Profile> {
                   child: Container(
                     margin: EdgeInsets.only(top: 20),
                     child: Hero(
-                      tag: '$currentUser.photoURL',
+                      tag: '${profileUser.photoURL}',
                       child: CircleAvatar(
-                        backgroundImage: NetworkImage(currentUser.photoURL),
+                        backgroundImage: NetworkImage(profileUser.photoURL),
                         radius: 50,
                       ),
                     ),
                   ),
                 ),
-                Container(
+                (currentUser.uid==userId)?Container(
                     alignment: Alignment.topRight,
                     padding: EdgeInsets.only(top: 10, right: 10),
                     child: ClipOval(
@@ -73,20 +85,20 @@ class _ProfileState extends State<Profile> {
                           },
                         ),
                       ),
-                    )),
+                    )):Container(),
               ]),
               SizedBox(height: 25),
               Center(
                   child: Text(
-                currentUser.userName,
-                style: TextStyle(
-                  fontSize: 18,
-                  letterSpacing: 2,
-                ),
+                    profileUser.userName,
+                    style: TextStyle(
+                      fontSize: 18,
+                      letterSpacing: 2,
+                    ),
               )),
               SizedBox(height: 10),
               Center(
-                child: Text(currentUser.displayName,
+                child: Text(profileUser.displayName,
                     style: TextStyle(
                       fontFamily: 'Futura',
                       color: Colors.black45,
@@ -96,7 +108,7 @@ class _ProfileState extends State<Profile> {
               ),
               SizedBox(height: 10),
               Center(
-                child: Text(currentUser.email,
+                child: Text(profileUser.email,
                     style: TextStyle(
                       fontFamily: 'Futura',
                       color: Colors.black45,
@@ -109,15 +121,15 @@ class _ProfileState extends State<Profile> {
               SizedBox(height: 15),
               Padding(
                   padding: EdgeInsets.only(left: 16),
-                  child: Text(_user(),
+                  child: Text((currentUser.uid==userId)?"Your Rooms":"Mutual Rooms",
                       style: TextStyle(
                         fontSize: 17,
                         color: Colors.blueAccent,
                       ))),
               SizedBox(height: 15),
-              Container(
+              Container( 
                 padding: EdgeInsets.all(0),
-                child: BinDatabase().showRoomsInProfile(currentUser.uid),
+                child: (currentUser.uid==userId)?BinDatabase().showRoomsInProfile(currentUser.uid):BinDatabase().showCommonRoomsInProfile(currentUser.uid,userId),
               ),
             ],
           ),
