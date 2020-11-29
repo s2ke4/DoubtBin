@@ -26,6 +26,11 @@ class _ProfileState extends State<Profile> {
        _user();
     }
 
+    Future<void> updateUserName()async{
+      DocumentSnapshot userDoc = await userRef.doc(userId).get();
+       setState(()=>profileUser = MyUser.creatingUser(userDoc));
+    }
+
     Future<void> _user()async{
        DocumentSnapshot userDoc = await userRef.doc(userId).get();
        profileUser = MyUser.creatingUser(userDoc);
@@ -81,7 +86,7 @@ class _ProfileState extends State<Profile> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => EditUsername()));
+                                    builder: (context) => EditUsername(userName:profileUser.userName,fn:updateUserName)));
                           },
                         ),
                       ),

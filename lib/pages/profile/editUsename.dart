@@ -1,19 +1,24 @@
-import 'package:doubtbin/model/user.dart';
 import 'package:doubtbin/pages/home/home.dart';
-import 'package:doubtbin/pages/profile/profile.dart';
 import 'package:doubtbin/shared/appBar.dart';
+import 'package:doubtbin/shared/loading.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class EditUsername extends StatefulWidget {
+  String userName;
+  Function fn;
+  EditUsername({this.userName,this.fn});
   @override
-  _EditUsernameState createState() => _EditUsernameState();
+  _EditUsernameState createState() => _EditUsernameState(userName);
 }
 
 class _EditUsernameState extends State<EditUsername> {
   TextEditingController userNameController = TextEditingController();
   bool correctUserName = true;
   bool isLoading = false;
+
+  _EditUsernameState(String userName){
+    userNameController.text = userName;
+  }
 
   addUserInDatabase() async {
     if (userNameController.text.trim().length < 3) {
@@ -23,14 +28,12 @@ class _EditUsernameState extends State<EditUsername> {
         correctUserName = true;
         isLoading = true;
       });
-      final _user = Provider.of<MyUser>(context, listen: false);
-      await userRef.doc(_user.uid).update({
+      await userRef.doc(currentUser.uid).update({
         "userName": userNameController.text.trim(),
       });
+      await widget.fn();
+      Navigator.pop(context);
     }
-    Navigator.pop(context);
-    Navigator.pop(context);
-    Navigator.push(context, MaterialPageRoute(builder: (context) => Profile()));
   }
 
   @override
@@ -38,7 +41,7 @@ class _EditUsernameState extends State<EditUsername> {
     return Container(
       child: Scaffold(
         appBar: appBar("Edit Username"),
-        body: Container(
+        body: isLoading?Loading():Container(
           padding: EdgeInsets.symmetric(horizontal: 24),
           child: Column(children: [
             SizedBox(height: 50),
@@ -58,6 +61,7 @@ class _EditUsernameState extends State<EditUsername> {
                 setState(() => correctUserName = val.length > 2 ? true : false);
               },
               controller: userNameController,
+              autofocus: true,
               decoration: InputDecoration(
                   hintText: "Enter new username",
                   labelText: "User Name",

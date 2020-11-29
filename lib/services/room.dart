@@ -178,8 +178,6 @@ class BinDatabase {
           return Loading();
         }
         List<Future<DocumentSnapshot>> collFuture = List();
-        print("from fn");
-        print(snapshot.data.docs);
         snapshot.data.docs.forEach((doc) {
           collFuture.add(binCollection.doc(doc.id).get());
         });
