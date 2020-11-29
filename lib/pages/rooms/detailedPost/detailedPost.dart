@@ -80,7 +80,7 @@ class _DetailPostState extends State<DetailPost> {
       userImageURL = val.data()['circleAvatar'];
       roomOwner = binref.data()['ownerId'];
       roomName = binref.data()['displayName'];
-      //post.numberOfComments = binCommentRef.data()['numberOfComments'];
+      post.numberOfComments = binCommentRef.data()['numberOfComments'];
     });
   }
 
