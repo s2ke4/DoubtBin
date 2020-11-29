@@ -29,11 +29,23 @@ class _DetailPostState extends State<DetailPost> {
   _DetailPostState({this.post,this.roomCode});
   String userName,userImageURL,roomName='';
   bool isResolved=false;
-  
+
+
+  bool isLiked;
+  bool isDisliked;
+  int numberOfLikes;
+  int numberOfDislikes;
+
   @override
   void initState(){
     super.initState();
-    setState(()=>isResolved = post.isResolved);
+    setState(() {
+      isResolved = post.isResolved;
+      isLiked = post.isLiked;
+      isDisliked = post.isDisliked;
+      numberOfLikes = post.numberOfLikes;
+      numberOfDislikes = post.numberOfDislikes;
+    });
     getInfo();
   }
 
@@ -61,9 +73,22 @@ class _DetailPostState extends State<DetailPost> {
         await BinDatabase(roomCode:roomCode).makeUnResolved(post.postID);
         break;
       case WhyFarther.delete:
-        await deletePopUp().deletePost(context, roomCode, post.postID, images);
+        await deletePopUp(roomCode:roomCode,postId:post.postID,images:images,isDeletePost:true).deletePost(context,"Delete this Doubt?","Delete");
         break;
     }
+  }
+
+  void PostLike() async{
+    await BinDatabase(roomCode:roomCode).PostLikes(post.postID);
+    isLiked==true ?
+    setState(() {isLiked = false; numberOfLikes--; }):
+    setState(() {isLiked = true; if(isDisliked == true){numberOfDislikes--;isDisliked = false;};numberOfLikes++; });
+  }
+  void PostDislike() async{
+    await BinDatabase(roomCode:roomCode).PostDislikes(post.postID);
+    isDisliked==true ?
+    setState(() {isDisliked = false; numberOfDislikes--; }) :
+    setState(() {isDisliked = true;if(isLiked == true){numberOfLikes--;isLiked = false;};numberOfDislikes++; });
   }
 
   @override
@@ -186,8 +211,7 @@ class _DetailPostState extends State<DetailPost> {
                         ),
                         onTap: (){
                           FocusScope.of(context).requestFocus(new FocusNode());
-                          Navigator.push(context,MaterialPageRoute(builder: (context)=>DetailedImage(images,false)));
-                          
+                          Navigator.push(context,MaterialPageRoute(builder: (context)=>DetailedImage(imgs:images,isFileImage:false)));
                         },
                       ),
                       SizedBox(height: 10),
@@ -197,13 +221,23 @@ class _DetailPostState extends State<DetailPost> {
                         children: [
                           Row(
                             children:[
-                              Icon(Icons.thumb_up,size:27),
+                              IconButton(
+                                icon: isLiked == true ? Icon(Icons.thumb_up,color: Colors.blue[500], size:27) : Icon(Icons.thumb_up, size:27),
+                                onPressed: PostLike,
+                                splashColor: Colors.blue[100],
+                                splashRadius: 25,
+                              ),
                               SizedBox(width:10),
-                              Text(post.numberOfLikes.toString()),
+                              Text(numberOfLikes.toString()),
                               SizedBox(width:15),
-                              Icon(Icons.thumb_down,size:27),
+                              IconButton(
+                                icon: isDisliked == true ? Icon(Icons.thumb_down,color: Colors.red[500], size:27) : Icon(Icons.thumb_down, size:27),
+                                onPressed: PostDislike,
+                                splashColor: Colors.red[100],
+                                splashRadius: 25,
+                              ),
                               SizedBox(width:10),
-                              Text(post.numberOfDislikes.toString())
+                              Text(numberOfDislikes.toString())
                             ]
                           ),
                           Padding(

@@ -3,8 +3,13 @@ import 'dart:io';
 import 'package:doubtbin/pages/rooms/detailedImage.dart';
 import 'package:flutter/material.dart';
 
-class showImage{
-  Widget showUploadImage(List<File> images,context){
+class showImage extends StatelessWidget {
+  List<File> images;
+  Function RemoveImg;
+  showImage({this.images,this.RemoveImg});
+
+  @override
+  Widget build(BuildContext context) {
     return (images.isEmpty)
             ?Text("no file selected")
             :GestureDetector(
@@ -41,7 +46,7 @@ class showImage{
                         ],
                 ),
                 onTap: (){
-                  Navigator.push(context,MaterialPageRoute(builder: (context)=>DetailedImage(images,true)));
+                  Navigator.push(context,MaterialPageRoute(builder: (context)=>DetailedImage(imgs:images,isFileImage: true,removeImg:RemoveImg)));
                 },
             );
   }

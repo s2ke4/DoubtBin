@@ -23,9 +23,10 @@ class _BurgerMenuState extends State<BurgerMenu> {
             Container(
               //height: 250,
               decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      colors: [ const Color(0xff007EF4),
-                      const Color(0xFF2A75BC),])),
+                  gradient: LinearGradient(colors: [
+                const Color(0xff007EF4),
+                const Color(0xFF2A75BC),
+              ])),
               child: DrawerHeader(
                 padding: EdgeInsets.fromLTRB(10, 15, 0, 15),
                 child: Column(
@@ -68,6 +69,9 @@ class _BurgerMenuState extends State<BurgerMenu> {
             ),
             Expanded(
               child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.blueGrey[50],
+                ),
                 padding: EdgeInsets.all(0),
                 child: BinDatabase().showRoomsInBurger(currentUser.uid),
               ),
@@ -85,22 +89,24 @@ class _BurgerMenuState extends State<BurgerMenu> {
               ),
               alignment: Alignment.bottomLeft,
             ),
-            FlatButton(
-              onPressed: () {
-                _auth.signOutGoogle();
-              },
-              child: SizedBox(
-                  width: double.infinity,
-                  child: Row(
-                    children: [
-                      Icon(Icons.exit_to_app),
-                      SizedBox(width: 9),
-                      Text(
-                        'Log Out',
-                        textAlign: TextAlign.left,
-                      ),
-                    ],
-                  )),
+            Container(
+              child: FlatButton(
+                onPressed: () {
+                  _auth.signOutGoogle();
+                },
+                child: SizedBox(
+                    width: double.infinity,
+                    child: Row(
+                      children: [
+                        Icon(Icons.exit_to_app),
+                        SizedBox(width: 9),
+                        Text(
+                          'Log Out',
+                          textAlign: TextAlign.left,
+                        ),
+                      ],
+                    )),
+              ),
             )
           ],
         ),

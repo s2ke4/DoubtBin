@@ -2,12 +2,18 @@ import 'package:doubtbin/services/room.dart';
 import 'package:flutter/material.dart';
 
 class deletePopUp{
-  Future<void> deletePost(parentContext,String roomCode,String postID,List<dynamic> images){
+
+  String roomCode,postId,userId;
+  List<dynamic> images;
+  bool isDeletePost;
+  deletePopUp({this.roomCode,this.postId,this.userId,this.images,this.isDeletePost});
+
+  Future<void> deletePost(parentContext,String alertmsg,String btnmsg){
     return showDialog(
         context: parentContext,
         builder: (context){
           return SimpleDialog(
-            title: Text("Delete this Doubt?"),
+            title: Text(alertmsg),
             children: [
               Padding(
                 padding: const EdgeInsets.only(left:25.0,right:25,top:20),
@@ -15,11 +21,20 @@ class deletePopUp{
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children:[
                     GestureDetector(
-                      child:Text("Delete",style:TextStyle(color: Colors.red,fontSize:18)),
+                      child:Text(btnmsg,style:TextStyle(color: Colors.red,fontSize:18)),
                       onTap:()async{
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                        await BinDatabase(roomCode:roomCode).deletePost(postID,images);
+                        if(isDeletePost){
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                          await BinDatabase(roomCode:roomCode).deletePost(postId,images);
+                        }else{
+                          if(btnmsg=="Exit"){
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          }
+                          Navigator.pop(context);
+                          await BinDatabase().exitFromBin(roomCode,userId);
+                        }
                       }
                     ),
                     GestureDetector(
