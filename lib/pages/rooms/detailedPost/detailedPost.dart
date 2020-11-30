@@ -1,6 +1,7 @@
 import 'package:bubble/bubble.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:doubtbin/model/post.dart';
+import 'package:doubtbin/model/user.dart';
 import 'package:doubtbin/pages/home/home.dart';
 import 'package:doubtbin/pages/rooms/comment.dart';
 import 'package:doubtbin/pages/rooms/detailedImage.dart';
@@ -30,8 +31,8 @@ class _DetailPostState extends State<DetailPost> {
   _DetailPostState({this.post,this.roomCode});
   String userName,userImageURL,roomName='';
   bool isResolved=false;
-  bool isLiked;
-  bool isDisliked;
+  List<dynamic> liked = [];
+  List<dynamic> disliked = [];
   int numberOfLikes;
   int numberOfDislikes;
 
@@ -66,15 +67,19 @@ class _DetailPostState extends State<DetailPost> {
   @override
   void initState(){
     super.initState();
+    List<dynamic> liketemp;
+    List<dynamic> disliketemp;
+    post.liked == null ? liketemp = [] : liketemp = post.liked;
+    post.liked == null ? disliketemp = [] : disliketemp = post.disliked;
     setState(() {
       isResolved = post.isResolved;
-      isLiked = post.isLiked;
-      isDisliked = post.isDisliked;
+      liked = liketemp;
+      disliked = disliketemp;
       numberOfLikes = post.numberOfLikes;
       numberOfDislikes = post.numberOfDislikes;
     });
 
-    binDatabase.(roomCode, post.postID).then((value){
+    binDatabase.getComments(roomCode, post.postID).then((value){
       setState(() {
         binCommentsStream = value;
       });
@@ -116,16 +121,16 @@ class _DetailPostState extends State<DetailPost> {
   }
 
   void PostLike() async{
+    liked.contains(currentUser.uid)==false ?
+    setState(() {liked.add(currentUser.uid); if(disliked.contains(currentUser.uid) == true){numberOfDislikes--;disliked.remove(currentUser.uid);};numberOfLikes++; }) :
+    setState(() {liked.remove(currentUser.uid); numberOfLikes--; });
     await BinDatabase(roomCode:roomCode).PostLikes(post.postID);
-    isLiked==true ?
-    setState(() {isLiked = false; numberOfLikes--; }):
-    setState(() {isLiked = true; if(isDisliked == true){numberOfDislikes--;isDisliked = false;};numberOfLikes++; });
   }
   void PostDislike() async{
+    disliked.contains(currentUser.uid)==false ?
+    setState(() {disliked.add(currentUser.uid) ;if(liked.contains(currentUser.uid) == true){numberOfLikes--;liked.remove(currentUser.uid) ;};numberOfDislikes++; }) :
+    setState(() {disliked.remove(currentUser.uid); numberOfDislikes--; });
     await BinDatabase(roomCode:roomCode).PostDislikes(post.postID);
-    isDisliked==true ?
-    setState(() {isDisliked = false; numberOfDislikes--; }) :
-    setState(() {isDisliked = true;if(isLiked == true){numberOfLikes--;isLiked = false;};numberOfDislikes++; });
   }
 
   Future addComment()  async
@@ -275,7 +280,7 @@ class _DetailPostState extends State<DetailPost> {
                           Row(
                             children:[
                               IconButton(
-                                icon: isLiked == true ? Icon(Icons.thumb_up,color: Colors.blue[500], size:27) : Icon(Icons.thumb_up, size:27),
+                                icon: liked == null || liked.contains(currentUser.uid) == false ? Icon(Icons.thumb_up, size:27) : Icon(Icons.thumb_up,color: Colors.blue[500], size:27),
                                 onPressed: PostLike,
                                 splashColor: Colors.blue[100],
                                 splashRadius: 25,
@@ -284,7 +289,7 @@ class _DetailPostState extends State<DetailPost> {
                               Text(numberOfLikes.toString()),
                               SizedBox(width:15),
                               IconButton(
-                                icon: isDisliked == true ? Icon(Icons.thumb_down,color: Colors.red[500], size:27) : Icon(Icons.thumb_down, size:27),
+                                icon: disliked == null || disliked.contains(currentUser.uid) == false ? Icon(Icons.thumb_down, size:27) : Icon(Icons.thumb_down,color: Colors.red[500], size:27),
                                 onPressed: PostDislike,
                                 splashColor: Colors.red[100],
                                 splashRadius: 25,

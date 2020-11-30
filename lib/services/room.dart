@@ -259,8 +259,8 @@ class BinDatabase {
                 postBody: doc.data()['postBody'],
                 author: doc.data()['author'],
                 isResolved: doc.data()['isResolved'],
-                isLiked: doc.data()['isLiked'],
-                isDisliked: doc.data()['isDisliked'],
+                liked: doc.data()['liked'],
+                disliked: doc.data()['disliked'],
                 numberOfAttachment: doc.data()['numberOfAttachment'],
                 numberOfComments: doc.data()['numberOfComments'],
                 numberOfLikes: doc.data()['numberOfLikes'],
@@ -329,8 +329,8 @@ class BinDatabase {
     String author,
     List<File> images,
     bool isResolved,
-    bool isLiked,
-    bool isDisliked,
+    List<dynamic> likes,
+    List<dynamic> dislikes,
     int numberOfAttachment,
     int numberOfComments,
     int numberOfLikes,
@@ -349,8 +349,8 @@ class BinDatabase {
       "postBody": postBody,
       "author": author,
       "isResolved": isResolved,
-      "isLiked": isLiked,
-      "isDisliked": isDisliked,
+      "liked": likes,
+      "disliked": dislikes,
       "media": media,
       "numberOfAttachment": numberOfAttachment,
       "numberOfComments": numberOfComments,
@@ -434,46 +434,47 @@ class BinDatabase {
 
   //likes post
   Future PostLikes(String postId) async {
-
     DocumentSnapshot  post =  await binCollection.doc(roomCode).collection("posts").doc(postId).get();
     int like = post.get('numberOfLikes');
-    int disLike = post.get('numberOfDislikes');
-    if(post.get('isLiked')==true){
-      await binCollection.doc(roomCode).collection("posts").doc(postId).update({"numberOfLikes": like-1});
-      await binCollection.doc(roomCode).collection("posts").doc(postId).update({"isLiked": false});
-    }else{
+    int dislike = post.get('numberOfDislikes');
+    List <dynamic> liked = post.get('liked');
+    List <dynamic> disliked = post.get('disliked');
+    if(liked.contains(currentUser.uid) == false){
+      liked.add(currentUser.uid);
       await binCollection.doc(roomCode).collection("posts").doc(postId).update({"numberOfLikes": like+1});
-      await binCollection.doc(roomCode).collection("posts").doc(postId).update({"isLiked": true});
-      if(post.get('isDisliked')==true){
-        await binCollection.doc(roomCode).collection("posts").doc(postId).update({"numberOfDislikes": disLike-1});
-        await binCollection.doc(roomCode).collection("posts").doc(postId).update({"isDisliked": false});
+      await binCollection.doc(roomCode).collection("posts").doc(postId).update({"liked": liked});
+      if(disliked.contains(currentUser.uid) == true){
+        print("hello");
+        disliked.remove(currentUser.uid);
+        await binCollection.doc(roomCode).collection("posts").doc(postId).update({"numberOfDislikes": dislike-1});
+        await binCollection.doc(roomCode).collection("posts").doc(postId).update({"disliked": disliked});
       }
+    }else{
+      liked.remove(currentUser.uid);
+      await binCollection.doc(roomCode).collection("posts").doc(postId).update({"numberOfLikes": like-1});
+      await binCollection.doc(roomCode).collection("posts").doc(postId).update({"liked": liked});
     }
   }
 
   Future PostDislikes(String postId) async {
-    DocumentSnapshot post = await binCollection.doc(roomCode).collection(
-        "posts").doc(postId).get();
+    DocumentSnapshot post = await binCollection.doc(roomCode).collection("posts").doc(postId).get();
     int like = post.get('numberOfLikes');
-    int disLike = post.get('numberOfDislikes');
-    if (post.get('isDisliked') == true) {
-      await binCollection.doc(roomCode).collection("posts").doc(postId).update(
-          {"numberOfDislikes": disLike - 1});
-      await binCollection.doc(roomCode).collection("posts").doc(postId).update(
-          {"isDisliked": false});
-    } else {
-      await binCollection.doc(roomCode).collection("posts").doc(postId).update(
-          {"numberOfDislikes": disLike + 1});
-      await binCollection.doc(roomCode).collection("posts").doc(postId).update(
-          {"isDisliked": true});
-      if (post.get('isLiked') == true) {
-        await binCollection.doc(roomCode).collection("posts")
-            .doc(postId)
-            .update({"numberOfLikes": like - 1});
-        await binCollection.doc(roomCode).collection("posts")
-            .doc(postId)
-            .update({"isLiked": false});
+    int dislike = post.get('numberOfDislikes');
+    List <dynamic> liked = post.get('liked');
+    List <dynamic> disliked = post.get('disliked');
+    if (disliked.contains(currentUser.uid) == false) {
+      disliked.add(currentUser.uid);
+      await binCollection.doc(roomCode).collection("posts").doc(postId).update({"numberOfDislikes": dislike + 1});
+      await binCollection.doc(roomCode).collection("posts").doc(postId).update({"disliked": disliked});
+      if (liked.contains(currentUser.uid) == true) {
+        liked.remove(currentUser.uid);
+        await binCollection.doc(roomCode).collection("posts").doc(postId).update({"numberOfLikes": like - 1});
+        await binCollection.doc(roomCode).collection("posts").doc(postId).update({"liked": liked});
       }
+    } else {
+      disliked.remove(currentUser.uid);
+      await binCollection.doc(roomCode).collection("posts").doc(postId).update({"numberOfDislikes": dislike - 1});
+      await binCollection.doc(roomCode).collection("posts").doc(postId).update({"disliked": disliked});
     }
   }
 

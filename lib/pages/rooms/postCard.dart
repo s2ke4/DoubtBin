@@ -1,6 +1,7 @@
 import 'package:doubtbin/model/post.dart';
 import 'package:doubtbin/pages/rooms/detailedPost/detailedPost.dart';
 import 'package:flutter/material.dart';
+import 'package:doubtbin/pages/home/home.dart';
 
 class PostCard extends StatelessWidget {
   final Post post;
@@ -61,11 +62,11 @@ class PostCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(children: [
-                          post.isLiked == true ? Icon(Icons.thumb_up,color: Colors.blue[500], size:27) : Icon(Icons.thumb_up, size:27),
+                          post.liked == null || post.liked.contains(currentUser.uid) == false ? Icon(Icons.thumb_up, size:27) : Icon(Icons.thumb_up,color: Colors.blue[500], size:27),
                           SizedBox(width: 10),
                           Text(post.numberOfLikes.toString()),
                           SizedBox(width: 15),
-                          post.isDisliked == true ? Icon(Icons.thumb_down,color: Colors.red[500], size:27) : Icon(Icons.thumb_down, size:27),
+                          post.disliked == null || post.disliked.contains(currentUser.uid) == false ? Icon(Icons.thumb_down, size:27) : Icon(Icons.thumb_down,color: Colors.red[500], size:27),
                           SizedBox(width: 10),
                           Text(post.numberOfDislikes.toString()),
                           SizedBox(width: 15),

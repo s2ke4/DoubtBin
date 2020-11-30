@@ -5,8 +5,8 @@ class Post {
   String postBody;
   String author;
   bool isResolved;
-  bool isLiked;
-  bool isDisliked;
+  List<dynamic> liked;
+  List<dynamic> disliked;
   int numberOfAttachment;
   int numberOfComments;
   int numberOfLikes;
@@ -20,8 +20,8 @@ class Post {
     this.postBody,
     this.author,
     this.isResolved,
-    this.isLiked,
-    this.isDisliked,
+    this.liked,
+    this.disliked,
     this.numberOfAttachment,
     this.numberOfComments,
     this.numberOfLikes,
