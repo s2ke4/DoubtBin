@@ -1,9 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:doubtbin/model/comment.dart';
 import 'package:doubtbin/model/post.dart';
-import 'package:doubtbin/model/user.dart';
 import 'package:doubtbin/pages/home/home.dart';
-import 'package:doubtbin/pages/rooms/comment.dart';
 import 'package:doubtbin/pages/rooms/detailedImage.dart';
 import 'package:doubtbin/pages/rooms/detailedPost/deletePopUp.dart';
 import 'package:doubtbin/pages/rooms/editPost/editNewPost.dart';
@@ -37,45 +34,20 @@ class _DetailPostState extends State<DetailPost> {
 
   BinDatabase binDatabase = new BinDatabase();
   TextEditingController commentTextEditingController = new TextEditingController();
-Stream binCommentsStream;
-  Widget binCommentsList()
-  {
-    return StreamBuilder(
-                stream: binCommentsStream,
-                builder: (context, snapshot){
-                  if(!snapshot.hasData){
-                    return Loading();
-                  }
-                  List<Comment> allComment=[];
-                  commentModel model;
-                  snapshot.data.docs.forEach((doc1){
-                     model = commentModel(
-                            comment:doc1.data()["comment"],
-                            time:doc1.data()["time"],
-                            numberOfLikes:doc1.data()["numberOfLikes"],
-                            numberOfDislikes:doc1.data()["numberOfDislikes"],
-                            commentAuthor:doc1.data()["commentAuthor"],
-                          );
-                      allComment.add(
-                        Comment(
-                          comment:model
-                        )
-                      );
-                  });
-                  return Column(
-                    children:allComment
-                  );
-                },
-              );
-  }
+
 
   void updateValue(Post post1){
     setState(()=>post = post1);
   }
 
+  void removeNumberOfComment(){
+    setState(()=>post.numberOfComments--);
+  }
+
   @override
   void initState(){
     super.initState();
+    getInfo();
     List<dynamic> liketemp;
     List<dynamic> disliketemp;
     post.liked == null ? liketemp = [] : liketemp = post.liked;
@@ -87,13 +59,6 @@ Stream binCommentsStream;
       numberOfLikes = post.numberOfLikes;
       numberOfDislikes = post.numberOfDislikes;
     });
-
-    binDatabase.getComments(roomCode, post.postID).then((value){
-      setState(() {
-        binCommentsStream = value;
-      });
-    });
-    getInfo();
   }
 
   getInfo()async{
@@ -141,16 +106,10 @@ Stream binCommentsStream;
   }
 
   void addComment() {
-    if(commentTextEditingController.text.trim().isNotEmpty){
-      commentModel commentMap = commentModel(
-        comment: commentTextEditingController.text,
-        time : DateTime.now().millisecondsSinceEpoch,
-        numberOfLikes:0,
-        numberOfDislikes:0,
-        commentAuthor:currentUser.uid
-      );
+    String comm = commentTextEditingController.text.trim();
+    if(comm.isNotEmpty){;
     setState(()=>post.numberOfComments++);
-     binDatabase.addComments(post.postID, roomCode, commentMap,post.numberOfComments);
+     binDatabase.addComments(post.postID, roomCode, comm,post.numberOfComments);
     setState(()=>commentTextEditingController.text = "");
      FocusScope.of(context).requestFocus(new FocusNode());
     }
@@ -323,7 +282,7 @@ Stream binCommentsStream;
                 ),
               ),
               //comments will come here
-             binCommentsList(),
+             binDatabase.getComments(roomCode, post.postID,removeNumberOfComment),
              SizedBox(height:70)
              ]
             ),

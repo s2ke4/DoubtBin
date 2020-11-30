@@ -7,6 +7,7 @@ import 'package:doubtbin/model/user.dart';
 import 'package:doubtbin/pages/home/binCard.dart';
 import 'package:doubtbin/pages/home/burgermenu/burgerRoomTile.dart';
 import 'package:doubtbin/pages/home/home.dart';
+import 'package:doubtbin/pages/rooms/comment.dart';
 import 'package:doubtbin/pages/rooms/postCard.dart';
 import 'package:doubtbin/pages/rooms/joinedUser/userTile.dart';
 import 'package:doubtbin/shared/loading.dart';
@@ -544,17 +545,17 @@ class BinDatabase {
 
 
 
-  addComments(String postId, String roomId,commentModel commentMap,int numberOfComments) {
+  addComments(String postId, String roomId,String comm,int numberOfComments) {
     binCollection.doc(roomId)
         .collection("posts")
         .doc(postId)
         .collection("comments")
         .add({
-          "comment":commentMap.comment,
-        "time":commentMap.time ,
-        "numberOfLikes":commentMap.numberOfLikes,
-        "numberOfDislikes":commentMap.numberOfDislikes,
-        "commentAuthor":commentMap.commentAuthor
+          "comment":comm,
+          "time":DateTime.now().millisecondsSinceEpoch,
+          "numberOfLikes":0,
+          "numberOfDislikes":0,
+          "commentAuthor":currentUser.uid
         });
 
     binCollection
@@ -566,14 +567,47 @@ class BinDatabase {
       });
   }
 
-  getComments(String roomId, String postId) async {
-    return binCollection
-        .doc(roomId)
-        .collection("posts")
-        .doc(postId)
-        .collection("comments")
-        .orderBy("time", descending: true)
-        .snapshots();
+  getComments(String roomId, String postId,Function removeNumberOfComment){
+    return StreamBuilder(
+            stream:binCollection.doc(roomId).collection("posts").doc(postId).collection("comments").orderBy("time", descending: true).snapshots(),
+            builder: (context, snapshot){
+              if(!snapshot.hasData){
+                return Loading();
+              }
+              List<Comment> allComment=[];
+              commentModel model;
+              snapshot.data.docs.forEach((doc1){
+                  model = commentModel(
+                        comment:doc1.data()["comment"],
+                        time:doc1.data()["time"],
+                        numberOfLikes:doc1.data()["numberOfLikes"],
+                        numberOfDislikes:doc1.data()["numberOfDislikes"],
+                        commentAuthor:doc1.data()["commentAuthor"],
+                      );
+                  allComment.add(
+                    Comment(
+                      comment:model,
+                      roomId: roomId,
+                      postId:postId,
+                      commentId: doc1.id,
+                      removeNumberOfComment:removeNumberOfComment
+                    )
+                  );
+              });
+              return Column(
+                children:allComment
+              );
+            },
+    );
+  }
+
+  Future<void> deleteComment(String postId,String commentId)async{
+    await binCollection.doc(roomCode).collection("posts").doc(postId).collection("comments").doc(commentId).delete();
+    DocumentSnapshot doc = await binCollection.doc(roomCode).collection("posts").doc(postId).get();
+    int num = doc.data()["numberOfComments"];
+    binCollection.doc(roomCode).collection("posts").doc(postId).update({
+      "numberOfComments":num-1
+    });
   }
   
   Future compressImage(_image, postId) async {

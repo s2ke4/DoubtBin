@@ -1,16 +1,19 @@
 import 'package:bubble/bubble.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doubtbin/model/comment.dart';
-import 'package:doubtbin/model/user.dart';
 import 'package:doubtbin/pages/home/home.dart';
+import 'package:doubtbin/pages/rooms/detailedPost/deletePopUp.dart';
 import 'package:doubtbin/shared/loading.dart';
 import 'package:flutter/material.dart';
+
+enum commentEnum{delete}
 
 class Comment extends StatefulWidget {
 
   final commentModel comment;
-
-  Comment({this.comment});
+  String postId,commentId,roomId;
+  Function removeNumberOfComment;
+  Comment({this.comment,this.postId,this.commentId,this.roomId,this.removeNumberOfComment});
   
   @override
   _CommentState createState() => _CommentState();
@@ -21,11 +24,11 @@ class _CommentState extends State<Comment> {
   bool isLoading = true;
   String circleAvatar,userName;
 
-  // @override
-  // void initState(){
-  //   super.initState();
-  //   getInfo();
-  // }
+  @override
+  void initState(){
+    super.initState();
+    print("hello");
+  }
   Future<void> getInfo()async{
      DocumentSnapshot doc = await userRef.doc(widget.comment.commentAuthor).get();
      circleAvatar = doc.data()["circleAvatar"];
@@ -33,6 +36,14 @@ class _CommentState extends State<Comment> {
      if(this.mounted){setState(()=>isLoading= false);}
   }
 
+  void performOperation(result){
+     switch(result){
+      case commentEnum.delete:
+        deletePopUp(roomCode: widget.roomId,postId: widget.postId,isDeletePost: false,commentId:widget.commentId,removeNumberOfComment:widget.removeNumberOfComment).deletePost(context, "Are You Sure You Want to Delete This Comment", "Delete");
+        break;
+     }
+  }
+ 
   @override
   Widget build(BuildContext context) {
     getInfo();
@@ -47,10 +58,30 @@ class _CommentState extends State<Comment> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      children:[
-                        isLoading?Loading():CircleAvatar(backgroundImage: NetworkImage(circleAvatar),radius: 16,),
-                        SizedBox(width: 10,),
-                        isLoading?Loading():Text(userName,style: TextStyle(fontSize: 16),)
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children:[
+                            isLoading?Loading():CircleAvatar(backgroundImage: NetworkImage(circleAvatar),radius: 16,),
+                            SizedBox(width: 10,),
+                            isLoading?Loading():Text(userName,style: TextStyle(fontSize: 16),)
+                          ],
+                        ),
+                        (currentUser.uid==widget.comment.commentAuthor)?PopupMenuButton<commentEnum>(
+                                onSelected: (commentEnum result) { performOperation(result); },
+                                itemBuilder: (BuildContext context) => <PopupMenuEntry<commentEnum>>[
+                                  PopupMenuItem<commentEnum>(
+                                    value: commentEnum.delete,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text('Delete this comment'),
+                                        Icon(Icons.delete)
+                                      ],
+                                    ),
+                                  ),
+                                ]
+                        ):Container()
                       ],
                     ),
                     SizedBox(height:10),

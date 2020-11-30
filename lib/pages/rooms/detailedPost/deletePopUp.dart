@@ -1,12 +1,14 @@
+import 'package:doubtbin/pages/rooms/detailedPost/detailedPost.dart';
 import 'package:doubtbin/services/room.dart';
 import 'package:flutter/material.dart';
 
 class deletePopUp{
 
-  String roomCode,postId,userId;
+  String roomCode,postId,userId,commentId;
+  Function removeNumberOfComment;
   List<dynamic> images;
   bool isDeletePost;
-  deletePopUp({this.roomCode,this.postId,this.userId,this.images,this.isDeletePost});
+  deletePopUp({this.roomCode,this.postId,this.userId,this.images,this.isDeletePost,this.commentId,this.removeNumberOfComment});
 
   Future<void> deletePost(parentContext,String alertmsg,String btnmsg){
     return showDialog(
@@ -27,6 +29,10 @@ class deletePopUp{
                           Navigator.pop(context);
                           Navigator.pop(context);
                           await BinDatabase(roomCode:roomCode).deletePost(postId,images);
+                        }else if(btnmsg=="Delete"){
+                          Navigator.pop(context);
+                          removeNumberOfComment();
+                          await BinDatabase(roomCode:roomCode).deleteComment(postId,commentId);
                         }else{
                           if(btnmsg=="Exit"){
                             Navigator.pop(context);
