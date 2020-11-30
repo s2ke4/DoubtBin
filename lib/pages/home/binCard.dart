@@ -1,3 +1,4 @@
+import 'package:doubtbin/pages/profile/profile.dart';
 import 'package:flutter/material.dart';
 import '../../model/bin.dart';
 import 'package:doubtbin/pages/rooms/roomDashboard.dart';
@@ -20,15 +21,14 @@ class BinCard extends StatelessWidget {
             MaterialPageRoute(
                 builder: (context) => RoomDashboard(
                       roomCode: bin.roomId,
-                      firstTime:false, //true only when the user creates or joins the room and then visits it for first time
+                      firstTime:
+                          false, //true only when the user creates or joins the room and then visits it for first time
                       roomName: bin.binName,
                       description: bin.description,
                     )));
       },
       child: Card(
         margin: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),
-        // elevation: elevation,
-        // color: ${bin.color}, isme error de rha hai
         child: Padding(
           padding: const EdgeInsets.fromLTRB(28.0, 15.0, 24.0, 15.0),
           child: Column(
@@ -42,12 +42,17 @@ class BinCard extends StatelessWidget {
                 ),
               ),
               SizedBox(height: pad),
-              Text(
-                bin.owner,
-                style: TextStyle(
-                  fontSize: 14.0,
-                  color: Colors.grey[600],
+              GestureDetector(
+                child: Text(
+                  bin.owner,
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    color: Colors.grey[600],
+                  ),
                 ),
+                onTap: (){
+                  print(bin.ownerId);
+                  Navigator.push(context,MaterialPageRoute(builder:(BuildContext context)=>Profile(userId:bin.ownerId)));},
               ),
               SizedBox(
                 height: 2.0,

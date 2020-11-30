@@ -15,7 +15,6 @@ import 'package:flutter/material.dart';
 enum WhyFarther { delete, markAsResolved, markAsUnresolved, update }
 
 class DetailPost extends StatefulWidget {
-
   Post post;
   String roomCode;
   DetailPost({this.post,this.roomCode});
@@ -57,12 +56,9 @@ class _DetailPostState extends State<DetailPost> {
     );
   }
 
-
-
   void updateValue(Post post1){
     setState(()=>post = post1);
   }
-
 
   @override
   void initState(){
@@ -90,7 +86,7 @@ class _DetailPostState extends State<DetailPost> {
   getInfo()async{
     final val =await userRef.doc(post.author).get();
     final binref = await binCollection.doc(roomCode).get();
-    final binCommentRef = await binCollection .doc(roomCode).collection(post.postID).doc(post.postID).get();
+    final binCommentRef = await binCollection .doc(roomCode).collection("posts").doc(post.postID).get();
     setState((){
       userName = val.data()['userName'];
       userImageURL = val.data()['circleAvatar'];

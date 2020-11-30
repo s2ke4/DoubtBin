@@ -18,7 +18,7 @@ class UserInfo extends StatelessWidget {
       highlightColor: Colors.transparent,
       padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
       onPressed: () => Navigator.push(
-          context, MaterialPageRoute(builder: (context) => Profile())),
+          context, MaterialPageRoute(builder: (context) => Profile(userId:user.uid))),
       child: Container(
         //color: Colors.deepPurpleAccent,
         padding: EdgeInsets.symmetric(horizontal: 0, vertical: 10),
