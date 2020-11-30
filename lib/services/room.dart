@@ -571,7 +571,7 @@ class BinDatabase {
 
   getComments(String roomId, String postId,Function removeNumberOfComment){
     return StreamBuilder(
-            stream:binCollection.doc(roomId).collection("posts").doc(postId).collection("comments").orderBy("time", descending: true).snapshots(),
+            stream:binCollection.doc(roomId).collection("posts").doc(postId).collection("comments").orderBy("numberOfLikes", descending: true).snapshots(),
             builder: (context, snapshot){
               if(!snapshot.hasData){
                 return Loading();
