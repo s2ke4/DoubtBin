@@ -16,7 +16,7 @@ class PostCard extends StatelessWidget {
       child: Container(
          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
             child: Card(
-              elevation: 3.0,
+              elevation: 2.0,
               shadowColor: Colors.grey[400],
               child: Padding(
                 padding: EdgeInsets.all(15.0),

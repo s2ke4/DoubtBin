@@ -29,7 +29,9 @@ class _RoomDashboardState extends State<RoomDashboard> {
   String description;
 
   _RoomDashboardState(
-      {this.firstTime, this.roomCode, this.roomName, this.description});
+      {this.firstTime, this.roomCode, this.roomName, this.description}){
+        print("RoomDashboard");
+      }
 
   @override
   void initState() {
