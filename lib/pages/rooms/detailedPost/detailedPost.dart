@@ -1,5 +1,5 @@
-import 'package:bubble/bubble.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:doubtbin/model/comment.dart';
 import 'package:doubtbin/model/post.dart';
 import 'package:doubtbin/model/user.dart';
 import 'package:doubtbin/pages/home/home.dart';
@@ -37,23 +37,36 @@ class _DetailPostState extends State<DetailPost> {
 
   BinDatabase binDatabase = new BinDatabase();
   TextEditingController commentTextEditingController = new TextEditingController();
-
-  Stream binCommentsStream;
-
-  Widget BinCommentsList()
+Stream binCommentsStream;
+  Widget binCommentsList()
   {
     return StreamBuilder(
-      stream: binCommentsStream,
-      builder: (context, snapshot){
-        return snapshot.hasData ? ListView.builder(
-          shrinkWrap: true,
-          scrollDirection: Axis.vertical,
-          itemCount: snapshot.data.documents.length,
-            itemBuilder: (context, index){
-            return CommentTile(snapshot.data.documents[index].data()["comment"], userName, userImageURL);
-            }) : Container();
-      },
-    );
+                stream: binCommentsStream,
+                builder: (context, snapshot){
+                  if(!snapshot.hasData){
+                    return Loading();
+                  }
+                  List<Comment> allComment=[];
+                  commentModel model;
+                  snapshot.data.docs.forEach((doc1){
+                     model = commentModel(
+                            comment:doc1.data()["comment"],
+                            time:doc1.data()["time"],
+                            numberOfLikes:doc1.data()["numberOfLikes"],
+                            numberOfDislikes:doc1.data()["numberOfDislikes"],
+                            commentAuthor:doc1.data()["commentAuthor"],
+                          );
+                      allComment.add(
+                        Comment(
+                          comment:model
+                        )
+                      );
+                  });
+                  return Column(
+                    children:allComment
+                  );
+                },
+              );
   }
 
   void updateValue(Post post1){
@@ -86,13 +99,11 @@ class _DetailPostState extends State<DetailPost> {
   getInfo()async{
     final val =await userRef.doc(post.author).get();
     final binref = await binCollection.doc(roomCode).get();
-    final binCommentRef = await binCollection .doc(roomCode).collection("posts").doc(post.postID).get();
     setState((){
       userName = val.data()['userName'];
       userImageURL = val.data()['circleAvatar'];
       roomOwner = binref.data()['ownerId'];
       roomName = binref.data()['displayName'];
-      post.numberOfComments = binCommentRef.data()['numberOfComments'];
     });
   }
 
@@ -129,21 +140,22 @@ class _DetailPostState extends State<DetailPost> {
     await BinDatabase(roomCode:roomCode).PostDislikes(post.postID);
   }
 
-  Future addComment()  async
-  {
-    if(commentTextEditingController.text.isNotEmpty){
-      Map<String, dynamic> commentMap = {
-      "comment" : commentTextEditingController.text,
-        "time" : DateTime.now().millisecondsSinceEpoch
-    };
-     await binDatabase.addComments(post.postID, roomCode, commentMap);
-     commentTextEditingController.text = " ";
-     post.numberOfComments++;
+  void addComment() {
+    if(commentTextEditingController.text.trim().isNotEmpty){
+      commentModel commentMap = commentModel(
+        comment: commentTextEditingController.text,
+        time : DateTime.now().millisecondsSinceEpoch,
+        numberOfLikes:0,
+        numberOfDislikes:0,
+        commentAuthor:currentUser.uid
+      );
+    setState(()=>post.numberOfComments++);
+     binDatabase.addComments(post.postID, roomCode, commentMap,post.numberOfComments);
+    setState(()=>commentTextEditingController.text = "");
+     FocusScope.of(context).requestFocus(new FocusNode());
     }
 
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -311,8 +323,8 @@ class _DetailPostState extends State<DetailPost> {
                 ),
               ),
               //comments will come here
-              BinCommentsList(),
-             // SizedBox(height:70)
+             binCommentsList(),
+             SizedBox(height:70)
              ]
             ),
             Positioned(
@@ -321,6 +333,8 @@ class _DetailPostState extends State<DetailPost> {
               right: 0.0,
               child:Container(
                 child: TextFormField(
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
                   textInputAction: TextInputAction.done,
                   controller: commentTextEditingController,
                   autofocus: false,
@@ -345,53 +359,3 @@ class _DetailPostState extends State<DetailPost> {
   }
 }
 
-
-class CommentTile extends StatelessWidget {
-
-  final String comment;
-  final String username;
-  final String userimageURL;
-  CommentTile(this.comment, this.username, this.userimageURL);
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(left:10,top: 15,right: 5),
-      child: Bubble(
-          nip: BubbleNip.leftTop,
-          color: Color.fromRGBO(240, 240, 240, 1.0),
-          child:Padding(
-            padding: const EdgeInsets.fromLTRB(5,5,0,5),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children:[
-                    (username==null||userimageURL==null)?Loading() :
-                    CircleAvatar(backgroundImage: NetworkImage(userimageURL),radius: 17,),
-                    SizedBox(width: 10,),
-                    (username==null||userimageURL==null)?Loading() :
-                    Text(username,style: TextStyle(fontSize: 16),)
-                  ],
-                ),
-                SizedBox(height:10),
-                comment == null ? Loading() :
-                Text(comment,style:TextStyle(fontSize: 16)),
-                SizedBox(height: 13,),
-                Row(
-                  children: [
-                    Icon(Icons.thumb_up,size:20 ),
-                    SizedBox(width: 5),
-                    Text("17",style: TextStyle(fontSize: 12),),
-                    SizedBox(width: 18),
-                    Icon(Icons.thumb_down,size: 20,),
-                    SizedBox(width: 5),
-                    Text("17",style: TextStyle(fontSize: 12),)
-                  ],
-                )
-              ],
-            ),
-          )
-      ),
-    );
-  }
-}

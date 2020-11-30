@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doubtbin/model/bin.dart';
+import 'package:doubtbin/model/comment.dart';
 import 'package:doubtbin/model/post.dart';
 import 'package:doubtbin/model/user.dart';
 import 'package:doubtbin/pages/home/binCard.dart';
@@ -542,22 +543,31 @@ class BinDatabase {
   }
 
 
-  addComments(String postId, String roomId, commentMap) {
-    FirebaseFirestore.instance
-        .collection("bins")
-        .doc(roomId)
+
+  addComments(String postId, String roomId,commentModel commentMap,int numberOfComments) {
+    binCollection.doc(roomId)
         .collection("posts")
         .doc(postId)
         .collection("comments")
-        .add(commentMap)
-        .catchError((e) {
-      print(e.toString());
-    });
+        .add({
+          "comment":commentMap.comment,
+        "time":commentMap.time ,
+        "numberOfLikes":commentMap.numberOfLikes,
+        "numberOfDislikes":commentMap.numberOfDislikes,
+        "commentAuthor":commentMap.commentAuthor
+        });
+
+    binCollection
+      .doc(roomId)
+      .collection("posts")
+      .doc(postId)
+      .update({
+        "numberOfComments":numberOfComments
+      });
   }
 
   getComments(String roomId, String postId) async {
-    return await FirebaseFirestore.instance
-        .collection("bins")
+    return binCollection
         .doc(roomId)
         .collection("posts")
         .doc(postId)
@@ -565,7 +575,6 @@ class BinDatabase {
         .orderBy("time", descending: true)
         .snapshots();
   }
-
   
   Future compressImage(_image, postId) async {
     Directory temDir = await getTemporaryDirectory();
