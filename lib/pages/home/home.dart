@@ -23,19 +23,19 @@ class _HomeState extends State<Home> {
 
   switchHomeAndUserName(MyUser us){
     currentUser = us;
-    setState(()=>firstTime=false);
+    if(this.mounted){setState(()=>firstTime=false);}
   }
 
   checkingForUserName()async{
     MyUser _user = Provider.of<MyUser>(context);
     DocumentSnapshot userData  = await userRef.doc(_user.uid).get();
-    if(userData.exists){
+    if(userData.exists && this.mounted){
       setState((){
         isCheck = true;
         firstTime = false;
       });
       currentUser = MyUser.creatingUser(userData);
-    }else{
+    }else if(this.mounted){
       setState(()=>isCheck = true);
     }
   }

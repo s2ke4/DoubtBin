@@ -4,8 +4,8 @@ class commentModel{
   int numberOfLikes;
   int numberOfDislikes;
   String commentAuthor;
-  List<dynamic> liked;
-  List<dynamic> disLiked;
+  Map likedUser;
+  Map disLikedUser;
 
-  commentModel({this.comment,this.time,this.numberOfDislikes,this.numberOfLikes,this.commentAuthor});
+  commentModel({this.comment,this.time,this.numberOfDislikes,this.numberOfLikes,this.commentAuthor,this.likedUser,this.disLikedUser});
 }

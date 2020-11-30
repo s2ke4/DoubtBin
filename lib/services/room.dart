@@ -555,7 +555,9 @@ class BinDatabase {
           "time":DateTime.now().millisecondsSinceEpoch,
           "numberOfLikes":0,
           "numberOfDislikes":0,
-          "commentAuthor":currentUser.uid
+          "commentAuthor":currentUser.uid,
+          "likedUser":{},
+          "disLikedUser":{}
         });
 
     binCollection
@@ -583,7 +585,9 @@ class BinDatabase {
                         numberOfLikes:doc1.data()["numberOfLikes"],
                         numberOfDislikes:doc1.data()["numberOfDislikes"],
                         commentAuthor:doc1.data()["commentAuthor"],
-                      );
+                        likedUser: doc1.data()["likedUser"],
+                        disLikedUser: doc1.data()["disLikedUser"]
+                  );
                   allComment.add(
                     Comment(
                       comment:model,
@@ -599,6 +603,24 @@ class BinDatabase {
               );
             },
     );
+  }
+
+  void likeComment(String roomId,String postId,String commentId,bool like,int numOfLike,bool disLike,int numOfDislike){
+    binCollection.doc(roomId).collection("posts").doc(postId).collection("comments").doc(commentId).update({
+      "likedUser.${currentUser.uid}":like,
+      "numberOfLikes":numOfLike,
+      "disLikedUser.${currentUser.uid}":disLike,
+      "numberOfDislikes":numOfDislike
+    });
+  }
+
+  void disLikeComment(String roomId,String postId,String commentId,bool dislike,int numOfdisLike,bool like,int numOfLike){
+    binCollection.doc(roomId).collection("posts").doc(postId).collection("comments").doc(commentId).update({
+      "disLikedUser.${currentUser.uid}":dislike,
+      "numberOfDislikes":numOfdisLike,
+      "likedUser.${currentUser.uid}":like,
+      "numberOfLikes":numOfLike,
+    });
   }
 
   Future<void> deleteComment(String postId,String commentId)async{
