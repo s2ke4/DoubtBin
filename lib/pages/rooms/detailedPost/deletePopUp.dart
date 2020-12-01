@@ -31,8 +31,8 @@ class deletePopUp{
                           await BinDatabase(roomCode:roomCode).deletePost(postId,images);
                         }else if(btnmsg=="Delete"){
                           Navigator.pop(context);
-                          removeNumberOfComment();
                           await BinDatabase(roomCode:roomCode).deleteComment(postId,commentId);
+                          removeNumberOfComment();
                         }else{
                           if(btnmsg=="Exit"){
                             Navigator.pop(context);

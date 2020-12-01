@@ -303,7 +303,7 @@ class BinDatabase {
 
   showAllPost() {
     return StreamBuilder(
-      stream: binCollection.doc(roomCode).collection("posts").snapshots(),
+      stream: binCollection.doc(roomCode).collection("posts").orderBy("time", descending: true).snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Loading();
@@ -419,6 +419,7 @@ class BinDatabase {
       "numberOfComments": numberOfComments,
       "numberOfLikes": numberOfLikes,
       "numberOfDislikes": numberOfDislikes,
+      "time":DateTime.now().millisecondsSinceEpoch,
     });
 
 
@@ -545,7 +546,8 @@ class BinDatabase {
 
 
 
-  addComments(String postId, String roomId,String comm,int numberOfComments) {
+  Future<void> addComments(String postId, String roomId,String comm,int numberOfComments)async {
+    
     binCollection.doc(roomId)
         .collection("posts")
         .doc(postId)
@@ -560,12 +562,12 @@ class BinDatabase {
           "disLikedUser":{}
         });
 
-    binCollection
+    await binCollection
       .doc(roomId)
       .collection("posts")
       .doc(postId)
       .update({
-        "numberOfComments":numberOfComments
+        "numberOfComments":FieldValue.increment(1)
       });
   }
 
@@ -625,10 +627,8 @@ class BinDatabase {
 
   Future<void> deleteComment(String postId,String commentId)async{
     await binCollection.doc(roomCode).collection("posts").doc(postId).collection("comments").doc(commentId).delete();
-    DocumentSnapshot doc = await binCollection.doc(roomCode).collection("posts").doc(postId).get();
-    int num = doc.data()["numberOfComments"];
     binCollection.doc(roomCode).collection("posts").doc(postId).update({
-      "numberOfComments":num-1
+      "numberOfComments":FieldValue.increment(-1)
     });
   }
   

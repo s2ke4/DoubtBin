@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doubtbin/model/post.dart';
 import 'package:doubtbin/pages/home/home.dart';
+import 'package:doubtbin/pages/profile/profile.dart';
 import 'package:doubtbin/pages/rooms/detailedImage.dart';
 import 'package:doubtbin/pages/rooms/detailedPost/deletePopUp.dart';
 import 'package:doubtbin/pages/rooms/editPost/editNewPost.dart';
@@ -40,8 +42,9 @@ class _DetailPostState extends State<DetailPost> {
     setState(()=>post = post1);
   }
 
-  void removeNumberOfComment(){
-    setState(()=>post.numberOfComments--);
+  void removeNumberOfComment()async{
+     DocumentSnapshot doc1 = await binCollection.doc(roomCode).collection("posts").doc(post.postID).get();
+    setState(()=>post.numberOfComments = doc1.data()["numberOfComments"]);
   }
 
   @override
@@ -105,13 +108,17 @@ class _DetailPostState extends State<DetailPost> {
     await BinDatabase(roomCode:roomCode).PostDislikes(post.postID);
   }
 
-  void addComment() {
+  void addComment()async {
     String comm = commentTextEditingController.text.trim();
-    if(comm.isNotEmpty){;
-    setState(()=>post.numberOfComments++);
-     binDatabase.addComments(post.postID, roomCode, comm,post.numberOfComments);
-    setState(()=>commentTextEditingController.text = "");
-     FocusScope.of(context).requestFocus(new FocusNode());
+    if(comm.isNotEmpty){
+      commentTextEditingController.text = "";
+      FocusScope.of(context).requestFocus(new FocusNode());
+      await binDatabase.addComments(post.postID, roomCode, comm,post.numberOfComments);
+      DocumentSnapshot doc1 = await binCollection.doc(roomCode).collection("posts").doc(post.postID).get();
+      
+      setState((){
+        post.numberOfComments = doc1.data()["numberOfComments"];
+      });
     }
 
   }
@@ -136,13 +143,16 @@ class _DetailPostState extends State<DetailPost> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children:[
-                          (userName==null||userImageURL==null)?Loading():Row(
-                            children:[
-                              CircleAvatar(backgroundImage: NetworkImage(userImageURL),radius: 17,),
-                              SizedBox(width: 10,),
-                              Text(userName,style: TextStyle(fontSize: 17),),
-                              SizedBox(width: 10,),
-                            ]
+                          (userName==null||userImageURL==null)?Loading():GestureDetector(
+                            child: Row(
+                              children:[
+                                CircleAvatar(backgroundImage: NetworkImage(userImageURL),radius: 17,),
+                                SizedBox(width: 10,),
+                                Text(userName,style: TextStyle(fontSize: 17),),
+                                SizedBox(width: 10,),
+                              ]
+                            ),
+                            onTap: (){Navigator.push(context,MaterialPageRoute(builder:(BuildContext context)=>Profile(userId:post.author)));},
                           ),
                           Row(
                             children:[

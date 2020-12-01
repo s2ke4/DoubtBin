@@ -28,8 +28,11 @@ class PostCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(children: [
-                          Text(post.postHeading,
-                              style: TextStyle(
+                          Text(
+                            post.postHeading.length > 28? 
+                              (post.postHeading.substring(0,25) + "...")
+                              :post.postHeading,
+                            style: TextStyle(
                                   fontSize: 21, fontWeight: FontWeight.bold)),
                         ]),
                         post.isResolved == true
