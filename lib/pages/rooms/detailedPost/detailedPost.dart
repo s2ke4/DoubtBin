@@ -112,7 +112,6 @@ class _DetailPostState extends State<DetailPost> {
               numberOfDislikes--;
               disliked.remove(currentUser.uid);
             }
-            ;
             numberOfLikes++;
           })
         : setState(() {
