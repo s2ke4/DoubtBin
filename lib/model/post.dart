@@ -12,7 +12,7 @@ class Post {
   int numberOfLikes;
   int numberOfDislikes;
 
-
+ 
   Post({
     this.postID,
     this.images,

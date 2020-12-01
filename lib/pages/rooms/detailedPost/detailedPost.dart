@@ -54,7 +54,7 @@ class _DetailPostState extends State<DetailPost> {
     List<dynamic> liketemp;
     List<dynamic> disliketemp;
     post.liked == null ? liketemp = [] : liketemp = post.liked;
-    post.liked == null ? disliketemp = [] : disliketemp = post.disliked;
+    post.disliked == null ? disliketemp = [] : disliketemp = post.disliked;
     setState(() {
       isResolved = post.isResolved;
       liked = liketemp;
