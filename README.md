@@ -17,3 +17,24 @@ This application will target the students helping them in solving doubts related
 - A person can send a request for joining  group to admin after applying code
 - There will also be a resources tab in every room where owner's of that room can share resources(like slide, pdf, links, etc)
 
+#Sneak peek of DoubtBin
+
+
+<img src="assets/WhatsApp%20Image%202020-12-01%20at%209.38.40%20PM%20(1).jpeg" height=600></img>
+<img src="assets/WhatsApp%20Image%202020-12-01%20at%209.40.42%20PM.jpeg" height=600></img>
+<img src="assets/WhatsApp%20Image%202020-12-01%20at%209.40.36%20PM.jpeg" height=600></img>
+<img src="assets/WhatsApp%20Image%202020-12-01%20at%209.42.17%20PM.jpeg" height=600></img>
+<img src="assets/WhatsApp%20Image%202020-12-01%20at%209.38.40%20PM%20(2).jpeg" height=600></img>
+<img src="assets/WhatsApp%20Image%202020-12-01%20at%209.38.39%20PM%20(1).jpeg" height=600></img>
+<img src="assets/WhatsApp%20Image%202020-12-01%20at%209.38.40%20PM.jpeg" height=600></img>
+<img src="assets/WhatsApp%20Image%202020-12-01%20at%209.38.38%20PM%20(1).jpeg" height=600></img>
+<img src="assets/WhatsApp%20Image%202020-12-01%20at%209.38.38%20PM.jpeg" height=600>
+<img src="assets/WhatsApp%20Image%202020-12-01%20at%209.38.39%20PM.jpeg" height=600></img>
+<img src="assets/WhatsApp%20Image%202020-12-01%20at%209.38.38%20PM%20(2).jpeg" height=600></img>
+<img src="assets/WhatsApp%20Image%202020-12-01%20at%209.40.27%20PM.jpeg" height=600></img>
+<img src="assets/WhatsApp%20Image%202020-12-01%20at%209.38.37%20PM%20(1).jpeg" height=600></img>
+<img src="assets/WhatsApp%20Image%202020-12-01%20at%209.38.37%20PM.jpeg" height=600></img>
+<img src="assets/WhatsApp%20Image%202020-12-01%20at%209.38.34%20PM.jpeg" height=600></img>
+<img src="assets/WhatsApp%20Image%202020-12-01%20at%209.40.33%20PM.jpeg" height=600></img>
+<img src="assets/WhatsApp%20Image%202020-12-01%20at%209.38.36%20PM.jpeg" height=600></img>
+<img src="assets/WhatsApp%20Image%202020-12-01%20at%209.38.35%20PM.jpeg" height=600></img>
