@@ -17,8 +17,7 @@ This application will target the students helping them in solving doubts related
 - A person can send a request for joining  group to admin after applying code
 - There will also be a resources tab in every room where owner's of that room can share resources(like slide, pdf, links, etc)
 
-#Sneak peek of DoubtBin
-
+## Sneak peek of DoubtBin
 
 <img src="assets/WhatsApp%20Image%202020-12-01%20at%209.38.40%20PM%20(1).jpeg" height=600></img>
 <img src="assets/WhatsApp%20Image%202020-12-01%20at%209.40.42%20PM.jpeg" height=600></img>
