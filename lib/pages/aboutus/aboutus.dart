@@ -42,9 +42,9 @@ class _AboutUsState extends State<AboutUs> {
         name: "Keshav Agarwal",
         email: "Keshavagarwal1710@gmail.com",
         buff:
-            "Flutter | c++ | Javascript | React | CSS | HTML | Firebase | Dart",
+            "Flutter | c++ | Javascript | React | CSS | HTML | Firebase | Dart | c | java",
         description:
-            "A paragraph is a series of related sentences developing a central idea, called the topic. Try to think about paragraphs in terms of thematic unity: a paragraph is a sentence or a group of sentences that supports one central, unified idea. Paragraphs add one idea at a time to your broader argument.",
+            "Just observing the world.",
         imgURL: "4.jpg",
         github: "https://github.com/The-Keshav-Agarwal",
         linkedin: "https://www.linkedin.com/in/keshav-agarwal-84b5221a9/"),
