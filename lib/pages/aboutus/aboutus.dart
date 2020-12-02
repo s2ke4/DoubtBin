@@ -15,17 +15,15 @@ class _AboutUsState extends State<AboutUs> {
         name: "Abhay Dwivedi",
         email: "abhaydwivedi230@gmail.com",
         buff: "Flutter | Javascript | Python | Firebase | Dart",
-        description:
-            "A paragraph is a series of related sentences developing a central idea, called the topic. Try to think about paragraphs in terms of thematic unity: a paragraph is a sentence or a group of sentences that supports one central, unified idea. Paragraphs add one idea at a time to your broader argument.",
+        description: "We have tomorrows for a reason.",
         imgURL: "1.jpg",
         github: "https://github.com/dwivedi-abhay",
-        linkedin: "https://www.linkedin.com/in/inayushpatel/"),
+        linkedin: "https://www.linkedin.com"),
     Devs(
         name: "Ayush Patel",
         email: "in.ayushpatel@gmail.com",
         buff: "It's LONE.STAR",
-        description:
-            "A paragraph is a series of related sentences developing a central idea, called the topic. Try to think about paragraphs in terms of thematic unity: a paragraph is a sentence or a group of sentences that supports one central, unified idea. Paragraphs add one idea at a time to your broader argument.",
+        description: "Focusing my lens beyond the horizon",
         imgURL: "2.jpg",
         github: "https://github.com/in-ayushpatel",
         linkedin: "https://www.linkedin.com/in/inayushpatel/"),
@@ -43,8 +41,7 @@ class _AboutUsState extends State<AboutUs> {
         email: "Keshavagarwal1710@gmail.com",
         buff:
             "Flutter | c++ | Javascript | React | CSS | HTML | Firebase | Dart | c | java",
-        description:
-            "Just observing the world.",
+        description: "Just observing the world.",
         imgURL: "4.jpg",
         github: "https://github.com/The-Keshav-Agarwal",
         linkedin: "https://www.linkedin.com/in/keshav-agarwal-84b5221a9/"),
