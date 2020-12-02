@@ -42,9 +42,13 @@ class _DetailPostState extends State<DetailPost> {
     setState(() => post = post1);
   }
 
-  void removeNumberOfComment()async{
-     DocumentSnapshot doc1 = await binCollection.doc(roomCode).collection("posts").doc(post.postID).get();
-    setState(()=>post.numberOfComments = doc1.data()["numberOfComments"]);
+  void removeNumberOfComment() async {
+    DocumentSnapshot doc1 = await binCollection
+        .doc(roomCode)
+        .collection("posts")
+        .doc(post.postID)
+        .get();
+    setState(() => post.numberOfComments = doc1.data()["numberOfComments"]);
   }
 
   @override
@@ -138,15 +142,20 @@ class _DetailPostState extends State<DetailPost> {
     await BinDatabase(roomCode: roomCode).PostDislikes(post.postID);
   }
 
-  void addComment()async {
+  void addComment() async {
     String comm = commentTextEditingController.text.trim();
-    if(comm.isNotEmpty){
+    if (comm.isNotEmpty) {
       commentTextEditingController.text = "";
       FocusScope.of(context).requestFocus(new FocusNode());
-      await binDatabase.addComments(post.postID, roomCode, comm,post.numberOfComments);
-      DocumentSnapshot doc1 = await binCollection.doc(roomCode).collection("posts").doc(post.postID).get();
-      
-      setState((){
+      await binDatabase.addComments(
+          post.postID, roomCode, comm, post.numberOfComments);
+      DocumentSnapshot doc1 = await binCollection
+          .doc(roomCode)
+          .collection("posts")
+          .doc(post.postID)
+          .get();
+
+      setState(() {
         post.numberOfComments = doc1.data()["numberOfComments"];
       });
     }
@@ -171,18 +180,35 @@ class _DetailPostState extends State<DetailPost> {
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children:[
-                          (userName==null||userImageURL==null)?Loading():GestureDetector(
-                            child: Row(
-                              children:[
-                                CircleAvatar(backgroundImage: NetworkImage(userImageURL),radius: 17,),
-                                SizedBox(width: 10,),
-                                Text(userName,style: TextStyle(fontSize: 17),),
-                                SizedBox(width: 10,),
-                              ]
-                            ),
-                            onTap: (){Navigator.push(context,MaterialPageRoute(builder:(BuildContext context)=>Profile(userId:post.author)));},
-                          ),
+                        children: [
+                          (userName == null || userImageURL == null)
+                              ? Loading()
+                              : GestureDetector(
+                                  child: Row(children: [
+                                    CircleAvatar(
+                                      backgroundImage:
+                                          NetworkImage(userImageURL),
+                                      radius: 17,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      userName,
+                                      style: TextStyle(fontSize: 17),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                  ]),
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (BuildContext context) =>
+                                                Profile(userId: post.author)));
+                                  },
+                                ),
                           Row(children: [
                             isResolved == true
                                 ? (Icon(
@@ -385,7 +411,7 @@ class _DetailPostState extends State<DetailPost> {
                 child: TextFormField(
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
-                  textInputAction: TextInputAction.done,
+                  textInputAction: TextInputAction.newline,
                   controller: commentTextEditingController,
                   autofocus: false,
                   decoration: InputDecoration(
