@@ -14,8 +14,6 @@ This application will target the students helping them in solving doubts related
 - Doubt room heads will have the option to delete an inappropriately posted doubt.
 - Any person can create a room and share code to join other people.
 - Multiple small doubt rooms can be created among students to resolve their doubts.
-- A person can send a request for joining  group to admin after applying code
-- There will also be a resources tab in every room where owner's of that room can share resources(like slide, pdf, links, etc)
 
 ## Sneak peek of DoubtBin
 
