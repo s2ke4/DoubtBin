@@ -18,10 +18,11 @@ import 'package:image/image.dart' as Im;
 import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 
-final CollectionReference binCollection =  FirebaseFirestore.instance.collection('bins');
+final CollectionReference binCollection =
+    FirebaseFirestore.instance.collection('bins');
 final StorageReference storageRef = FirebaseStorage.instance.ref();
-final CollectionReference userCollection = FirebaseFirestore.instance.collection('Users');
-
+final CollectionReference userCollection =
+    FirebaseFirestore.instance.collection('Users');
 
 class BinDatabase {
   final String roomCode;
@@ -40,14 +41,15 @@ class BinDatabase {
     });
   }
 
-  Future createRoom(String roomCode, String displayName, String description, List domain) async {
+  Future createRoom(String roomCode, String displayName, String description,
+      List domain) async {
     await binCollection.doc(roomCode).set({
       "roomCode": roomCode,
       "displayName": displayName,
       "description": description,
       "ownerName": currentUser.displayName,
       "ownerId": currentUser.uid,
-      "domain":domain
+      "domain": domain
     });
   }
 
@@ -91,7 +93,8 @@ class BinDatabase {
                             binName: docSnap.data()['displayName'],
                             owner: docSnap.data()['ownerName'],
                             roomId: docSnap.id,
-                            ownerId:docSnap.data()['ownerId']
+                            ownerId: docSnap.data()['ownerId'],
+                            domain: docSnap.data()['domain'],
                           ),
                         ),
                       );
@@ -151,6 +154,7 @@ class BinDatabase {
                       binName: docSnap.data()['displayName'],
                       owner: docSnap.data()['ownerName'],
                       roomId: docSnap.id,
+                      domain: docSnap.data()['domain'],
                     ),
                   ),
                 );
@@ -198,6 +202,7 @@ class BinDatabase {
                       binName: docSnap.data()['displayName'],
                       owner: docSnap.data()['ownerName'],
                       roomId: docSnap.id,
+                      domain: docSnap.data()['domain'],
                     ),
                   ),
                 );
@@ -220,63 +225,64 @@ class BinDatabase {
     );
   }
 
-  showCommonRoomsInProfile(String userId1,userId2){
+  showCommonRoomsInProfile(String userId1, userId2) {
     return StreamBuilder(
-      stream:userRef.doc(userId1).collection("joinedRoom").snapshots(),
-      builder:(context,snapshot1){
-        if(!snapshot1.hasData){
-          return Loading();
-        }
-        return StreamBuilder(
-          stream: userRef.doc(userId2).collection("joinedRoom").snapshots(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return Loading();
-            }
-            List<Future<DocumentSnapshot>> collFuture = List();
-            snapshot.data.docs.forEach((doc) {
-              for(int i=0;i<snapshot1.data.docs.length;i++){
-                if(doc.id==snapshot1.data.docs[i].id){
-                  collFuture.add(binCollection.doc(doc.id).get());
-                  break;
-                }
-              }});
-
-            return FutureBuilder<List<DocumentSnapshot>>(
-              future: Future.wait<DocumentSnapshot>(collFuture),
-              builder: (context, snapshot){
-                if (snapshot.hasData){
-                  List<BurgerRoomTile> allCard = [];
-                  snapshot.data.forEach((docSnap) {
-                    allCard.add(
-                      BurgerRoomTile(
-                        bin: Bin(
-                          description: docSnap.data()['description'],
-                          binName: docSnap.data()['displayName'],
-                          owner: docSnap.data()['ownerName'],
-                          roomId: docSnap.id,
-                        ),
-                      ),
-                    );
-                  });
-                  if (allCard.length == 0) {
-                    return Container(
-                        child: Center(
-                            child: Text("No Room to Show",
-                                style: TextStyle(fontSize: 16))));
+        stream: userRef.doc(userId1).collection("joinedRoom").snapshots(),
+        builder: (context, snapshot1) {
+          if (!snapshot1.hasData) {
+            return Loading();
+          }
+          return StreamBuilder(
+            stream: userRef.doc(userId2).collection("joinedRoom").snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Loading();
+              }
+              List<Future<DocumentSnapshot>> collFuture = List();
+              snapshot.data.docs.forEach((doc) {
+                for (int i = 0; i < snapshot1.data.docs.length; i++) {
+                  if (doc.id == snapshot1.data.docs[i].id) {
+                    collFuture.add(binCollection.doc(doc.id).get());
+                    break;
                   }
-                  return Column(children: allCard);
-                } else {
-                  return Container(
-                    child: Loading(),
-                  );
                 }
-              },
-            );
-          },
-        );
-      }
-    );
+              });
+
+              return FutureBuilder<List<DocumentSnapshot>>(
+                future: Future.wait<DocumentSnapshot>(collFuture),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    List<BurgerRoomTile> allCard = [];
+                    snapshot.data.forEach((docSnap) {
+                      allCard.add(
+                        BurgerRoomTile(
+                          bin: Bin(
+                            description: docSnap.data()['description'],
+                            binName: docSnap.data()['displayName'],
+                            owner: docSnap.data()['ownerName'],
+                            roomId: docSnap.id,
+                            domain: docSnap.data()['domain'],
+                          ),
+                        ),
+                      );
+                    });
+                    if (allCard.length == 0) {
+                      return Container(
+                          child: Center(
+                              child: Text("No Room to Show",
+                                  style: TextStyle(fontSize: 16))));
+                    }
+                    return Column(children: allCard);
+                  } else {
+                    return Container(
+                      child: Loading(),
+                    );
+                  }
+                },
+              );
+            },
+          );
+        });
   }
 
   //when a person joined a room then
@@ -284,14 +290,15 @@ class BinDatabase {
   //we will include that room in the joined room collection of that person
 
   //check room code to join room
-  Future<String> checkingCode(String userId,BuildContext context,String currentDomain) async {
+  Future<String> checkingCode(
+      String userId, BuildContext context, String currentDomain) async {
     DocumentSnapshot doc = await binCollection.doc(roomCode).get();
     bool found = doc.exists;
     if (found) {
       List domain = doc.data()["domain"];
-      if(domain.isNotEmpty){
+      if (domain.isNotEmpty) {
         bool permitted = domain.contains(currentDomain);
-        if(!permitted){
+        if (!permitted) {
           return "notPermitted";
         }
       }
@@ -306,14 +313,14 @@ class BinDatabase {
           .doc(userId)
           .set({"member": true});
       Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => RoomDashboard(
-                      firstTime: false,
-                      roomCode: roomCode,
-                      roomName:doc.data()['displayName'],
-                      description: doc.data()['description'],
-                    )));
+          context,
+          MaterialPageRoute(
+              builder: (context) => RoomDashboard(
+                    firstTime: false,
+                    roomCode: roomCode,
+                    roomName: doc.data()['displayName'],
+                    description: doc.data()['description'],
+                  )));
       return "";
     }
     return "inValid Code";
@@ -321,7 +328,11 @@ class BinDatabase {
 
   showAllPost() {
     return StreamBuilder(
-      stream: binCollection.doc(roomCode).collection("posts").orderBy("time", descending: true).snapshots(),
+      stream: binCollection
+          .doc(roomCode)
+          .collection("posts")
+          .orderBy("time", descending: true)
+          .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Loading();
@@ -437,10 +448,8 @@ class BinDatabase {
       "numberOfComments": numberOfComments,
       "numberOfLikes": numberOfLikes,
       "numberOfDislikes": numberOfDislikes,
-      "time":DateTime.now().millisecondsSinceEpoch,
+      "time": DateTime.now().millisecondsSinceEpoch,
     });
-
-
   }
 
   //edit post
@@ -516,140 +525,208 @@ class BinDatabase {
     await binCollection.doc(code).collection('members').doc(uid).delete();
   }
 
-
   //likes post
   Future PostLikes(String postId) async {
-    DocumentSnapshot  post =  await binCollection.doc(roomCode).collection("posts").doc(postId).get();
+    DocumentSnapshot post =
+        await binCollection.doc(roomCode).collection("posts").doc(postId).get();
     int like = post.get('numberOfLikes');
     int dislike = post.get('numberOfDislikes');
-    List <dynamic> liked = post.get('liked');
-    List <dynamic> disliked = post.get('disliked');
-    if(liked.contains(currentUser.uid) == false){
+    List<dynamic> liked = post.get('liked');
+    List<dynamic> disliked = post.get('disliked');
+    if (liked.contains(currentUser.uid) == false) {
       liked.add(currentUser.uid);
-      await binCollection.doc(roomCode).collection("posts").doc(postId).update({"numberOfLikes": like+1});
-      await binCollection.doc(roomCode).collection("posts").doc(postId).update({"liked": liked});
-      if(disliked.contains(currentUser.uid) == true){
+      await binCollection
+          .doc(roomCode)
+          .collection("posts")
+          .doc(postId)
+          .update({"numberOfLikes": like + 1});
+      await binCollection
+          .doc(roomCode)
+          .collection("posts")
+          .doc(postId)
+          .update({"liked": liked});
+      if (disliked.contains(currentUser.uid) == true) {
         disliked.remove(currentUser.uid);
-        await binCollection.doc(roomCode).collection("posts").doc(postId).update({"numberOfDislikes": dislike-1});
-        await binCollection.doc(roomCode).collection("posts").doc(postId).update({"disliked": disliked});
+        await binCollection
+            .doc(roomCode)
+            .collection("posts")
+            .doc(postId)
+            .update({"numberOfDislikes": dislike - 1});
+        await binCollection
+            .doc(roomCode)
+            .collection("posts")
+            .doc(postId)
+            .update({"disliked": disliked});
       }
-    }else{
+    } else {
       liked.remove(currentUser.uid);
-      await binCollection.doc(roomCode).collection("posts").doc(postId).update({"numberOfLikes": like-1});
-      await binCollection.doc(roomCode).collection("posts").doc(postId).update({"liked": liked});
+      await binCollection
+          .doc(roomCode)
+          .collection("posts")
+          .doc(postId)
+          .update({"numberOfLikes": like - 1});
+      await binCollection
+          .doc(roomCode)
+          .collection("posts")
+          .doc(postId)
+          .update({"liked": liked});
     }
   }
 
   Future PostDislikes(String postId) async {
-    DocumentSnapshot post = await binCollection.doc(roomCode).collection("posts").doc(postId).get();
+    DocumentSnapshot post =
+        await binCollection.doc(roomCode).collection("posts").doc(postId).get();
     int like = post.get('numberOfLikes');
     int dislike = post.get('numberOfDislikes');
-    List <dynamic> liked = post.get('liked');
-    List <dynamic> disliked = post.get('disliked');
+    List<dynamic> liked = post.get('liked');
+    List<dynamic> disliked = post.get('disliked');
     if (disliked.contains(currentUser.uid) == false) {
       disliked.add(currentUser.uid);
-      await binCollection.doc(roomCode).collection("posts").doc(postId).update({"numberOfDislikes": dislike + 1});
-      await binCollection.doc(roomCode).collection("posts").doc(postId).update({"disliked": disliked});
+      await binCollection
+          .doc(roomCode)
+          .collection("posts")
+          .doc(postId)
+          .update({"numberOfDislikes": dislike + 1});
+      await binCollection
+          .doc(roomCode)
+          .collection("posts")
+          .doc(postId)
+          .update({"disliked": disliked});
       if (liked.contains(currentUser.uid) == true) {
         liked.remove(currentUser.uid);
-        await binCollection.doc(roomCode).collection("posts").doc(postId).update({"numberOfLikes": like - 1});
-        await binCollection.doc(roomCode).collection("posts").doc(postId).update({"liked": liked});
+        await binCollection
+            .doc(roomCode)
+            .collection("posts")
+            .doc(postId)
+            .update({"numberOfLikes": like - 1});
+        await binCollection
+            .doc(roomCode)
+            .collection("posts")
+            .doc(postId)
+            .update({"liked": liked});
       }
     } else {
       disliked.remove(currentUser.uid);
-      await binCollection.doc(roomCode).collection("posts").doc(postId).update({"numberOfDislikes": dislike - 1});
-      await binCollection.doc(roomCode).collection("posts").doc(postId).update({"disliked": disliked});
+      await binCollection
+          .doc(roomCode)
+          .collection("posts")
+          .doc(postId)
+          .update({"numberOfDislikes": dislike - 1});
+      await binCollection
+          .doc(roomCode)
+          .collection("posts")
+          .doc(postId)
+          .update({"disliked": disliked});
     }
   }
 
-
-
-  Future<void> addComments(String postId, String roomId,String comm,int numberOfComments)async {
-    
-    binCollection.doc(roomId)
+  Future<void> addComments(
+      String postId, String roomId, String comm, int numberOfComments) async {
+    binCollection
+        .doc(roomId)
         .collection("posts")
         .doc(postId)
         .collection("comments")
         .add({
-          "comment":comm,
-          "time":DateTime.now().millisecondsSinceEpoch,
-          "numberOfLikes":0,
-          "numberOfDislikes":0,
-          "commentAuthor":currentUser.uid,
-          "likedUser":{},
-          "disLikedUser":{}
-        });
+      "comment": comm,
+      "time": DateTime.now().millisecondsSinceEpoch,
+      "numberOfLikes": 0,
+      "numberOfDislikes": 0,
+      "commentAuthor": currentUser.uid,
+      "likedUser": {},
+      "disLikedUser": {}
+    });
 
     await binCollection
-      .doc(roomId)
-      .collection("posts")
-      .doc(postId)
-      .update({
-        "numberOfComments":FieldValue.increment(1)
-      });
+        .doc(roomId)
+        .collection("posts")
+        .doc(postId)
+        .update({"numberOfComments": FieldValue.increment(1)});
   }
 
-  getComments(String roomId, String postId,Function removeNumberOfComment){
+  getComments(String roomId, String postId, Function removeNumberOfComment) {
     return StreamBuilder(
-            stream:binCollection.doc(roomId).collection("posts").doc(postId).collection("comments").orderBy("numberOfLikes", descending: true).snapshots(),
-            builder: (context, snapshot){
-              if(!snapshot.hasData){
-                return Loading();
-              }
-              List<Comment> allComment=[];
-              commentModel model;
-              snapshot.data.docs.forEach((doc1){
-                  model = commentModel(
-                        comment:doc1.data()["comment"],
-                        time:doc1.data()["time"],
-                        numberOfLikes:doc1.data()["numberOfLikes"],
-                        numberOfDislikes:doc1.data()["numberOfDislikes"],
-                        commentAuthor:doc1.data()["commentAuthor"],
-                        likedUser: doc1.data()["likedUser"],
-                        disLikedUser: doc1.data()["disLikedUser"]
-                  );
-                  allComment.add(
-                    Comment(
-                      comment:model,
-                      roomId: roomId,
-                      postId:postId,
-                      commentId: doc1.id,
-                      removeNumberOfComment:removeNumberOfComment
-                    )
-                  );
-              });
-              return Column(
-                children:allComment
-              );
-            },
+      stream: binCollection
+          .doc(roomId)
+          .collection("posts")
+          .doc(postId)
+          .collection("comments")
+          .orderBy("numberOfLikes", descending: true)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Loading();
+        }
+        List<Comment> allComment = [];
+        commentModel model;
+        snapshot.data.docs.forEach((doc1) {
+          model = commentModel(
+              comment: doc1.data()["comment"],
+              time: doc1.data()["time"],
+              numberOfLikes: doc1.data()["numberOfLikes"],
+              numberOfDislikes: doc1.data()["numberOfDislikes"],
+              commentAuthor: doc1.data()["commentAuthor"],
+              likedUser: doc1.data()["likedUser"],
+              disLikedUser: doc1.data()["disLikedUser"]);
+          allComment.add(Comment(
+              comment: model,
+              roomId: roomId,
+              postId: postId,
+              commentId: doc1.id,
+              removeNumberOfComment: removeNumberOfComment));
+        });
+        return Column(children: allComment);
+      },
     );
   }
 
-  void likeComment(String roomId,String postId,String commentId,bool like,int numOfLike,bool disLike,int numOfDislike){
-    binCollection.doc(roomId).collection("posts").doc(postId).collection("comments").doc(commentId).update({
-      "likedUser.${currentUser.uid}":like,
-      "numberOfLikes":numOfLike,
-      "disLikedUser.${currentUser.uid}":disLike,
-      "numberOfDislikes":numOfDislike
+  void likeComment(String roomId, String postId, String commentId, bool like,
+      int numOfLike, bool disLike, int numOfDislike) {
+    binCollection
+        .doc(roomId)
+        .collection("posts")
+        .doc(postId)
+        .collection("comments")
+        .doc(commentId)
+        .update({
+      "likedUser.${currentUser.uid}": like,
+      "numberOfLikes": numOfLike,
+      "disLikedUser.${currentUser.uid}": disLike,
+      "numberOfDislikes": numOfDislike
     });
   }
 
-  void disLikeComment(String roomId,String postId,String commentId,bool dislike,int numOfdisLike,bool like,int numOfLike){
-    binCollection.doc(roomId).collection("posts").doc(postId).collection("comments").doc(commentId).update({
-      "disLikedUser.${currentUser.uid}":dislike,
-      "numberOfDislikes":numOfdisLike,
-      "likedUser.${currentUser.uid}":like,
-      "numberOfLikes":numOfLike,
+  void disLikeComment(String roomId, String postId, String commentId,
+      bool dislike, int numOfdisLike, bool like, int numOfLike) {
+    binCollection
+        .doc(roomId)
+        .collection("posts")
+        .doc(postId)
+        .collection("comments")
+        .doc(commentId)
+        .update({
+      "disLikedUser.${currentUser.uid}": dislike,
+      "numberOfDislikes": numOfdisLike,
+      "likedUser.${currentUser.uid}": like,
+      "numberOfLikes": numOfLike,
     });
   }
 
-  Future<void> deleteComment(String postId,String commentId)async{
-    await binCollection.doc(roomCode).collection("posts").doc(postId).collection("comments").doc(commentId).delete();
-    binCollection.doc(roomCode).collection("posts").doc(postId).update({
-      "numberOfComments":FieldValue.increment(-1)
-    });
+  Future<void> deleteComment(String postId, String commentId) async {
+    await binCollection
+        .doc(roomCode)
+        .collection("posts")
+        .doc(postId)
+        .collection("comments")
+        .doc(commentId)
+        .delete();
+    binCollection
+        .doc(roomCode)
+        .collection("posts")
+        .doc(postId)
+        .update({"numberOfComments": FieldValue.increment(-1)});
   }
-  
+
   Future compressImage(_image, postId) async {
     Directory temDir = await getTemporaryDirectory();
     final temPath = temDir.path;
@@ -663,14 +740,13 @@ class BinDatabase {
   //this fn is responsible for uploading image
   Future<String> uploadImage(_image, int i, postId) async {
     int id = new DateTime.now().millisecondsSinceEpoch;
-    id+=i;
+    id += i;
     StorageUploadTask uploadTask =
         storageRef.child('post$id _$postId.jpg').putFile(_image);
-      
+
     StorageTaskSnapshot storageSnap = await uploadTask.onComplete;
     String downloadURL = await storageSnap.ref.getDownloadURL();
-    
+
     return downloadURL;
   }
-
 }

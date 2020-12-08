@@ -1,38 +1,66 @@
-import 'package:doubtbin/pages/rooms/roomDashboard.dart';
+import 'package:doubtbin/model/bin.dart';
+import 'package:doubtbin/pages/home/floatingbutton/createRoom.dart';
+import 'package:doubtbin/pages/rooms/joinedUser/joinedUsers.dart';
+import 'package:doubtbin/services/room.dart';
 import 'package:doubtbin/shared/appBar.dart';
 import 'package:doubtbin/shared/loading.dart';
 import 'package:flutter/material.dart';
-import 'package:doubtbin/services/room.dart';
-import 'package:uuid/uuid.dart';
-import '../home.dart';
 
-var uuid = Uuid();
-
-class CreateRoom extends StatefulWidget {
+class EditRoomInfo extends StatefulWidget {
+  String roomName;
+  String description;
+  String roomCode;
+  Bin bin;
+  List<dynamic> domains;
+  Function updateInfo;
+  EditRoomInfo(
+      {this.roomCode,
+      this.roomName,
+      this.description,
+      this.domains,
+      this.bin,
+      this.updateInfo});
   @override
-  _CreateRoomState createState() => _CreateRoomState();
+  _EditRoomInfoState createState() => _EditRoomInfoState(
+      roomCode: roomCode,
+      roomName: roomName,
+      description: description,
+      domains: domains,
+      bin: bin,
+      updateInfo: updateInfo);
 }
 
-class _CreateRoomState extends State<CreateRoom> {
+class _EditRoomInfoState extends State<EditRoomInfo> {
   TextEditingController roomNameController = TextEditingController();
   TextEditingController roomDescriptionController = TextEditingController();
-  TextEditingController domainController = TextEditingController();
+  TextEditingController roomDomainNameController = TextEditingController();
   bool tooShortName = false;
   bool toolong = false;
   bool toolongDescription = false;
   bool isLoading = false;
-
-  final myController = TextEditingController();
-  @override
-  void dispose() {
-    // Clean up the controller when the widget is disposed.
-    myController.dispose();
-    super.dispose();
+  String roomName;
+  String description;
+  String roomCode;
+  List<dynamic> domains;
+  Bin bin;
+  Function updateInfo;
+  _EditRoomInfoState(
+      {this.roomCode,
+      this.roomName,
+      this.description,
+      this.domains,
+      this.bin,
+      this.updateInfo}) {
+    roomNameController.text = roomName;
+    roomDescriptionController.text = description;
+    roomDomainNameController.text =
+        domains.toString().substring(1, domains.toString().length - 1);
   }
 
-  Future createRoom() async {
+  Future updateRoomInfo() async {
     String roomName = roomNameController.text.trim();
     String roomDescription = roomDescriptionController.text.trim();
+    String roomDomainName = roomDomainNameController.text.trim();
     setState(() => roomName.length > 50 ? toolong = true : toolong = false);
     setState(() => roomDescription.length > 100
         ? toolongDescription = true
@@ -40,29 +68,20 @@ class _CreateRoomState extends State<CreateRoom> {
     setState(
         () => roomName.isEmpty ? tooShortName = true : tooShortName = false);
     if (!tooShortName && !toolong && !toolongDescription) {
-      //room
-      var domainString = (domainController.text).split(' ').join('');
+      // var domainString = (roomDomainName).split(' ').join('');
       List domains = new List();
-      if (domainString != "") {
-        domains = domainString.split(',');
-      }
+      domains = roomDomainName.split(',');
+      // if (domainString != "") {
+      //   domains = domainString.split(',');
+      // }
       setState(() => isLoading = true);
-      final roomCode = uuid.v4();
-      await BinDatabase(roomCode: roomCode)
-          .createRoom(roomCode, roomName, roomDescription, domains);
-      await BinDatabase(roomCode: roomCode).addmembers(currentUser.uid);
-      await BinDatabase(roomCode: roomCode).joinRoom(currentUser.uid);
-      print(domains);
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => RoomDashboard(
-                    roomCode: roomCode,
-                    firstTime: true,
-                    roomName: roomName,
-                    description: roomDescription,
-                    domains: domains,
-                  )));
+      await binCollection.doc(roomCode).update({
+        "displayName": roomName,
+        "description": roomDescription,
+        "domain": domains
+      });
+      updateInfo(roomName, roomDescription, domains);
+      Navigator.pop(context);
     }
   }
 
@@ -78,13 +97,13 @@ class _CreateRoomState extends State<CreateRoom> {
       )),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        appBar: appBar("Create Room"),
+        appBar: appBar("Edit Room Information"),
         body: isLoading
             ? Loading()
             : Container(
                 child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: ListView(
+                    child: Column(
                       children: [
                         SizedBox(height: 30),
                         TextFormField(
@@ -112,25 +131,22 @@ class _CreateRoomState extends State<CreateRoom> {
                               fillColor: Colors.grey[50],
                               hintText: "Enter Room Description",
                               border: OutlineInputBorder(),
-                              labelText: "Room Description (optional)",
+                              labelText: "Room Description",
                               errorText: toolongDescription
                                   ? "Room Description too long"
                                   : null),
                         ),
                         SizedBox(height: 40),
                         TextFormField(
-                          keyboardType: TextInputType.multiline,
-                          maxLines: null,
-                          controller: domainController,
+                          controller: roomDomainNameController,
                           decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Colors.grey[50],
-                              hintText: "Enter Organization's Domain Name.",
-                              border: OutlineInputBorder(),
-                              labelText: "Domain Name (optional)",
-                              helperMaxLines: 10,
-                              helperText:
-                                  "For Example.. If your organization email address is \"xxxx@iiitvadodara.ac.in\" and also \"xxxx@iiitv.ac.in\" then write \"iiitvadodara.ac.in, iiitv.ac.in\" (without quote) .This will allow only the users with in your organization to join the room.\nIf you choose to leave it blank then anyone with your room code can join this room."),
+                            filled: true,
+                            fillColor: Colors.grey[50],
+                            hintText:
+                                "Changing domain name won't affect already joined users.", //Changing domain name won't affect already joined users.
+                            border: OutlineInputBorder(),
+                            labelText: "Domain Name",
+                          ),
                         ),
                         SizedBox(height: 40),
                         GestureDetector(
@@ -152,12 +168,12 @@ class _CreateRoomState extends State<CreateRoom> {
                                   const Color(0xFF2A75BC),
                                 ])),
                             child: Text(
-                              "Create",
+                              "Save Changes",
                               style:
                                   TextStyle(color: Colors.white, fontSize: 18),
                             ),
                           ),
-                          onTap: createRoom,
+                          onTap: updateRoomInfo,
                         )
                       ],
                     ))),
