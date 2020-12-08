@@ -15,6 +15,11 @@ This application will target the students helping them in solving doubts related
 - Any person can create a room and share code to join other people.
 - Multiple small doubt rooms can be created among students to resolve their doubts.
 
+## Download Apk
+
+You can download apk file of doubtbin from <a href="https://drive.google.com/drive/folders/1p37-BxI-14Crejc8f-oK9diaPh0bD5IY?usp=sharing">here</a>
+
+
 ## Sneak peek of DoubtBin
 
 <img src="assets/WhatsApp%20Image%202020-12-01%20at%209.38.40%20PM%20(1).jpeg" height=600></img>
@@ -35,3 +40,5 @@ This application will target the students helping them in solving doubts related
 <img src="assets/WhatsApp%20Image%202020-12-01%20at%209.40.33%20PM.jpeg" height=600></img>
 <img src="assets/WhatsApp%20Image%202020-12-01%20at%209.38.36%20PM.jpeg" height=600></img>
 <img src="assets/WhatsApp%20Image%202020-12-01%20at%209.38.35%20PM.jpeg" height=600></img>
+
+
