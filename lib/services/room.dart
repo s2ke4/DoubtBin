@@ -10,6 +10,7 @@ import 'package:doubtbin/pages/home/home.dart';
 import 'package:doubtbin/pages/rooms/comment.dart';
 import 'package:doubtbin/pages/rooms/postCard.dart';
 import 'package:doubtbin/pages/rooms/joinedUser/userTile.dart';
+import 'package:doubtbin/pages/rooms/roomDashboard.dart';
 import 'package:doubtbin/shared/loading.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -39,13 +40,14 @@ class BinDatabase {
     });
   }
 
-  Future createRoom(String roomCode, String displayName, String description) async {
+  Future createRoom(String roomCode, String displayName, String description, List domain) async {
     await binCollection.doc(roomCode).set({
       "roomCode": roomCode,
       "displayName": displayName,
       "description": description,
       "ownerName": currentUser.displayName,
-      "ownerId": currentUser.uid
+      "ownerId": currentUser.uid,
+      "domain":domain
     });
   }
 
@@ -282,10 +284,17 @@ class BinDatabase {
   //we will include that room in the joined room collection of that person
 
   //check room code to join room
-  Future<bool> checkingCode(String userId) async {
+  Future<String> checkingCode(String userId,BuildContext context,String currentDomain) async {
     DocumentSnapshot doc = await binCollection.doc(roomCode).get();
     bool found = doc.exists;
     if (found) {
+      List domain = doc.data()["domain"];
+      if(domain.isNotEmpty){
+        bool permitted = domain.contains(currentDomain);
+        if(!permitted){
+          return "notPermitted";
+        }
+      }
       userRef
           .doc(userId)
           .collection("joinedRoom")
@@ -296,9 +305,18 @@ class BinDatabase {
           .collection("members")
           .doc(userId)
           .set({"member": true});
-      return true;
+      Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => RoomDashboard(
+                      firstTime: false,
+                      roomCode: roomCode,
+                      roomName:doc.data()['displayName'],
+                      description: doc.data()['description'],
+                    )));
+      return "";
     }
-    return false;
+    return "inValid Code";
   }
 
   showAllPost() {

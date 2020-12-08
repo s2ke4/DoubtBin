@@ -1,6 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doubtbin/pages/home/home.dart';
-import 'package:doubtbin/pages/rooms/roomDashboard.dart';
 import 'package:doubtbin/services/room.dart';
 import 'package:doubtbin/shared/appBar.dart';
 import 'package:doubtbin/shared/loading.dart';
@@ -14,30 +12,26 @@ class JoinRoom extends StatefulWidget {
 class _JoinRoomState extends State<JoinRoom> {
   TextEditingController joinroomNameController = TextEditingController();
   bool validCode = true;
+  bool notPermitted = false;
   bool isLoading = false;
+  String notPermittedmsg = "You Are Not Permitted to join this room. Make Sure that you logged in with correct email id.";
   joinRoom() async {
     var code = joinroomNameController.text.trim();
     setState(() => code.isEmpty ? validCode = false : validCode = true);
-
+    String email = currentUser.email;
+    int i=0;
+    while(email[i]!='@'){
+      i++;
+    }
+    String currentDomain = email.substring(i+1);
     if (validCode) {
       setState(() => isLoading = true);
-      bool exist =
-          await BinDatabase(roomCode: code).checkingCode(currentUser.uid);
-      if (!exist) {
+      String response =
+          await BinDatabase(roomCode: code).checkingCode(currentUser.uid,context,currentDomain);
+      if (response == "inValid Code") {
         setState(() => {validCode = false, isLoading = false});
-      } else {
-        DocumentSnapshot doc = await binCollection.doc(code).get();
-        String name = doc.data()['displayName'];
-        String description = doc.data()['description'];
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => RoomDashboard(
-                      firstTime: false,
-                      roomCode: code,
-                      roomName: name,
-                      description: description,
-                    )));
+      }else if(response == "notPermitted"){
+        setState(() => {notPermitted = true, isLoading = false});
       }
     }
   }
@@ -62,8 +56,9 @@ class _JoinRoomState extends State<JoinRoom> {
                           hintText: "Enter Room Code",
                           border: OutlineInputBorder(),
                           labelText: "Room Code",
+                          errorMaxLines: 5,
                           errorText: validCode
-                              ? null
+                              ? (notPermitted?notPermittedmsg:null)
                               : "Room Not Found, Please Enter Correct Code",
                         ),
                       ),

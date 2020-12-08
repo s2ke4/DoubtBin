@@ -16,6 +16,7 @@ class CreateRoom extends StatefulWidget {
 class _CreateRoomState extends State<CreateRoom> {
   TextEditingController roomNameController = TextEditingController();
   TextEditingController roomDescriptionController = TextEditingController();
+  TextEditingController domainController = TextEditingController();
   bool tooShortName = false;
   bool toolong = false;
   bool toolongDescription = false;
@@ -40,12 +41,18 @@ class _CreateRoomState extends State<CreateRoom> {
         () => roomName.isEmpty ? tooShortName = true : tooShortName = false);
     if (!tooShortName && !toolong && !toolongDescription) {
       //room
+      var domainString = (domainController.text).split(' ').join('');
+      List domains = new List();
+      if(domainString!=""){
+        domains = domainString.split(',');
+      }
       setState(() => isLoading = true);
       final roomCode = uuid.v4();
       await BinDatabase(roomCode: roomCode).createRoom(
         roomCode,
         roomName,
         roomDescription,
+        domains
       );
       await BinDatabase(roomCode: roomCode).addmembers(currentUser.uid);
       await BinDatabase(roomCode: roomCode).joinRoom(currentUser.uid);
@@ -78,7 +85,7 @@ class _CreateRoomState extends State<CreateRoom> {
             : Container(
                 child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: Column(
+                    child: ListView(
                       children: [
                         SizedBox(height: 30),
                         TextFormField(
@@ -106,10 +113,25 @@ class _CreateRoomState extends State<CreateRoom> {
                               fillColor: Colors.grey[50],
                               hintText: "Enter Room Description",
                               border: OutlineInputBorder(),
-                              labelText: "Room Description",
+                              labelText: "Room Description (optional)",
                               errorText: toolongDescription
                                   ? "Room Description too long"
                                   : null),
+                        ),
+                        SizedBox(height: 40),
+                        TextFormField(
+                          keyboardType: TextInputType.multiline,
+                          maxLines: null,
+                          controller: domainController,
+                          decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.grey[50],
+                              hintText: "Enter Organization's Domain Name.",
+                              border: OutlineInputBorder(),
+                              labelText: "Domain Name (optional)",
+                              helperMaxLines: 10,
+                              helperText: "For Example.. If your organization email address is \"xxxx@iiitvadodara.ac.in\" and also \"xxxx@iiitv.ac.in\" then write \"iiitvadodara.ac.in, iiitv.ac.in\" (without quote) .This will allow only the users with in your organization to join the room.\nIf you choose to leave it blank then anyone with your room code can join this room."
+                          ),
                         ),
                         SizedBox(height: 40),
                         GestureDetector(
