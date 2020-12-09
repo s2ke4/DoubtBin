@@ -5,27 +5,12 @@ import 'package:doubtbin/shared/loading.dart';
 import 'package:flutter/material.dart';
 
 class EditRoomInfo extends StatefulWidget {
-  String roomName;
-  String description;
-  String roomCode;
   Bin bin;
-  List<dynamic> domains;
   Function updateInfo;
-  EditRoomInfo(
-      {this.roomCode,
-      this.roomName,
-      this.description,
-      this.domains,
-      this.bin,
-      this.updateInfo});
+  EditRoomInfo({this.bin, this.updateInfo});
   @override
-  _EditRoomInfoState createState() => _EditRoomInfoState(
-      // roomCode: roomCode,
-      // roomName: roomName,
-      // description: description,
-      // domains: domains,
-      bin: bin,
-      updateInfo: updateInfo);
+  _EditRoomInfoState createState() =>
+      _EditRoomInfoState(bin: bin, updateInfo: updateInfo);
 }
 
 class _EditRoomInfoState extends State<EditRoomInfo> {
@@ -36,20 +21,9 @@ class _EditRoomInfoState extends State<EditRoomInfo> {
   bool toolong = false;
   bool toolongDescription = false;
   bool isLoading = false;
-  // String roomName;
-  // String description;
-  // String roomCode;
-  // List<dynamic> domains;
   Bin bin;
   Function updateInfo;
-  _EditRoomInfoState(
-      {
-      // this.roomCode,
-      // this.roomName,
-      // this.description,
-      // this.domains,
-      this.bin,
-      this.updateInfo}) {
+  _EditRoomInfoState({this.bin, this.updateInfo}) {
     roomNameController.text = bin.binName;
     roomDescriptionController.text = bin.description;
     roomDomainNameController.text =

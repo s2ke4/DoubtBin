@@ -9,18 +9,9 @@ class RIKeys {
 }
 
 class RoomInfo extends StatefulWidget {
-  String roomCode, roomName, description, ownerId;
   Bin bin;
   Function updateInfo2;
-  List<dynamic> domains;
-  RoomInfo(
-      {this.roomCode,
-      this.roomName,
-      this.description,
-      this.ownerId,
-      this.domains,
-      this.bin,
-      this.updateInfo2});
+  RoomInfo({this.bin, this.updateInfo2});
 
   @override
   _RoomInfoState createState() => _RoomInfoState();
@@ -30,7 +21,7 @@ class _RoomInfoState extends State<RoomInfo> {
   final key = new GlobalKey<ScaffoldState>();
 
   handleCopyCode(BuildContext context) {
-    Clipboard.setData(new ClipboardData(text: widget.roomCode));
+    Clipboard.setData(new ClipboardData(text: widget.bin.roomId));
     final scaffold = Scaffold.of(context);
     scaffold.showSnackBar(
       SnackBar(
@@ -60,7 +51,7 @@ class _RoomInfoState extends State<RoomInfo> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Stack(children: <Widget>[
-              (currentUser.uid == widget.ownerId)
+              (currentUser.uid == widget.bin.ownerId)
                   ? Container(
                       alignment: Alignment.topRight,
                       child: ClipOval(
@@ -76,17 +67,14 @@ class _RoomInfoState extends State<RoomInfo> {
                                   size: 25,
                                 )),
                             onTap: () {
-                              print(widget.domains);
+                              print(widget.bin.domain);
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => EditRoomInfo(
-                                          bin: widget.bin,
-                                          updateInfo: updateInfo,
-                                          roomCode: widget.bin.roomId,
-                                          roomName: widget.bin.binName,
-                                          description: widget.bin.description,
-                                          domains: widget.bin.domain)));
+                                            bin: widget.bin,
+                                            updateInfo: updateInfo,
+                                          )));
                             },
                           ),
                         ),

@@ -326,9 +326,6 @@ class BinDatabase {
                       domain: doc.data()['domain'],
                     ),
                     firstTime: false,
-                    // roomCode: roomCode,
-                    // roomName: doc.data()['displayName'],
-                    // description: doc.data()['description'],
                   )));
       return "";
     }

@@ -11,49 +11,22 @@ import 'package:doubtbin/shared/loading.dart';
 import 'package:flutter/material.dart';
 
 class JoinedUsers extends StatefulWidget {
-  // final String roomCode;
-  // final String roomName;
-  // final String description;
-  // List<dynamic> domains;
   Function updateInfo2;
   Bin bin;
-  JoinedUsers(
-      {
-      // this.roomCode,
-      // this.roomName,
-      // this.description,
-      // this.domains,
-      this.bin,
-      this.updateInfo2});
+  JoinedUsers({this.bin, this.updateInfo2});
 
   @override
-  _JoinedUsersState createState() => _JoinedUsersState(
-      // roomCode: roomCode,
-      // roomName: roomName,
-      // description: description,
-      // domains: domains,
-      bin: bin,
-      updateInfo2: updateInfo2);
+  _JoinedUsersState createState() =>
+      _JoinedUsersState(bin: bin, updateInfo2: updateInfo2);
 }
 
 class _JoinedUsersState extends State<JoinedUsers> {
-  // String roomCode;
-  // String roomName;
-  // String description;
-  // List<dynamic> domains;
   Bin bin;
   Function updateInfo2;
   String oid;
   bool isLoading = true;
   DocumentSnapshot docSnap;
-  _JoinedUsersState(
-      {
-      // this.roomCode,
-      // this.roomName,
-      // this.description,
-      // this.domains,
-      this.bin,
-      this.updateInfo2}) {
+  _JoinedUsersState({this.bin, this.updateInfo2}) {
     getDetail();
   }
   void getDetail() async {
@@ -77,11 +50,12 @@ class _JoinedUsersState extends State<JoinedUsers> {
                 : RoomInfo(
                     updateInfo2: updateInfo2,
                     bin: bin,
-                    roomCode: bin.roomId,
-                    roomName: bin.binName,
-                    description: bin.description,
-                    ownerId: docSnap.id,
-                    domains: bin.domain),
+                    // roomCode: bin.roomId,
+                    // roomName: bin.binName,
+                    // description: bin.description,
+                    // ownerId: docSnap.id,
+                    // domains: bin.domain
+                  ),
             ExitButton(code: bin.roomId, uid: currentUser.uid),
             isLoading
                 ? Loading()

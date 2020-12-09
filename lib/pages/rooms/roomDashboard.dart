@@ -8,49 +8,19 @@ import 'package:flutter/services.dart';
 
 class RoomDashboard extends StatefulWidget {
   final bool firstTime;
-  // final String roomCode;
-  // final String roomName;
-  // final String description;
   final Bin bin;
-  // final List<dynamic> domains;
-  RoomDashboard(
-      {this.firstTime,
-      // this.roomCode,
-      // this.roomName,
-      // this.description,
-      // this.domains,
-      this.bin});
+  RoomDashboard({this.firstTime, this.bin});
 
   @override
-  _RoomDashboardState createState() => _RoomDashboardState(
-      firstTime: firstTime,
-      // roomCode: roomCode,
-      // roomName: roomName,
-      // description: description,
-      // domains: domains,
-      bin: bin);
+  _RoomDashboardState createState() =>
+      _RoomDashboardState(firstTime: firstTime, bin: bin);
 }
 
 class _RoomDashboardState extends State<RoomDashboard> {
   final key = new GlobalKey<ScaffoldState>();
   bool firstTime;
-  // String roomCode;
-  // String roomName;
-  // String description;
   Bin bin;
-  // List<dynamic> domains;
-
-  _RoomDashboardState(
-      {this.firstTime,
-      // this.roomCode,
-      // this.roomName,
-      // this.description,
-      // this.domains,
-      this.bin}) {
-    print("RoomDashboard");
-    // print(domains);
-    print(bin.roomId);
-  }
+  _RoomDashboardState({this.firstTime, this.bin}) {}
 
   void updateInfo2(Bin bin) {
     setState(() {
@@ -128,10 +98,6 @@ class _RoomDashboardState extends State<RoomDashboard> {
                         builder: (context) => JoinedUsers(
                               updateInfo2: updateInfo2,
                               bin: bin,
-                              // roomCode: bin.roomId,
-                              // roomName: bin.binName,
-                              // description: bin.description,
-                              // domains: bin.domain
                             )));
               },
             ),
