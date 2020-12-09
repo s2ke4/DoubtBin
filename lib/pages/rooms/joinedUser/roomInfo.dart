@@ -84,7 +84,7 @@ class _RoomInfoState extends State<RoomInfo> {
                 child: Text(
                   widget.bin.binName,
                   style: TextStyle(
-                    fontSize: 24.0,
+                    fontSize: 28.0,
                     color: Colors.grey[800],
                   ),
                 ),

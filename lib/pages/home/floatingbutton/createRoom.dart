@@ -58,18 +58,15 @@ class _CreateRoomState extends State<CreateRoom> {
           context,
           MaterialPageRoute(
               builder: (context) => RoomDashboard(
-                    // roomCode: roomCode,
                     firstTime: true,
                     bin: Bin(
                       description: roomDescription,
                       binName: roomName,
                       owner: currentUser.displayName,
+                      ownerId: currentUser.uid,
                       roomId: roomCode,
                       domain: domains,
                     ),
-                    // roomName: roomName,
-                    // description: roomDescription,
-                    // domains: domains,
                   )));
     }
   }
