@@ -1,3 +1,4 @@
+import 'package:doubtbin/model/bin.dart';
 import 'package:doubtbin/pages/rooms/joinedUser/joinedUsers.dart';
 import 'package:doubtbin/pages/rooms/addNewPost/newPost.dart';
 import 'package:doubtbin/services/room.dart';
@@ -10,15 +11,24 @@ class RoomDashboard extends StatefulWidget {
   final String roomCode;
   final String roomName;
   final String description;
+  final Bin bin;
+  final List<dynamic> domains;
   RoomDashboard(
-      {this.firstTime, this.roomCode, this.roomName, this.description});
+      {this.firstTime,
+      this.roomCode,
+      this.roomName,
+      this.description,
+      this.domains,
+      this.bin});
 
   @override
   _RoomDashboardState createState() => _RoomDashboardState(
       firstTime: firstTime,
       roomCode: roomCode,
       roomName: roomName,
-      description: description);
+      description: description,
+      domains: domains,
+      bin: bin);
 }
 
 class _RoomDashboardState extends State<RoomDashboard> {
@@ -27,11 +37,26 @@ class _RoomDashboardState extends State<RoomDashboard> {
   String roomCode;
   String roomName;
   String description;
+  Bin bin;
+  List<dynamic> domains;
 
   _RoomDashboardState(
-      {this.firstTime, this.roomCode, this.roomName, this.description}){
-        print("RoomDashboard");
-      }
+      {this.firstTime,
+      this.roomCode,
+      this.roomName,
+      this.description,
+      this.domains,
+      this.bin}) {
+    print("RoomDashboard");
+    print(domains);
+    print(bin.roomId);
+  }
+
+  void updateInfo2(Bin bin) {
+    setState(() {
+      this.bin = bin;
+    });
+  }
 
   @override
   void initState() {
@@ -84,8 +109,8 @@ class _RoomDashboardState extends State<RoomDashboard> {
       key: key,
       appBar: CustomAppBar(
         appBar: AppBar(
-          backgroundColor:Color(0xff007EF4),
-          title: Text(roomName),
+          backgroundColor: Color(0xff007EF4),
+          title: Text(bin.binName),
           actions: [
             FlatButton.icon(
               icon: Icon(
@@ -97,14 +122,18 @@ class _RoomDashboardState extends State<RoomDashboard> {
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () {
+                print(domains);
+                print(bin.roomId);
                 Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => JoinedUsers(
-                              roomCode: roomCode,
-                              roomName: roomName,
-                              description: description,
-                            )));
+                            updateInfo2: updateInfo2,
+                            bin: bin,
+                            roomCode: bin.roomId,
+                            roomName: bin.binName,
+                            description: bin.description,
+                            domains: bin.domain)));
               },
             ),
           ],

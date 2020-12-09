@@ -16,15 +16,18 @@ class BinCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         print("Card Clicked");
+        print(bin.roomId);
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => RoomDashboard(
+                      bin: bin,
                       roomCode: bin.roomId,
                       firstTime:
                           false, //true only when the user creates or joins the room and then visits it for first time
                       roomName: bin.binName,
                       description: bin.description,
+                      domains: bin.domain,
                     )));
       },
       child: Card(
@@ -50,9 +53,14 @@ class BinCard extends StatelessWidget {
                     color: Colors.grey[600],
                   ),
                 ),
-                onTap: (){
+                onTap: () {
                   print(bin.ownerId);
-                  Navigator.push(context,MaterialPageRoute(builder:(BuildContext context)=>Profile(userId:bin.ownerId)));},
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              Profile(userId: bin.ownerId)));
+                },
               ),
               SizedBox(
                 height: 2.0,
