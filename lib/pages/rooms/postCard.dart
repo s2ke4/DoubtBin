@@ -65,11 +65,11 @@ class PostCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(children: [
-                          post.liked == null || post.liked.contains(currentUser.uid) == false ? Icon(Icons.thumb_up, size:27) : Icon(Icons.thumb_up,color: Colors.blue[500], size:27),
+                          post.liked[currentUser.uid] == null || post.liked[currentUser.uid] == false ? Icon(Icons.thumb_up, size:27) : Icon(Icons.thumb_up,color: Colors.blue[500], size:27),
                           SizedBox(width: 10),
                           Text(post.numberOfLikes.toString()),
                           SizedBox(width: 15),
-                          post.disliked == null || post.disliked.contains(currentUser.uid) == false ? Icon(Icons.thumb_down, size:27) : Icon(Icons.thumb_down,color: Colors.red[500], size:27),
+                          post.disliked[currentUser.uid] == null || post.disliked[currentUser.uid] == false ? Icon(Icons.thumb_down, size:27) : Icon(Icons.thumb_down,color: Colors.red[500], size:27),
                           SizedBox(width: 10),
                           Text(post.numberOfDislikes.toString()),
                           SizedBox(width: 15),

@@ -5,8 +5,8 @@ class Post {
   String postBody;
   String author;
   bool isResolved;
-  List<dynamic> liked;
-  List<dynamic> disliked;
+  Map liked;
+  Map disliked;
   int numberOfAttachment;
   int numberOfComments;
   int numberOfLikes;

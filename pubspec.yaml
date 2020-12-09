@@ -44,6 +44,7 @@ dependencies:
   firebase_storage: ^4.0.1
   image: ^2.1.18
   path_provider: ^1.6.21
+  synchronized: ^2.2.0+2
 
 dev_dependencies:
   flutter_test:

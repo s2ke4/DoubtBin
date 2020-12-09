@@ -11,6 +11,7 @@ import 'package:doubtbin/shared/appBar.dart';
 import 'package:doubtbin/shared/loading.dart';
 import 'package:flutter/material.dart';
 
+
 enum WhyFarther { delete, markAsResolved, markAsUnresolved, update }
 
 class DetailPost extends StatefulWidget {
@@ -29,10 +30,7 @@ class _DetailPostState extends State<DetailPost> {
   _DetailPostState({this.post, this.roomCode});
   String userName, userImageURL, roomName = '';
   bool isResolved = false;
-  List<dynamic> liked = [];
-  List<dynamic> disliked = [];
-  int numberOfLikes;
-  int numberOfDislikes;
+  bool isLiked, isDisLiked ;
 
   BinDatabase binDatabase = new BinDatabase();
   TextEditingController commentTextEditingController =
@@ -49,22 +47,16 @@ class _DetailPostState extends State<DetailPost> {
         .doc(post.postID)
         .get();
     setState(() => post.numberOfComments = doc1.data()["numberOfComments"]);
-  }
+  } 
 
   @override
   void initState() {
     super.initState();
     getInfo();
-    List<dynamic> liketemp;
-    List<dynamic> disliketemp;
-    post.liked == null ? liketemp = [] : liketemp = post.liked;
-    post.disliked == null ? disliketemp = [] : disliketemp = post.disliked;
     setState(() {
       isResolved = post.isResolved;
-      liked = liketemp;
-      disliked = disliketemp;
-      numberOfLikes = post.numberOfLikes;
-      numberOfDislikes = post.numberOfDislikes;
+      isLiked =(post.liked[currentUser.uid] == true) ? true : false;
+      isDisLiked = (post.disliked[currentUser.uid] == true) ? true : false;
     });
   }
 
@@ -108,38 +100,48 @@ class _DetailPostState extends State<DetailPost> {
     }
   }
 
-  void PostLike() async {
-    liked.contains(currentUser.uid) == false
-        ? setState(() {
-            liked.add(currentUser.uid);
-            if (disliked.contains(currentUser.uid) == true) {
-              numberOfDislikes--;
-              disliked.remove(currentUser.uid);
-            }
-            numberOfLikes++;
-          })
-        : setState(() {
-            liked.remove(currentUser.uid);
-            numberOfLikes--;
-          });
-    await BinDatabase(roomCode: roomCode).PostLikes(post.postID);
+  void PostLike() async{
+
+    await BinDatabase(roomCode: roomCode).PostLikes(post.postID, 
+        !isLiked,
+        isDisLiked,
+        false);
+
+    setState(() {
+      post.numberOfDislikes = isDisLiked
+          ? post.numberOfDislikes - 1
+          : post.numberOfDislikes;
+      post.disliked[currentUser.uid] = false;
+      isDisLiked = false;
+      post.liked[currentUser.uid] = !isLiked;
+      isLiked = !isLiked;
+      post.numberOfLikes = isLiked
+          ? post.numberOfLikes + 1
+          : post.numberOfLikes - 1;
+    });
   }
 
-  void PostDislike() async {
-    disliked.contains(currentUser.uid) == false
-        ? setState(() {
-            disliked.add(currentUser.uid);
-            if (liked.contains(currentUser.uid) == true) {
-              numberOfLikes--;
-              liked.remove(currentUser.uid);
-            }
-            numberOfDislikes++;
-          })
-        : setState(() {
-            disliked.remove(currentUser.uid);
-            numberOfDislikes--;
-          });
-    await BinDatabase(roomCode: roomCode).PostDislikes(post.postID);
+  void PostDislike()async {
+    await BinDatabase(roomCode: roomCode).PostDislikes(post.postID,
+       !isDisLiked,
+       isLiked,
+       false,
+    );
+
+    setState(() {
+     post.numberOfLikes = isLiked
+          ?post.numberOfLikes - 1
+          :post.numberOfLikes;
+     post.liked[currentUser.uid] = false;
+     isLiked = false;
+     post.disliked[currentUser.uid] = !isDisLiked;
+     isDisLiked=!isDisLiked;
+     post.numberOfDislikes =
+         isDisLiked
+              ?post.numberOfDislikes + 1
+              :post.numberOfDislikes - 1;
+    });
+    
   }
 
   void addComment() async {
@@ -358,31 +360,26 @@ class _DetailPostState extends State<DetailPost> {
                         children: [
                           Row(children: [
                             IconButton(
-                              icon: liked == null ||
-                                      liked.contains(currentUser.uid) == false
-                                  ? Icon(Icons.thumb_up, size: 27)
-                                  : Icon(Icons.thumb_up,
-                                      color: Colors.blue[500], size: 27),
+                              icon: isLiked
+                                  ? Icon(Icons.thumb_up,color: Colors.blue[500], size: 27)
+                                  : Icon(Icons.thumb_up,size: 27),
                               onPressed: PostLike,
                               splashColor: Colors.blue[100],
                               splashRadius: 25,
                             ),
                             SizedBox(width: 10),
-                            Text(numberOfLikes.toString()),
+                            Text(post.numberOfLikes.toString()),
                             SizedBox(width: 15),
                             IconButton(
-                              icon: disliked == null ||
-                                      disliked.contains(currentUser.uid) ==
-                                          false
-                                  ? Icon(Icons.thumb_down, size: 27)
-                                  : Icon(Icons.thumb_down,
-                                      color: Colors.red[500], size: 27),
+                              icon: isDisLiked 
+                                  ? Icon(Icons.thumb_down,color: Colors.red[500], size: 27)
+                                  : Icon(Icons.thumb_down,size: 27),
                               onPressed: PostDislike,
                               splashColor: Colors.red[100],
                               splashRadius: 25,
                             ),
                             SizedBox(width: 10),
-                            Text(numberOfDislikes.toString())
+                            Text(post.numberOfDislikes.toString())
                           ]),
                           Padding(
                             padding: const EdgeInsets.only(right: 8.0),

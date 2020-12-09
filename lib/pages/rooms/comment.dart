@@ -59,8 +59,16 @@ class _CommentState extends State<Comment> {
         break;
     }
   }
-
+ 
   void handleLike() {
+    BinDatabase().likeComment(
+        widget.roomId,
+        widget.postId,
+        widget.commentId,
+        !isLiked,
+        isDisLiked,
+    );
+        
     setState(() {
       widget.comment.numberOfDislikes = isDisLiked
           ? widget.comment.numberOfDislikes - 1
@@ -71,17 +79,19 @@ class _CommentState extends State<Comment> {
           ? widget.comment.numberOfLikes + 1
           : widget.comment.numberOfLikes - 1;
     });
-    BinDatabase().likeComment(
-        widget.roomId,
-        widget.postId,
-        widget.commentId,
-        widget.comment.likedUser[currentUser.uid],
-        widget.comment.numberOfLikes,
-        widget.comment.disLikedUser[currentUser.uid],
-        widget.comment.numberOfDislikes);
+    
   }
 
   void handleDislike() {
+
+    BinDatabase().disLikeComment(
+        widget.roomId,
+        widget.postId,
+        widget.commentId,
+        !isDisLiked,
+        isLiked,
+    );
+
     setState(() {
       widget.comment.numberOfLikes = isLiked
           ? widget.comment.numberOfLikes - 1
@@ -93,14 +103,6 @@ class _CommentState extends State<Comment> {
               ? widget.comment.numberOfDislikes + 1
               : widget.comment.numberOfDislikes - 1;
     });
-    BinDatabase().disLikeComment(
-        widget.roomId,
-        widget.postId,
-        widget.commentId,
-        widget.comment.disLikedUser[currentUser.uid],
-        widget.comment.numberOfDislikes,
-        widget.comment.likedUser[currentUser.uid],
-        widget.comment.numberOfLikes);
   }
 
   @override

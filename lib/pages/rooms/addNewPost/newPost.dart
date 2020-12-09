@@ -29,8 +29,6 @@ class _NewPostState extends State<NewPost> {
   bool tooShortHeading = false;
   bool tooShortDescription = false;
   List<File> images = [];
-  List<String> likes = [];
-  List<String> dislikes = [];
   final picker = ImagePicker();
 
   _NewPostState({this.roomCode, this.roomName});
@@ -117,13 +115,7 @@ class _NewPostState extends State<NewPost> {
           postDescriptionController.text.trim(),
           currentUser.uid,
           images,
-          false,
-          likes,
-          dislikes,
-          images.length,
-          0,
-          0,
-          0);
+          images.length,);
       Navigator.pop(context);
     }
   }

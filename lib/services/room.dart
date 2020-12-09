@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:image/image.dart' as Im;
 import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:synchronized/synchronized.dart';
 
 final CollectionReference binCollection =  FirebaseFirestore.instance.collection('bins');
 final StorageReference storageRef = FirebaseStorage.instance.ref();
@@ -24,6 +25,7 @@ final CollectionReference userCollection = FirebaseFirestore.instance.collection
 
 
 class BinDatabase {
+  var lock = new Lock();
   final String roomCode;
   final String user;
   final String uid;
@@ -409,13 +411,7 @@ class BinDatabase {
     String postBody,
     String author,
     List<File> images,
-    bool isResolved,
-    List<dynamic> likes,
-    List<dynamic> dislikes,
     int numberOfAttachment,
-    int numberOfComments,
-    int numberOfLikes,
-    int numberOfDislikes,
   ) async {
     List<String> media = new List(numberOfAttachment);
     for (int i = 0; i < numberOfAttachment; i++) {
@@ -429,14 +425,14 @@ class BinDatabase {
       "postHeading": postHeading,
       "postBody": postBody,
       "author": author,
-      "isResolved": isResolved,
-      "liked": likes,
-      "disliked": dislikes,
+      "isResolved": false,
+      "liked": {},
+      "disliked": {},
       "media": media,
       "numberOfAttachment": numberOfAttachment,
-      "numberOfComments": numberOfComments,
-      "numberOfLikes": numberOfLikes,
-      "numberOfDislikes": numberOfDislikes,
+      "numberOfComments": 0,
+      "numberOfLikes": 0,
+      "numberOfDislikes": 0,
       "time":DateTime.now().millisecondsSinceEpoch,
     });
 
@@ -518,48 +514,26 @@ class BinDatabase {
 
 
   //likes post
-  Future PostLikes(String postId) async {
-    DocumentSnapshot  post =  await binCollection.doc(roomCode).collection("posts").doc(postId).get();
-    int like = post.get('numberOfLikes');
-    int dislike = post.get('numberOfDislikes');
-    List <dynamic> liked = post.get('liked');
-    List <dynamic> disliked = post.get('disliked');
-    if(liked.contains(currentUser.uid) == false){
-      liked.add(currentUser.uid);
-      await binCollection.doc(roomCode).collection("posts").doc(postId).update({"numberOfLikes": like+1});
-      await binCollection.doc(roomCode).collection("posts").doc(postId).update({"liked": liked});
-      if(disliked.contains(currentUser.uid) == true){
-        disliked.remove(currentUser.uid);
-        await binCollection.doc(roomCode).collection("posts").doc(postId).update({"numberOfDislikes": dislike-1});
-        await binCollection.doc(roomCode).collection("posts").doc(postId).update({"disliked": disliked});
-      }
-    }else{
-      liked.remove(currentUser.uid);
-      await binCollection.doc(roomCode).collection("posts").doc(postId).update({"numberOfLikes": like-1});
-      await binCollection.doc(roomCode).collection("posts").doc(postId).update({"liked": liked});
-    }
+  Future PostLikes(String postId,bool like,bool predislike,bool disLike) async {
+    await lock.synchronized(() async {
+      await binCollection.doc(roomCode).collection("posts").doc(postId).update({
+        "liked.${currentUser.uid}":like,
+        "numberOfLikes":like?FieldValue.increment(1):FieldValue.increment(-1),
+        "disliked.${currentUser.uid}":disLike,
+        "numberOfDislikes":predislike?FieldValue.increment(-1):FieldValue.increment(0)
+      });
+    });
   }
 
-  Future PostDislikes(String postId) async {
-    DocumentSnapshot post = await binCollection.doc(roomCode).collection("posts").doc(postId).get();
-    int like = post.get('numberOfLikes');
-    int dislike = post.get('numberOfDislikes');
-    List <dynamic> liked = post.get('liked');
-    List <dynamic> disliked = post.get('disliked');
-    if (disliked.contains(currentUser.uid) == false) {
-      disliked.add(currentUser.uid);
-      await binCollection.doc(roomCode).collection("posts").doc(postId).update({"numberOfDislikes": dislike + 1});
-      await binCollection.doc(roomCode).collection("posts").doc(postId).update({"disliked": disliked});
-      if (liked.contains(currentUser.uid) == true) {
-        liked.remove(currentUser.uid);
-        await binCollection.doc(roomCode).collection("posts").doc(postId).update({"numberOfLikes": like - 1});
-        await binCollection.doc(roomCode).collection("posts").doc(postId).update({"liked": liked});
-      }
-    } else {
-      disliked.remove(currentUser.uid);
-      await binCollection.doc(roomCode).collection("posts").doc(postId).update({"numberOfDislikes": dislike - 1});
-      await binCollection.doc(roomCode).collection("posts").doc(postId).update({"disliked": disliked});
-    }
+  Future PostDislikes(String postId,bool dislike,bool prelike,bool like)async {
+    await lock.synchronized(() async {
+      await binCollection.doc(roomCode).collection("posts").doc(postId).update({
+        "disliked.${currentUser.uid}":dislike,
+        "numberOfDislikes":dislike?FieldValue.increment(1):FieldValue.increment(-1),
+        "liked.${currentUser.uid}":like,
+        "numberOfLikes":prelike?FieldValue.increment(-1):FieldValue.increment(0),
+      });
+    });
   }
 
 
@@ -625,21 +599,26 @@ class BinDatabase {
     );
   }
 
-  void likeComment(String roomId,String postId,String commentId,bool like,int numOfLike,bool disLike,int numOfDislike){
-    binCollection.doc(roomId).collection("posts").doc(postId).collection("comments").doc(commentId).update({
-      "likedUser.${currentUser.uid}":like,
-      "numberOfLikes":numOfLike,
-      "disLikedUser.${currentUser.uid}":disLike,
-      "numberOfDislikes":numOfDislike
+  Future<void> likeComment(String roomId,String postId,String commentId,bool like,bool predisLike)async{
+    await lock.synchronized(() async {
+      await binCollection.doc(roomId).collection("posts").doc(postId).collection("comments").doc(commentId).update({
+        "likedUser.${currentUser.uid}":like,
+        "numberOfLikes":like?FieldValue.increment(1):FieldValue.increment(-1),
+        "disLikedUser.${currentUser.uid}":false,
+        "numberOfDislikes":predisLike?FieldValue.increment(-1):FieldValue.increment(0)
+      });
     });
+    
   }
 
-  void disLikeComment(String roomId,String postId,String commentId,bool dislike,int numOfdisLike,bool like,int numOfLike){
-    binCollection.doc(roomId).collection("posts").doc(postId).collection("comments").doc(commentId).update({
-      "disLikedUser.${currentUser.uid}":dislike,
-      "numberOfDislikes":numOfdisLike,
-      "likedUser.${currentUser.uid}":like,
-      "numberOfLikes":numOfLike,
+  Future<void> disLikeComment(String roomId,String postId,String commentId,bool dislike,bool prelike)async{
+    await lock.synchronized(() async {
+      await binCollection.doc(roomId).collection("posts").doc(postId).collection("comments").doc(commentId).update({
+        "disLikedUser.${currentUser.uid}":dislike,
+        "numberOfDislikes":dislike?FieldValue.increment(1):FieldValue.increment(-1),
+        "likedUser.${currentUser.uid}":false,
+        "numberOfLikes":prelike?FieldValue.increment(-1):FieldValue.increment(0),
+      });
     });
   }
 
