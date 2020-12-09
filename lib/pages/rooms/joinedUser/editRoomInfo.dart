@@ -114,7 +114,9 @@ class _EditRoomInfoState extends State<EditRoomInfo> {
                             filled: true,
                             fillColor: Colors.grey[50],
                             hintText:
-                                "Changing domain name won't affect already joined users.", //Changing domain name won't affect already joined users.
+                                "Ex: iiitvadodara.ac.in, iiitv.ac.in", //Changing domain name won't affect already joined users.
+                            helperText:
+                                "Changing domain name won't affect already joined users.",
                             border: OutlineInputBorder(),
                             labelText: "Domain Name",
                           ),
