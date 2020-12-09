@@ -17,7 +17,7 @@ This application will target the students helping them in solving doubts related
 
 ## Download Apk
 
-You can download apk file of doubtbin from <a href="https://drive.google.com/drive/folders/1p37-BxI-14Crejc8f-oK9diaPh0bD5IY?usp=sharing">here</a>
+You can download apk file of doubtbin from <a href="https://drive.google.com/file/d/10lt0Pf7810SZBauAlsvCbAWGGTO_gJee/view?usp=sharing">here</a>
 
 
 ## Sneak peek of DoubtBin
