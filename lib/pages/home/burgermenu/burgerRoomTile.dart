@@ -21,10 +21,12 @@ class BurgerRoomTile extends StatelessWidget {
             context,
             MaterialPageRoute(
                 builder: (context) => RoomDashboard(
-                      roomCode: bin.roomId,
-                      firstTime:false, //true only when the user creates or joins the room and then visits it for first time
-                      roomName: bin.binName,
-                      description: bin.description,
+                      // roomCode: bin.roomId,
+                      firstTime:
+                          false, //true only when the user creates or joins the room and then visits it for first time
+                      // roomName: bin.binName,
+                      // description: bin.description,
+                      bin: bin,
                     )));
       },
     );

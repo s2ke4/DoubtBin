@@ -1,6 +1,4 @@
 import 'package:doubtbin/model/bin.dart';
-import 'package:doubtbin/pages/home/floatingbutton/createRoom.dart';
-import 'package:doubtbin/pages/rooms/joinedUser/joinedUsers.dart';
 import 'package:doubtbin/services/room.dart';
 import 'package:doubtbin/shared/appBar.dart';
 import 'package:doubtbin/shared/loading.dart';
@@ -22,10 +20,10 @@ class EditRoomInfo extends StatefulWidget {
       this.updateInfo});
   @override
   _EditRoomInfoState createState() => _EditRoomInfoState(
-      roomCode: roomCode,
-      roomName: roomName,
-      description: description,
-      domains: domains,
+      // roomCode: roomCode,
+      // roomName: roomName,
+      // description: description,
+      // domains: domains,
       bin: bin,
       updateInfo: updateInfo);
 }
@@ -38,29 +36,29 @@ class _EditRoomInfoState extends State<EditRoomInfo> {
   bool toolong = false;
   bool toolongDescription = false;
   bool isLoading = false;
-  String roomName;
-  String description;
-  String roomCode;
-  List<dynamic> domains;
+  // String roomName;
+  // String description;
+  // String roomCode;
+  // List<dynamic> domains;
   Bin bin;
   Function updateInfo;
   _EditRoomInfoState(
-      {this.roomCode,
-      this.roomName,
-      this.description,
-      this.domains,
+      {
+      // this.roomCode,
+      // this.roomName,
+      // this.description,
+      // this.domains,
       this.bin,
       this.updateInfo}) {
-    roomNameController.text = roomName;
-    roomDescriptionController.text = description;
+    roomNameController.text = bin.binName;
+    roomDescriptionController.text = bin.description;
     roomDomainNameController.text =
-        domains.toString().substring(1, domains.toString().length - 1);
+        bin.domain.toString().substring(1, bin.domain.toString().length - 1);
   }
 
   Future updateRoomInfo() async {
     String roomName = roomNameController.text.trim();
     String roomDescription = roomDescriptionController.text.trim();
-    String roomDomainName = roomDomainNameController.text.trim();
     setState(() => roomName.length > 50 ? toolong = true : toolong = false);
     setState(() => roomDescription.length > 100
         ? toolongDescription = true
@@ -68,14 +66,13 @@ class _EditRoomInfoState extends State<EditRoomInfo> {
     setState(
         () => roomName.isEmpty ? tooShortName = true : tooShortName = false);
     if (!tooShortName && !toolong && !toolongDescription) {
-      // var domainString = (roomDomainName).split(' ').join('');
+      var domainString = (roomDomainNameController.text).split(' ').join('');
       List domains = new List();
-      domains = roomDomainName.split(',');
-      // if (domainString != "") {
-      //   domains = domainString.split(',');
-      // }
+      if (domainString != "") {
+        domains = domainString.split(',');
+      }
       setState(() => isLoading = true);
-      await binCollection.doc(roomCode).update({
+      await binCollection.doc(bin.roomId).update({
         "displayName": roomName,
         "description": roomDescription,
         "domain": domains

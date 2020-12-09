@@ -22,12 +22,12 @@ class BinCard extends StatelessWidget {
             MaterialPageRoute(
                 builder: (context) => RoomDashboard(
                       bin: bin,
-                      roomCode: bin.roomId,
+                      // roomCode: bin.roomId,
                       firstTime:
                           false, //true only when the user creates or joins the room and then visits it for first time
-                      roomName: bin.binName,
-                      description: bin.description,
-                      domains: bin.domain,
+                      // roomName: bin.binName,
+                      // description: bin.description,
+                      // domains: bin.domain,
                     )));
       },
       child: Card(

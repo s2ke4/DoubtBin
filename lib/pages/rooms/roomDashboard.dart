@@ -8,47 +8,47 @@ import 'package:flutter/services.dart';
 
 class RoomDashboard extends StatefulWidget {
   final bool firstTime;
-  final String roomCode;
-  final String roomName;
-  final String description;
+  // final String roomCode;
+  // final String roomName;
+  // final String description;
   final Bin bin;
-  final List<dynamic> domains;
+  // final List<dynamic> domains;
   RoomDashboard(
       {this.firstTime,
-      this.roomCode,
-      this.roomName,
-      this.description,
-      this.domains,
+      // this.roomCode,
+      // this.roomName,
+      // this.description,
+      // this.domains,
       this.bin});
 
   @override
   _RoomDashboardState createState() => _RoomDashboardState(
       firstTime: firstTime,
-      roomCode: roomCode,
-      roomName: roomName,
-      description: description,
-      domains: domains,
+      // roomCode: roomCode,
+      // roomName: roomName,
+      // description: description,
+      // domains: domains,
       bin: bin);
 }
 
 class _RoomDashboardState extends State<RoomDashboard> {
   final key = new GlobalKey<ScaffoldState>();
   bool firstTime;
-  String roomCode;
-  String roomName;
-  String description;
+  // String roomCode;
+  // String roomName;
+  // String description;
   Bin bin;
-  List<dynamic> domains;
+  // List<dynamic> domains;
 
   _RoomDashboardState(
       {this.firstTime,
-      this.roomCode,
-      this.roomName,
-      this.description,
-      this.domains,
+      // this.roomCode,
+      // this.roomName,
+      // this.description,
+      // this.domains,
       this.bin}) {
     print("RoomDashboard");
-    print(domains);
+    // print(domains);
     print(bin.roomId);
   }
 
@@ -73,14 +73,14 @@ class _RoomDashboardState extends State<RoomDashboard> {
                       children: [
                         Flexible(
                             child: Text(
-                          roomCode,
+                          bin.roomId,
                           softWrap: true,
                         )),
                         GestureDetector(
                           child: Icon(Icons.content_copy),
                           onTap: () {
                             Clipboard.setData(
-                                new ClipboardData(text: roomCode));
+                                new ClipboardData(text: bin.roomId));
                             key.currentState.showSnackBar(new SnackBar(
                               content: new Text("Copied to Clipboard"),
                             ));
@@ -122,32 +122,31 @@ class _RoomDashboardState extends State<RoomDashboard> {
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () {
-                print(domains);
-                print(bin.roomId);
                 Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => JoinedUsers(
-                            updateInfo2: updateInfo2,
-                            bin: bin,
-                            roomCode: bin.roomId,
-                            roomName: bin.binName,
-                            description: bin.description,
-                            domains: bin.domain)));
+                              updateInfo2: updateInfo2,
+                              bin: bin,
+                              // roomCode: bin.roomId,
+                              // roomName: bin.binName,
+                              // description: bin.description,
+                              // domains: bin.domain
+                            )));
               },
             ),
           ],
         ),
       ),
       backgroundColor: Colors.grey[100],
-      body: BinDatabase(roomCode: roomCode).showAllPost(),
+      body: BinDatabase(roomCode: bin.roomId).showAllPost(),
       floatingActionButton: new FloatingActionButton(
         onPressed: () {
           Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) =>
-                      NewPost(roomCode: roomCode, roomName: roomName)));
+                      NewPost(roomCode: bin.roomId, roomName: bin.binName)));
         },
         child: new Icon(Icons.add),
       ),

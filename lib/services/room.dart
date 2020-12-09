@@ -318,10 +318,17 @@ class BinDatabase {
           context,
           MaterialPageRoute(
               builder: (context) => RoomDashboard(
+                    bin: Bin(
+                      description: doc.data()['description'],
+                      binName: doc.data()['displayName'],
+                      owner: doc.data()['ownerName'],
+                      roomId: doc.id,
+                      domain: doc.data()['domain'],
+                    ),
                     firstTime: false,
-                    roomCode: roomCode,
-                    roomName: doc.data()['displayName'],
-                    description: doc.data()['description'],
+                    // roomCode: roomCode,
+                    // roomName: doc.data()['displayName'],
+                    // description: doc.data()['description'],
                   )));
       return "";
     }
@@ -444,7 +451,7 @@ class BinDatabase {
       "numberOfComments": 0,
       "numberOfLikes": 0,
       "numberOfDislikes": 0,
-      "time":DateTime.now().millisecondsSinceEpoch,
+      "time": DateTime.now().millisecondsSinceEpoch,
     });
   }
 
@@ -522,24 +529,30 @@ class BinDatabase {
   }
 
   //likes post
-  Future PostLikes(String postId,bool like,bool predislike,bool disLike) async {
+  Future PostLikes(
+      String postId, bool like, bool predislike, bool disLike) async {
     await lock.synchronized(() async {
       await binCollection.doc(roomCode).collection("posts").doc(postId).update({
-        "liked.${currentUser.uid}":like,
-        "numberOfLikes":like?FieldValue.increment(1):FieldValue.increment(-1),
-        "disliked.${currentUser.uid}":disLike,
-        "numberOfDislikes":predislike?FieldValue.increment(-1):FieldValue.increment(0)
+        "liked.${currentUser.uid}": like,
+        "numberOfLikes":
+            like ? FieldValue.increment(1) : FieldValue.increment(-1),
+        "disliked.${currentUser.uid}": disLike,
+        "numberOfDislikes":
+            predislike ? FieldValue.increment(-1) : FieldValue.increment(0)
       });
     });
   }
 
-  Future PostDislikes(String postId,bool dislike,bool prelike,bool like)async {
+  Future PostDislikes(
+      String postId, bool dislike, bool prelike, bool like) async {
     await lock.synchronized(() async {
       await binCollection.doc(roomCode).collection("posts").doc(postId).update({
-        "disliked.${currentUser.uid}":dislike,
-        "numberOfDislikes":dislike?FieldValue.increment(1):FieldValue.increment(-1),
-        "liked.${currentUser.uid}":like,
-        "numberOfLikes":prelike?FieldValue.increment(-1):FieldValue.increment(0),
+        "disliked.${currentUser.uid}": dislike,
+        "numberOfDislikes":
+            dislike ? FieldValue.increment(1) : FieldValue.increment(-1),
+        "liked.${currentUser.uid}": like,
+        "numberOfLikes":
+            prelike ? FieldValue.increment(-1) : FieldValue.increment(0),
       });
     });
   }
@@ -604,27 +617,59 @@ class BinDatabase {
     );
   }
 
-  Future<void> likeComment(String roomId,String postId,String commentId,bool like,bool predisLike)async{
+  Future<void> likeComment(String roomId, String postId, String commentId,
+      bool like, bool predisLike) async {
     await lock.synchronized(() async {
-      await binCollection.doc(roomId).collection("posts").doc(postId).collection("comments").doc(commentId).update({
-        "likedUser.${currentUser.uid}":like,
-        "numberOfLikes":like?FieldValue.increment(1):FieldValue.increment(-1),
-        "disLikedUser.${currentUser.uid}":false,
-        "numberOfDislikes":predisLike?FieldValue.increment(-1):FieldValue.increment(0)
+      await binCollection
+          .doc(roomId)
+          .collection("posts")
+          .doc(postId)
+          .collection("comments")
+          .doc(commentId)
+          .update({
+        "likedUser.${currentUser.uid}": like,
+        "numberOfLikes":
+            like ? FieldValue.increment(1) : FieldValue.increment(-1),
+        "disLikedUser.${currentUser.uid}": false,
+        "numberOfDislikes":
+            predisLike ? FieldValue.increment(-1) : FieldValue.increment(0)
       });
     });
-    
   }
 
-  Future<void> disLikeComment(String roomId,String postId,String commentId,bool dislike,bool prelike)async{
+  Future<void> deleteComment(String postId, String commentId) async {
+    await binCollection
+        .doc(roomCode)
+        .collection("posts")
+        .doc(postId)
+        .collection("comments")
+        .doc(commentId)
+        .delete();
+    binCollection
+        .doc(roomCode)
+        .collection("posts")
+        .doc(postId)
+        .update({"numberOfComments": FieldValue.increment(-1)});
+  }
+
+  Future<void> disLikeComment(String roomId, String postId, String commentId,
+      bool dislike, bool prelike) async {
     await lock.synchronized(() async {
-      await binCollection.doc(roomId).collection("posts").doc(postId).collection("comments").doc(commentId).update({
-        "disLikedUser.${currentUser.uid}":dislike,
-        "numberOfDislikes":dislike?FieldValue.increment(1):FieldValue.increment(-1),
-        "likedUser.${currentUser.uid}":false,
-        "numberOfLikes":prelike?FieldValue.increment(-1):FieldValue.increment(0),
+      await binCollection
+          .doc(roomId)
+          .collection("posts")
+          .doc(postId)
+          .collection("comments")
+          .doc(commentId)
+          .update({
+        "disLikedUser.${currentUser.uid}": dislike,
+        "numberOfDislikes":
+            dislike ? FieldValue.increment(1) : FieldValue.increment(-1),
+        "likedUser.${currentUser.uid}": false,
+        "numberOfLikes":
+            prelike ? FieldValue.increment(-1) : FieldValue.increment(0),
       });
-    })
+    });
   }
 
   Future compressImage(_image, postId) async {
@@ -649,5 +694,4 @@ class BinDatabase {
 
     return downloadURL;
   }
-
 }

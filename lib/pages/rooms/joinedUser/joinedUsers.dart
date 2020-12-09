@@ -11,56 +11,58 @@ import 'package:doubtbin/shared/loading.dart';
 import 'package:flutter/material.dart';
 
 class JoinedUsers extends StatefulWidget {
-  final String roomCode;
-  final String roomName;
-  final String description;
-  List<dynamic> domains;
+  // final String roomCode;
+  // final String roomName;
+  // final String description;
+  // List<dynamic> domains;
   Function updateInfo2;
   Bin bin;
   JoinedUsers(
-      {this.roomCode,
-      this.roomName,
-      this.description,
-      this.domains,
+      {
+      // this.roomCode,
+      // this.roomName,
+      // this.description,
+      // this.domains,
       this.bin,
       this.updateInfo2});
 
   @override
   _JoinedUsersState createState() => _JoinedUsersState(
-      roomCode: roomCode,
-      roomName: roomName,
-      description: description,
-      domains: domains,
+      // roomCode: roomCode,
+      // roomName: roomName,
+      // description: description,
+      // domains: domains,
       bin: bin,
       updateInfo2: updateInfo2);
 }
 
 class _JoinedUsersState extends State<JoinedUsers> {
-  String roomCode;
-  String roomName;
-  String description;
-  List<dynamic> domains;
+  // String roomCode;
+  // String roomName;
+  // String description;
+  // List<dynamic> domains;
   Bin bin;
   Function updateInfo2;
   String oid;
   bool isLoading = true;
   DocumentSnapshot docSnap;
   _JoinedUsersState(
-      {this.roomCode,
-      this.roomName,
-      this.description,
-      this.domains,
+      {
+      // this.roomCode,
+      // this.roomName,
+      // this.description,
+      // this.domains,
       this.bin,
       this.updateInfo2}) {
     getDetail();
   }
   void getDetail() async {
-    DocumentSnapshot coll = await binCollection.doc(roomCode).get();
+    DocumentSnapshot coll = await binCollection.doc(bin.roomId).get();
     setState(() => oid = coll.data()['ownerId']);
     DocumentSnapshot docsnap = await userCollection.doc(oid).get();
     setState(() => docSnap = docsnap);
     setState(() => isLoading = false);
-    print(domains);
+    print(bin.domain);
   }
 
   @override
@@ -80,7 +82,7 @@ class _JoinedUsersState extends State<JoinedUsers> {
                     description: bin.description,
                     ownerId: docSnap.id,
                     domains: bin.domain),
-            ExitButton(code: roomCode, uid: currentUser.uid),
+            ExitButton(code: bin.roomId, uid: currentUser.uid),
             isLoading
                 ? Loading()
                 : UserTile(
@@ -91,12 +93,11 @@ class _JoinedUsersState extends State<JoinedUsers> {
                         photoURL: docSnap.data()['circleAvatar'],
                         userName: docSnap.data()['userName']),
                     ownerId: oid,
-                    code: roomCode,
-                  ),
+                    code: bin.roomId),
             isLoading
                 ? Loading()
                 : Container(
-                    child: BinDatabase().showAllMembers(roomCode, oid),
+                    child: BinDatabase().showAllMembers(bin.roomId, oid),
                   )
           ],
         ),

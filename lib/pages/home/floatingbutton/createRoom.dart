@@ -1,3 +1,4 @@
+import 'package:doubtbin/model/bin.dart';
 import 'package:doubtbin/pages/rooms/roomDashboard.dart';
 import 'package:doubtbin/shared/appBar.dart';
 import 'package:doubtbin/shared/loading.dart';
@@ -57,11 +58,18 @@ class _CreateRoomState extends State<CreateRoom> {
           context,
           MaterialPageRoute(
               builder: (context) => RoomDashboard(
-                    roomCode: roomCode,
+                    // roomCode: roomCode,
                     firstTime: true,
-                    roomName: roomName,
-                    description: roomDescription,
-                    domains: domains,
+                    bin: Bin(
+                      description: roomDescription,
+                      binName: roomName,
+                      owner: currentUser.displayName,
+                      roomId: roomCode,
+                      domain: domains,
+                    ),
+                    // roomName: roomName,
+                    // description: roomDescription,
+                    // domains: domains,
                   )));
     }
   }
