@@ -41,4 +41,6 @@ You can download apk file of doubtbin from <a href="https://drive.google.com/fil
 <img src="assets/WhatsApp%20Image%202020-12-01%20at%209.38.36%20PM.jpeg" height=600></img>
 <img src="assets/WhatsApp%20Image%202020-12-01%20at%209.38.35%20PM.jpeg" height=600></img>
 
+![Visitor count](https://visitor-badge.laobi.icu/badge?page_id=s2ke4.DoubtBin)
+
 
